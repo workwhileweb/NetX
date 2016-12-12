@@ -24,8 +24,8 @@ namespace Extreme.Net.Tests
 			
 			var response = await request.GetAsync(uri);
 			var source = response.ToString();
-			
-			StringAssert.Contains(source, getArgument);
+
+            StringAssert.Contains(source, getArgument);
 			StringAssert.Contains(source, getValue);
         }
 		
@@ -55,8 +55,6 @@ namespace Extreme.Net.Tests
 		[TestMethod]
 		public async void TestHeadersAsync()
 		{
-			
-			
 			var request = new HttpRequest();
 			request.UserAgent = userAgent;
 			
