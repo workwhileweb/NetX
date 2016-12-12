@@ -1,12 +1,13 @@
 # Extreme.Net
 
 [![NuGet version](https://badge.fury.io/nu/Extreme.Net.svg)](https://badge.fury.io/nu/Extreme.Net)
+[![Build status](https://ci.appveyor.com/api/projects/status/7mwsovabbtwq6i65?svg=true)](https://ci.appveyor.com/project/extremecodetv/extreme-net)
 
 **Extreme.Net** - http class library for C# which includes:
  * Classes for work with proxy servers: HTTP, Socks4(a), Socks5, Chain.
  * Classes for work with HTTP 1.0/1.1 protocol: keep-alive, gzip, deflate, chunked, SSL, proxies and more.
 
-**Extreme.Net** its a fork of [xNet](https://github.com/X-rus/xNet)
+**Extreme.Net** it's a fork of [xNet](https://github.com/X-rus/xNet)
 
 
 # Installation
