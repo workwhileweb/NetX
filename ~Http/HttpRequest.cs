@@ -948,13 +948,29 @@ namespace Extreme.Net
             return Raw(HttpMethod.GET, address);
         }
 
+		/// <summary>
+        /// Асинхронно отправляет GET-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> GetAsync(string address, RequestParams urlParams = null)
         {
             return await Task.Run(() => {
                 return this.Get(address, urlParams);
             });
         }
-
+		
+		/// <summary>
+        /// Асинхронно отправляет GET-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> GetAsync(Uri address, RequestParams urlParams = null)
         {
             return await Task.Run(() =>
@@ -979,6 +995,14 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address);
         }
 
+        /// <summary>
+        /// Асинхонно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address)
         {
            return await Task.Run(() => {
@@ -997,7 +1021,14 @@ namespace Extreme.Net
         {
             return Raw(HttpMethod.POST, address);
         }
-
+		
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address)
         {
             return await Task.Run(() => {
@@ -1033,6 +1064,21 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, dontEscape, CharacterSet));
         }
 
+		
+        /// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <param name="dontEscape">Указывает, нужно ли кодировать параметры запроса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, RequestParams reqParams, bool dontEscape = false)
         {
             return await Task.Run(() => {
@@ -1066,7 +1112,20 @@ namespace Extreme.Net
 
             return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, dontEscape, CharacterSet));
         }
-
+		
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <param name="dontEscape">Указывает, нужно ли кодировать параметры запроса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, RequestParams reqParams, bool dontEscape = false)
         {
             return await Task.Run(() => {
@@ -1129,7 +1188,29 @@ namespace Extreme.Net
 
             return Raw(HttpMethod.POST, address, content);
         }
-
+		
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, string str, string contentType)
         {
             return await Task.Run(() => {
@@ -1191,6 +1272,26 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, string str, string contentType)
         {
             return await Task.Run(() => {
@@ -1246,7 +1347,27 @@ namespace Extreme.Net
 
             return Raw(HttpMethod.POST, address, content);
         }
-
+		
+        /// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, byte[] bytes, string contentType = "application/octet-stream")
         {
             return await Task.Run(() => {
@@ -1299,6 +1420,23 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
+		
+        /// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, byte[] bytes, string contentType = "application/octet-stream")
         {
             return await Task.Run(() =>
@@ -1356,6 +1494,26 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, Stream stream, string contentType = "application/octet-stream")
         {
             return await Task.Run(() => {
@@ -1408,6 +1566,22 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, Stream stream, string contentType = "application/octet-stream")
         {
             return await Task.Run(() => {
@@ -1451,6 +1625,23 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, new FileContent(path));
         }
 
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, string path)
         {
             return await Task.Run(() => {
@@ -1490,6 +1681,19 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, new FileContent(path));
         }
 
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, string path)
         {
             return await Task.Run(() => {
@@ -1524,6 +1728,19 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
+		/// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, HttpContent content)
         {
             return await Task.Run(() => {
@@ -1557,6 +1774,19 @@ namespace Extreme.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
+		
+        /// <summary>
+        /// Асинхронно отправляет POST-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, HttpContent content)
         {        
             return await Task.Run(() => {
