@@ -4,7 +4,7 @@ namespace Extreme.Net
     /// <summary>
     /// HTTP-заголовки.
     /// </summary>
-    public enum HttpHeader
+    internal enum HttpHeader
     {
         Accept,
         AcceptCharset,

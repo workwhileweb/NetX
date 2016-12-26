@@ -42,14 +42,17 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProxyHandler.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RequestParams.cs" />
+    <Compile Include="~Extensions\HttpExtensions.cs" />
     <Compile Include="~Http\HttpExceptionStatus.cs" />
     <Compile Include="~Http\~Content\BytesContent.cs" />
     <Compile Include="~Http\~Content\FileContent.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="~Http\~Content\MultipartContent.cs" />
     <Compile Include="~Http\~Content\StreamContent.cs" />
     <Compile Include="~Http\~Content\StringContent.cs" />
+    <Compile Include="~Internal\ProgressStreamContent.cs" />
     <Compile Include="~Proxy\ChainProxyClient.cs" />
     <Compile Include="~Http\~Misc\DownloadProgressChangedEventArgs.cs" />
     <Compile Include="~Http\HttpHeader.cs" />

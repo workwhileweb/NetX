@@ -6,7 +6,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет тело запроса в виде строки.
     /// </summary>
-    public class StringContent : BytesContent
+    internal class StringContent : BytesContent
     {
         #region Конструкторы (открытые)
 

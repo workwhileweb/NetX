@@ -17,7 +17,7 @@ namespace Extreme.Net
     /// <summary>
     /// Class to send HTTP-server requests.
     /// </summary>
-    public class HttpRequest : IDisposable
+    internal class HttpRequest : IDisposable
     {
         // Используется для определения того, сколько байт было отправлено/считано.
         private sealed class HttpWraperStream : Stream
@@ -178,12 +178,12 @@ namespace Extreme.Net
         // Заголовки, которые можно задать только с помощью специального свойства/метода.
         private static readonly List<string> _closedHeaders = new List<string>()
         {
-            "Accept-Encoding",
-            "Content-Length",
-            "Content-Type",
-            "Connection",
-            "Proxy-Connection",
-            "Host"
+            //"Accept-Encoding",
+            //"Content-Length",
+            //"Content-Type",
+            //"Connection",
+            //"Proxy-Connection",
+            //"Host"
         };
 
         #endregion
@@ -973,7 +973,7 @@ namespace Extreme.Net
         /// <exception cref="Extreme.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> GetAsync(Uri address, RequestParams urlParams = null)
         {
-            return await Task.Run(() =>
+            return await Task.Run<HttpResponse>(() =>
             {
                 return this.Get(address, urlParams);
             });
@@ -1826,6 +1826,11 @@ namespace Extreme.Net
 
             var uri = new Uri(address, UriKind.RelativeOrAbsolute);
             return Raw(method, uri, content);
+        }
+
+        public Task<HttpResponse> RawAsync(HttpMethod method, string address, HttpContent content = null)
+        {
+            return Task.Run<HttpResponse>(() => { return Raw(method, address); });
         }
 
         /// <summary>

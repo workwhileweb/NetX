@@ -4,7 +4,7 @@ namespace Extreme.Net
     /// <summary>
     /// Определяет коды состояния HTTP.
     /// </summary>
-    public enum HttpStatusCode
+    internal enum HttpStatusCode
     {
         None = 0,
 

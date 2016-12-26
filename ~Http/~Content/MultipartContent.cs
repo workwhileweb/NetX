@@ -10,7 +10,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет тело запроса в виде состовного содержимого.
     /// </summary>
-    public class MultipartContent : HttpContent, IEnumerable<HttpContent>
+    internal class MultipartContent : HttpContent, IEnumerable<HttpContent>
     {
         private sealed class Element
         {

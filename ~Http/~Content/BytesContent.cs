@@ -6,7 +6,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет тело запроса в виде байтов.
     /// </summary>
-    public class BytesContent : HttpContent
+    internal class BytesContent : HttpContent
     {
         #region Поля (защищённые)
 

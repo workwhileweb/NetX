@@ -6,7 +6,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет тело запроса в виде потока данных из определённого файла.
     /// </summary>
-    public class FileContent : StreamContent
+    internal class FileContent : StreamContent
     {
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="FileContent"/> и открывает поток файла.

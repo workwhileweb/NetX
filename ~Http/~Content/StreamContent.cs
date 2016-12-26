@@ -6,7 +6,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет тело запроса в виде потока.
     /// </summary>
-    public class StreamContent : HttpContent
+    internal class StreamContent : HttpContent
     {
         #region Поля (защищённые электромагнитным излучением)
 

@@ -7,7 +7,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет тело запроса в виде параметров запроса.
     /// </summary>
-    public class FormUrlEncodedContent : BytesContent
+    internal class FormUrlEncodedContent : BytesContent
     {
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="FormUrlEncodedContent"/>.

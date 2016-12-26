@@ -5,7 +5,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет тело запроса. Освбождается сразу после отправки.
     /// </summary>
-    public abstract class HttpContent
+    internal abstract class HttpContent
     {
         /// <summary>MIME-тип контента.</summary>
         protected string _contentType = string.Empty;

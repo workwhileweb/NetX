@@ -7,7 +7,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет коллекцию HTTP-куки.
     /// </summary>
-    public class CookieDictionary : Dictionary<string, string>
+    internal class CookieDictionary : Dictionary<string, string>
     {
         /// <summary>
         /// Возвращает или задает значение, указывающие, закрыты ли куки для редактирования

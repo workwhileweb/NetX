@@ -4,7 +4,7 @@ namespace Extreme.Net
     /// <summary>
     /// Определяет состояния для класса <see cref="HttpException"/>.
     /// </summary>
-    public enum HttpExceptionStatus
+    internal enum HttpExceptionStatus
     {
         /// <summary>
         /// Произошла другая ошибка.
