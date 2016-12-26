@@ -8,11 +8,7 @@
         <owners>ExtremeCodeTv</owners>
         <projectUrl>https://github.com/extremecodetv/Extreme.Net/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Http class library with support Http/Socks4/Socks5 proxy
-
-Includes:
- - Classes for work with proxy servers: HTTP, Socks4(a), Socks5, Chain.
- - Classes for work with HTTP 1.0/1.1 protocol: keep-alive, gzip, deflate, chunked, SSL, proxies and more.</description>
+        <description>Extreme.Met provides Http(s), Socks4a, Socks4, Socks5, Chain proxy to HttpClient</description>
     </metadata>
     <files>
         <file src="bin\Debug\Extreme.Net.dll" target="lib\Extreme.Net.dll" />
