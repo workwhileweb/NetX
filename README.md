@@ -4,7 +4,7 @@
 [![NuGet version](https://badge.fury.io/nu/Extreme.Net.svg)](https://badge.fury.io/nu/Extreme.Net)
 [![Build status](https://ci.appveyor.com/api/projects/status/7mwsovabbtwq6i65?svg=true)](https://ci.appveyor.com/project/extremecodetv/extreme-net)
 
-**Extreme.Net** beta - provides Http(s), Socks4a, Socks4, Socks5, Chain proxy to HttpClient
+**Extreme.Net** beta - provides Http(s), Socks4a, Socks4, Socks5, Chain proxy for .Net framework's HttpClient class
 
 **Extreme.Net** it's a fork of [xNet](https://github.com/X-rus/xNet)
 
