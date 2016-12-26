@@ -1,11 +1,10 @@
 # Extreme.Net
+## beta
 
 [![NuGet version](https://badge.fury.io/nu/Extreme.Net.svg)](https://badge.fury.io/nu/Extreme.Net)
 [![Build status](https://ci.appveyor.com/api/projects/status/7mwsovabbtwq6i65?svg=true)](https://ci.appveyor.com/project/extremecodetv/extreme-net)
 
-**Extreme.Net** - http class library for C# which includes:
- * Classes for work with proxy servers: HTTP, Socks4(a), Socks5, Chain.
- * Classes for work with HTTP 1.0/1.1 protocol: keep-alive, gzip, deflate, chunked, SSL, proxies and more.
+**Extreme.Net** beta - provides Http(s), Socks4a, Socks4, Socks5, Chain proxy to HttpClient
 
 **Extreme.Net** it's a fork of [xNet](https://github.com/X-rus/xNet)
 
@@ -21,44 +20,22 @@ PM > Install-Package Extreme.Net
 # Examples
  
 ```csharp
-HttpRequest request = new HttpRequest();
-HttpResponse response;
+    var socksProxy = new Socks5ProxyClient("77.109.184.55", 62810);
 
-response = await request.GetAsync("http://site.com");
+    var handler = new ProxyHandler(socksProxy);
+    var client = new HttpClient(handler);
+
+    var request = new HttpRequestMessage();
+	request.Method = HttpMethod.Post;
+
+    var parameters = new Dictionary<string, string> { { "param1", "1" }, { "param2", "2" } };
+    var encodedContent = new FormUrlEncodedContent(parameters);
+
+    var response = await client.PostAsync("http://httpbin.org/post", encodedContent);
+    var content  = await response.Content.ReadAsStringAsync();
 
 ``` 
 
-### Another one
-```csharp 
-using (var request = new HttpRequest("http://site.com/"))
-{
-    request.UserAgent = Http.ChromeUserAgent();
-    request.Proxy = Socks5ProxyClient.Parse("127.0.0.1:1080");
-
-    request
-        // Parameters URL-address.
-        .AddUrlParam("data1", "value1")
-        .AddUrlParam("data2", "value2")
-
-        // Parameters 'x-www-form-urlencoded'.
-        .AddParam("data1", "value1")
-        .AddParam("data2", "value2")
-        .AddParam("data2", "value2")
-
-        // Multipart data.
-        .AddField("data1", "value1")
-        .AddFile("game_code", @"C:\orion.zip")
-
-        // HTTP-header.
-        .AddHeader("X-Apocalypse", "21.12.12");
-        
-    // These parameters are sent in this request.
-    request.Post("/").None();
-
-    // But in this request they will be gone.
-    request.Post("/").None();
-}
-```
 
 #Developer
 
