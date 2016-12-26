@@ -1,5 +1,5 @@
 # Extreme.Net
-## beta
+### beta
 
 [![NuGet version](https://badge.fury.io/nu/Extreme.Net.svg)](https://badge.fury.io/nu/Extreme.Net)
 [![Build status](https://ci.appveyor.com/api/projects/status/7mwsovabbtwq6i65?svg=true)](https://ci.appveyor.com/project/extremecodetv/extreme-net)
