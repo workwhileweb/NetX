@@ -20,7 +20,7 @@ PM > Install-Package Extreme.Net
 # Examples
  
 ```csharp
-    var socksProxy = new Socks5ProxyClient("77.109.184.55", 62810);
+    var socksProxy = new Socks5ProxyClient("127.0.0.1", 3128);
 
     var handler = new ProxyHandler(socksProxy);
     var client = new HttpClient(handler);
