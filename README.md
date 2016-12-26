@@ -33,7 +33,6 @@ PM > Install-Package Extreme.Net
 
     var response = await client.PostAsync("http://httpbin.org/post", encodedContent);
     var content  = await response.Content.ReadAsStringAsync();
-
 ``` 
 
 
