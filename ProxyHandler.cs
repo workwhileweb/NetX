@@ -42,7 +42,7 @@ namespace Extreme.Net
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            HttpExtensions.FillCookieContainer(httpResponse, CookieContainer);
+            HttpExtensions.FillCookieContainer(CookieContainer, httpResponse);
 
             response = httpResponse.ToHttpResponseMessage();
             response.RequestMessage = request;

@@ -52,7 +52,7 @@ namespace Extreme.Net
             return httpRequest;
         }
 
-        public static void FillCookieContainer(HttpResponse httpResponse, CookieContainer cookieContainer)
+        public static void FillCookieContainer(CookieContainer cookieContainer, HttpResponse httpResponse)
         {
             //simplified, all cookies are set to the root path
             var rootUri = new Uri($"{httpResponse.Address.Scheme}://{httpResponse.Address.Authority}");
