@@ -170,7 +170,7 @@ namespace Extreme.Net
         /// <summary>
         /// Version HTTP-protocol, used in requests.
         /// </summary>
-        public static readonly Version ProtocolVersion = new Version(1, 1);
+        public static Version ProtocolVersion = new Version(1, 1);
 
 
         #region Статические поля (закрытые)

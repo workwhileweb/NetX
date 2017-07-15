@@ -55,6 +55,9 @@ namespace Extreme.Net
 
         #endregion
 
+        #region Статические свойства (открытые)
+        public static string ProtocolVersion { get; set; } = "1.1"; 
+        #endregion
 
         #region Статические методы (открытые)
 
@@ -206,7 +209,7 @@ namespace Extreme.Net
         {
             var commandBuilder = new StringBuilder();
 
-            commandBuilder.AppendFormat("CONNECT {0}:{1} HTTP/1.1\r\n", destinationHost, destinationPort);
+            commandBuilder.AppendFormat("CONNECT {0}:{1} HTTP/{2}\r\n", destinationHost, destinationPort, ProtocolVersion);
             commandBuilder.AppendFormat(GenerateAuthorizationHeader());
             commandBuilder.AppendLine();
 
