@@ -22,7 +22,7 @@ namespace Extreme.Net
             HttpResponseMessage response = null;
             HttpResponse httpResponse;
 
-            var httpRequest   = request.ToHttpRequest();
+            var httpRequest   = request.ToHttpRequest(CookieContainer);
             httpRequest.Proxy = proxyClient;
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -41,6 +41,8 @@ namespace Extreme.Net
             }
 
             cancellationToken.ThrowIfCancellationRequested();
+
+            HttpExtensions.FillCookieContainer(CookieContainer, httpResponse);
 
             response = httpResponse.ToHttpResponseMessage();
             response.RequestMessage = request;

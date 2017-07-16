@@ -30,22 +30,36 @@ namespace Extreme.Net
             return response;
         }
 
-        public static HttpRequest ToHttpRequest(this HttpRequestMessage request)
+        public static HttpRequest ToHttpRequest(this HttpRequestMessage request, CookieContainer cookieContainer)
         {
             var httpRequest = new HttpRequest();
 
             var headers = request.Headers.Union(request.Content != null 
-                ? (IEnumerable<KeyValuePair<string, IEnumerable<string>>>)request.Content.Headers 
+                ? request.Content.Headers 
                 : Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>());
 
-            //TODO: Copy cookies
+            httpRequest.Cookies = new CookieDictionary();
+            foreach (var cookie in cookieContainer.GetCookies(request.RequestUri).Cast<Cookie>())
+            {
+                httpRequest.Cookies.Add(cookie.Name, cookie.Value);
+            }
 
-            foreach(var keyValue in headers)
+            foreach (var keyValue in headers)
             {
                 httpRequest.AddHeader(keyValue.Key, String.Join(GetHeaderSeparator(keyValue.Key), keyValue.Value));
             }
 
             return httpRequest;
+        }
+
+        public static void FillCookieContainer(CookieContainer cookieContainer, HttpResponse httpResponse)
+        {
+            //simplified, all cookies are set to the root path
+            var rootUri = new Uri($"{httpResponse.Address.Scheme}://{httpResponse.Address.Authority}");
+            foreach (var cookie in httpResponse.Cookies)
+            {
+                cookieContainer.Add(rootUri, new Cookie(cookie.Key, cookie.Value));
+            }
         }
 
         private static string GetHeaderSeparator(string name)
