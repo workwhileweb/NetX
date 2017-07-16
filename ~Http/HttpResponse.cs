@@ -11,7 +11,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет класс, предназначеннный для загрузки ответа от HTTP-сервера.
     /// </summary>
-    internal sealed class HttpResponse
+    public sealed class HttpResponse
     {
         #region Классы (закрытые)
 

@@ -8,7 +8,7 @@ namespace Extreme.Net
     /// Исключение, которое выбрасывается, в случае возникновения ошибки при работе с HTTP-протоколом.
     /// </summary>
     [Serializable]
-    internal sealed class HttpException : NetException
+    public sealed class HttpException : NetException
     {
         #region Свойства (открытые)
 

@@ -5,7 +5,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет данные для события, сообщающим о прогрессе загрузки данных.
     /// </summary>
-    internal sealed class DownloadProgressChangedEventArgs : EventArgs
+    public sealed class DownloadProgressChangedEventArgs : EventArgs
     {
         #region Свойства (открытые)
 

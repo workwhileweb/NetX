@@ -6,7 +6,7 @@ namespace Extreme.Net
     /// <summary>
     /// Представляет коллекцию строк, представляющих параметры запроса.
     /// </summary>
-    internal class RequestParams : List<KeyValuePair<string,string>>
+    public class RequestParams : List<KeyValuePair<string,string>>
     {
         /// <summary>
         /// Задаёт новый параметр запроса.

@@ -4,7 +4,7 @@ namespace Extreme.Net
     /// <summary>
     /// Определяет коды состояния HTTP.
     /// </summary>
-    internal enum HttpStatusCode
+    public enum HttpStatusCode
     {
         None = 0,
 
@@ -51,6 +51,7 @@ namespace Extreme.Net
         UnsupportedMediaType = 415,
         RequestedRangeNotSatisfiable = 416,
         ExpectationFailed = 417,
+        InstagramTryLaterError = 429,
 
         InternalServerError = 500,
         NotImplemented = 501,

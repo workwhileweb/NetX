@@ -17,7 +17,7 @@ namespace Extreme.Net
     /// <summary>
     /// Class to send HTTP-server requests.
     /// </summary>
-    internal class HttpRequest : IDisposable
+    public class HttpRequest : IDisposable
     {
         // Используется для определения того, сколько байт было отправлено/считано.
         private sealed class HttpWraperStream : Stream

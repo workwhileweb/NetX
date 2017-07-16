@@ -4,7 +4,7 @@ namespace Extreme.Net
     /// <summary>
     /// HTTP-метод запроса.
     /// </summary>
-    internal enum HttpMethod
+    public enum HttpMethod
     {
         GET,
         HEAD,
