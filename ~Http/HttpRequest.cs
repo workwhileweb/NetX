@@ -2996,7 +2996,8 @@ namespace Extreme.Net
         private string GenerateStartingLine(HttpMethod method)
         {
             string query;
-
+            query = Address.PathAndQuery;
+            /*
             if (_currentProxy != null &&
                 (_currentProxy.Type == ProxyType.Http || _currentProxy.Type == ProxyType.Chain))
             {
@@ -3006,7 +3007,7 @@ namespace Extreme.Net
             {
                 query = Address.PathAndQuery;
             }
-
+            */
             return string.Format("{0} {1} HTTP/{2}\r\n",
                 method, query, ProtocolVersion);
         }
