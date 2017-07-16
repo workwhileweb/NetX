@@ -34,8 +34,8 @@ namespace Extreme.Net
         {
             var httpRequest = new HttpRequest();
 
-            var headers = request.Headers.Union(request.Content != null
-                ? request.Content.Headers
+            var headers = request.Headers.Union(request.Content != null 
+                ? request.Content.Headers 
                 : Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>());
 
             httpRequest.Cookies = new CookieDictionary();
@@ -62,7 +62,7 @@ namespace Extreme.Net
             }
         }
 
-private static string GetHeaderSeparator(string name)
+        private static string GetHeaderSeparator(string name)
         {
             if (headerSeparators.ContainsKey(name))
             {
