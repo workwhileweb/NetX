@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Представляет клиент для Socks4a прокси-сервера.

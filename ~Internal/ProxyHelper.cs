@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     internal static class ProxyHelper
     {

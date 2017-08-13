@@ -6,12 +6,12 @@ using System.Resources;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Extreme.Net")]
-[assembly: AssemblyDescription("https://github.com/extremecodetv/Extreme.Net")]
+[assembly: AssemblyTitle("SharpNet")]
+[assembly: AssemblyDescription("https://github.com/grandsilence/SharpNet")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ExtremCodeTv")]
-[assembly: AssemblyProduct("Extreme.Net")]
-[assembly: AssemblyCopyright("Copyright © 2016 ExtremeCodeTv")]
+[assembly: AssemblyCompany("Kelog")]
+[assembly: AssemblyProduct("SharpNet")]
+[assembly: AssemblyCopyright("Copyright © 2017 Grand Silence")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

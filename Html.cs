@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Static class for help working with HTML and other text data

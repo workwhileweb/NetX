@@ -1,5 +1,5 @@
 ﻿
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Определяет состояния для класса <see cref="HttpException"/>.

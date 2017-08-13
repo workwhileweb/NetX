@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Представляет класс, предназначеннный для загрузки ответа от HTTP-сервера.
@@ -422,7 +423,7 @@ namespace Extreme.Net
         /// <summary>
         /// Возвращает кодировку тела сообщения.
         /// </summary>
-        /// <value>Кодировка тела сообщения, если соответствующий заголок задан, иначе значение заданное в <see cref="Extreme.Net.Net.HttpRequest"/>. Если и оно не задано, то значение <see cref="System.Text.Encoding.Default"/>.</value>
+        /// <value>Кодировка тела сообщения, если соответствующий заголок задан, иначе значение заданное в <see cref="HttpRequest"/>. Если и оно не задано, то значение <see cref="System.Text.Encoding.Default"/>.</value>
         public Encoding CharacterSet { get; private set; }
 
         /// <summary>
@@ -450,9 +451,9 @@ namespace Extreme.Net
         }
 
         /// <summary>
-        /// Возвращает куки, образовавшиеся в результате запроса, или установленные в <see cref="Extreme.Net.Net.HttpRequest"/>.
+        /// Возвращает куки, образовавшиеся в результате запроса, или установленные в <see cref="HttpRequest"/>.
         /// </summary>
-        /// <remarks>Если куки были установлены в <see cref="Extreme.Net.Net.HttpRequest"/> и значение свойства <see cref="Extreme.Net.Net.CookieDictionary.IsLocked"/> равно <see langword="true"/>, то будут созданы новые куки.</remarks>
+        /// <remarks>Если куки были установлены в <see cref="HttpRequest"/> и значение свойства <see cref="CookieDictionary.IsLocked"/> равно <see langword="true"/>, то будут созданы новые куки.</remarks>
         public CookieDictionary Cookies { get; private set; }
 
         /// <summary>
@@ -542,7 +543,7 @@ namespace Extreme.Net
         /// </summary>
         /// <returns>Если тело сообщения отсутствует, или оно уже было загружено, то будет возвращён пустой массив байтов.</returns>
         /// <exception cref="System.InvalidOperationException">Вызов метода из ошибочного ответа.</exception>
-        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public byte[] ToBytes()
         {
             #region Проверка состояния
@@ -599,8 +600,8 @@ namespace Extreme.Net
         /// </summary>
         /// <returns>Если тело сообщения отсутствует, или оно уже было загружено, то будет возвращена пустая строка.</returns>
         /// <exception cref="System.InvalidOperationException">Вызов метода из ошибочного ответа.</exception>
-        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        override public string ToString()
+        /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        public override string ToString()
         {
             #region Проверка состояния
 
@@ -673,7 +674,7 @@ namespace Extreme.Net
         /// -или-
         /// Вызывающий оператор не имеет необходимого разрешения.
         /// </exception>
-        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public void ToFile(string path)
         {
             #region Проверка состояния
@@ -749,7 +750,7 @@ namespace Extreme.Net
         /// </summary>
         /// <returns>Если тело сообщения отсутствует, или оно уже было загружено, то будет возвращено значение <see langword="null"/>.</returns>
         /// <exception cref="System.InvalidOperationException">Вызов метода из ошибочного ответа.</exception>
-        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public MemoryStream ToMemoryStream()
         {
             #region Проверка состояния
@@ -805,7 +806,7 @@ namespace Extreme.Net
         /// Пропускает тело сообщения. Данный метод следует вызвать, если не требуется тело сообщения.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Вызов метода из ошибочного ответа.</exception>
-        /// <exception cref="Extreme.Net.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public void None()
         {
             #region Проверка состояния
@@ -885,14 +886,12 @@ namespace Extreme.Net
         /// <param name="name">Название куки.</param>
         /// <returns>Значение куки, если она задана, иначе пустая строка.</returns>
         /// <remarks>Это куки, которые были заданы в текущем ответе. Их сырые значения могут быть использованы для получения каких-нибудь дополнительных данных.</remarks>
-        public string GetRawCookie(string name)
+        public Cookie GetRawCookie(string name)
         {
-            string value;
+            Cookie value;
 
             if (!_rawCookies.TryGetValue(name, out value))
-            {
-                value = string.Empty;
-            }
+                value = null;
 
             return value;
         }
@@ -902,7 +901,7 @@ namespace Extreme.Net
         /// </summary>
         /// <returns>Коллекция сырых значений куки.</returns>
         /// <remarks>Это куки, которые были заданы в текущем ответе. Их сырые значения могут быть использованы для получения каких-нибудь дополнительных данных.</remarks>
-        public Dictionary<string, string>.Enumerator EnumerateRawCookies()
+        public Dictionary<string, Cookie>.Enumerator EnumerateRawCookies()
         {
             return _rawCookies.GetEnumerator();
         }
@@ -1085,6 +1084,23 @@ namespace Extreme.Net
                 typeof(HttpStatusCode), statusCode);
         }
 
+        private string ParseCookieParam(string value, string name)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+
+            int index = value.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+            if (index == -1)
+                return null;
+
+            index += name.Length;
+            int indexEnd = value.IndexOf(';', index);
+            if (indexEnd == -1)
+                indexEnd = value.Length - 1;
+
+            return value.Substring(index, indexEnd - index);                
+        }
+
         private void SetCookie(string value)
         {
             if (value.Length == 0)
@@ -1108,6 +1124,7 @@ namespace Extreme.Net
 
             string cookieValue;
             string cookieName = value.Substring(0, separatorPos);
+            DateTime expires = default(DateTime);
 
             if (endCookiePos == -1)
             {
@@ -1120,7 +1137,7 @@ namespace Extreme.Net
 
                 #region Получаем время, которое куки будет действителен
 
-                int expiresPos = value.IndexOf("expires=");
+                int expiresPos = value.IndexOf("expires=", StringComparison.OrdinalIgnoreCase);
 
                 if (expiresPos != -1)
                 {
@@ -1136,9 +1153,7 @@ namespace Extreme.Net
                     else
                     {
                         expiresStr = value.Substring(expiresPos, endExpiresPos - expiresPos);
-                    }
-
-                    DateTime expires;
+                    }                    
 
                     // Если время куки вышло, то удаляем её.
                     if (DateTime.TryParse(expiresStr, out expires) &&
@@ -1151,6 +1166,44 @@ namespace Extreme.Net
                 #endregion
             }
 
+            string domain = ParseCookieParam(value, "Domain=");
+            if (string.IsNullOrEmpty(domain))
+                domain = Address.Host;
+
+            string path = ParseCookieParam(value, "Path=");
+            bool secure = value.Contains("Secure");
+
+            var c = new Cookie
+            {
+                Name = cookieName,
+                Domain = domain
+            };
+            var cRaw = new Cookie
+            {
+                Name = cookieName,
+                Domain = domain
+            };
+
+            if (expires != default(DateTime))
+            {
+                c.Expires = expires;
+                cRaw.Expires = expires;
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                c.Path = path;
+                cRaw.Path = path;
+            }
+            if (secure)
+            {
+                c.Secure = true;
+                cRaw.Secure = true;
+            }
+            
+            c.Value = cookieValue;
+            cRaw.Value = value;
+
             // Если куки нужно удалить.
             if (cookieValue.Length == 0 ||
                 cookieValue.Equals("deleted", StringComparison.OrdinalIgnoreCase))
@@ -1159,10 +1212,14 @@ namespace Extreme.Net
             }
             else
             {
-                Cookies[cookieName] = cookieValue;
+                //var c = new Cookie(cookieName, cookieValue);
+                // Парсим домен для куки
+               
+
+               Cookies[cookieName] = c;
             }
 
-            _rawCookies[cookieName] = value;
+            _rawCookies[cookieName] = cRaw;
         }
 
         private void ReceiveHeaders()

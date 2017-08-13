@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Представляет данные для события, сообщающим о прогрессе загрузки данных.

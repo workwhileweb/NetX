@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Представляет тело запроса в виде потока.

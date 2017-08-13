@@ -1,4 +1,4 @@
-﻿namespace Extreme.Net
+﻿namespace SharpNet
 {
     /// <summary>
     /// Тип прокси-сервера.

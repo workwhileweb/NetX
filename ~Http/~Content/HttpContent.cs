@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Представляет тело запроса. Освбождается сразу после отправки.

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     internal delegate void ProgressDelegate(long bytes, long totalBytes, long totalBytesExpected);
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Представляет тело запроса в виде параметров запроса.

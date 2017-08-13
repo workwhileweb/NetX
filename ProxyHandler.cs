@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     public class ProxyHandler : HttpClientHandler
     {

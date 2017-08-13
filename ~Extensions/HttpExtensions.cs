@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     internal static class HttpExtensions
     {
@@ -41,7 +41,7 @@ namespace Extreme.Net
             httpRequest.Cookies = new CookieDictionary();
             foreach (var cookie in cookieContainer.GetCookies(request.RequestUri).Cast<Cookie>())
             {
-                httpRequest.Cookies.Add(cookie.Name, cookie.Value);
+                httpRequest.Cookies.Add(cookie.Name, cookie);
             }
 
             foreach (var keyValue in headers)
@@ -58,7 +58,7 @@ namespace Extreme.Net
             var rootUri = new Uri($"{httpResponse.Address.Scheme}://{httpResponse.Address.Authority}");
             foreach (var cookie in httpResponse.Cookies)
             {
-                cookieContainer.Add(rootUri, new Cookie(cookie.Key, cookie.Value));
+                cookieContainer.Add(rootUri, cookie.Value);
             }
         }
 

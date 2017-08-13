@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// Представляет коллекцию строк, представляющих параметры запроса.

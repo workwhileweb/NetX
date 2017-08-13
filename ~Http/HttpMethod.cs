@@ -1,5 +1,5 @@
 ﻿
-namespace Extreme.Net
+namespace SharpNet
 {
     /// <summary>
     /// HTTP-метод запроса.
