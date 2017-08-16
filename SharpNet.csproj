@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="RequestParams.cs" />
     <Compile Include="~Extensions\HttpExtensions.cs" />
+    <Compile Include="~Http\CookieStorage.cs" />
     <Compile Include="~Http\HttpExceptionStatus.cs" />
     <Compile Include="~Http\~Content\BytesContent.cs" />
     <Compile Include="~Http\~Content\FileContent.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Html.cs" />
     <Compile Include="NetException.cs" />
     <Compile Include="~Http\HttpMethod.cs" />
-    <Compile Include="~Http\CookieDictionary.cs" />
     <Compile Include="~Proxy\HttpProxyClient.cs" />
     <Compile Include="~Http\HttpException.cs" />
     <Compile Include="~Http\HttpRequest.cs" />

@@ -38,11 +38,12 @@ namespace SharpNet
                 ? request.Content.Headers 
                 : Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>());
 
-            httpRequest.Cookies = new CookieDictionary();
+            httpRequest.Cookies = new CookieStorage(false, cookieContainer);
+            /*
             foreach (var cookie in cookieContainer.GetCookies(request.RequestUri).Cast<Cookie>())
             {
                 httpRequest.Cookies.Add(cookie.Name, cookie);
-            }
+            }*/
 
             foreach (var keyValue in headers)
             {
@@ -56,10 +57,10 @@ namespace SharpNet
         {
             //simplified, all cookies are set to the root path
             var rootUri = new Uri($"{httpResponse.Address.Scheme}://{httpResponse.Address.Authority}");
-            foreach (var cookie in httpResponse.Cookies)
-            {
-                cookieContainer.Add(rootUri, cookie.Value);
-            }
+            var cookies = httpResponse.Cookies.GetCookies(rootUri);
+
+            foreach (Cookie cookie in cookies)
+                cookieContainer.Add(rootUri, cookie);
         }
 
         private static string GetHeaderSeparator(string name)

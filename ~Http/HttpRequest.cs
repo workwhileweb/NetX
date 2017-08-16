@@ -634,8 +634,8 @@ namespace SharpNet
         /// Возвращает или задает куки, связанные с запросом.
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="null"/>.</value>
-        /// <remarks>Куки могут изменяться ответом от HTTP-сервера. Чтобы не допустить этого, нужно установить свойство <see cref="SharpNet.CookieDictionary.IsLocked"/> равным <see langword="true"/>.</remarks>
-        public CookieDictionary Cookies { get; set; }
+        /// <remarks>Куки могут изменяться ответом от HTTP-сервера. Чтобы не допустить этого, нужно установить свойство <see cref="SharpNet.CookieStorage.IsLocked"/> равным <see langword="true"/>.</remarks>
+        public CookieStorage Cookies { get; set; }
 
         #endregion
 
@@ -2405,12 +2405,12 @@ namespace SharpNet
         /// </summary>
         /// <param name="name">Название куки.</param>
         /// <returns>Значение <see langword="true"/>, если указанные куки содержатся, иначе значение <see langword="false"/>.</returns>
-        public bool ContainsCookie(string name)
+        public bool ContainsCookie(string url, string name)
         {
             if (Cookies == null)
                 return false;
 
-            return Cookies.ContainsKey(name);
+            return Cookies.ContainsKey(url, name);
         }
 
         #region Работа с заголовками
@@ -2584,7 +2584,7 @@ namespace SharpNet
 
             try
             {
-                SendRequestData(method);
+                SendRequestData(address, method);
             }
             catch (SecurityException ex)
             {
@@ -2715,7 +2715,7 @@ namespace SharpNet
             return false;
         }
 
-        private void SendRequestData(HttpMethod method)
+        private void SendRequestData(Uri uri, HttpMethod method)
         {
             var contentLength = 0L;
             var contentType = string.Empty;
@@ -2726,8 +2726,9 @@ namespace SharpNet
                 contentLength = _content.CalculateContentLength();
             }
 
+            
             var startingLine = GenerateStartingLine(method);
-            var headers = GenerateHeaders(method, contentLength, contentType);
+            var headers = GenerateHeaders(uri, method, contentLength, contentType);
 
             var startingLineBytes = Encoding.ASCII.GetBytes(startingLine);
             var headersBytes = Encoding.ASCII.GetBytes(headers);
@@ -3016,7 +3017,7 @@ namespace SharpNet
         // - заголовки, которы задаются через специальные свойства, либо автоматически
         // - заголовки, которые задаются через индексатор
         // - временные заголовки, которые задаются через метод AddHeader
-        private string GenerateHeaders(HttpMethod method, long contentLength = 0, string contentType = null)
+        private string GenerateHeaders(Uri uri, HttpMethod method, long contentLength = 0, string contentType = null)
         {
             var headers = GenerateCommonHeaders(method, contentLength, contentType);
 
@@ -3027,8 +3028,10 @@ namespace SharpNet
 
             if (Cookies != null && Cookies.Count != 0 && !headers.ContainsKey("Cookie"))
             {
-                Cookies.RemoveExpired();
-                headers["Cookie"] = Cookies.ToString();
+                //Cookies.RemoveExpired();
+                string cookies = Cookies.GetCookieHeader(uri);
+                if (!string.IsNullOrEmpty(cookies))
+                    headers["Cookie"] = cookies;
             }
             return ToHeadersString(headers);
         }

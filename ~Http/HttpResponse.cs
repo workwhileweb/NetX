@@ -327,7 +327,7 @@ namespace SharpNet
         private readonly Dictionary<string, string> _headers =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        private readonly CookieDictionary _rawCookies = new CookieDictionary();
+        //private readonly CookieStorage _rawCookies = new CookieStorage();
 
         #endregion
 
@@ -453,8 +453,8 @@ namespace SharpNet
         /// <summary>
         /// Возвращает куки, образовавшиеся в результате запроса, или установленные в <see cref="HttpRequest"/>.
         /// </summary>
-        /// <remarks>Если куки были установлены в <see cref="HttpRequest"/> и значение свойства <see cref="CookieDictionary.IsLocked"/> равно <see langword="true"/>, то будут созданы новые куки.</remarks>
-        public CookieDictionary Cookies { get; private set; }
+        /// <remarks>Если куки были установлены в <see cref="HttpRequest"/> и значение свойства <see cref="CookieStorage.IsLocked"/> равно <see langword="true"/>, то будут созданы новые куки.</remarks>
+        public CookieStorage Cookies { get; private set; }
 
         /// <summary>
         /// Возвращает время простаивания постоянного соединения в миллисекундах.
@@ -857,55 +857,19 @@ namespace SharpNet
         /// <summary>
         /// Определяет, содержатся ли указанные куки.
         /// </summary>
+        /// <param name="url">Путь для куки.</param>
         /// <param name="name">Название куки.</param>
         /// <returns>Значение <see langword="true"/>, если указанные куки содержатся, иначе значение <see langword="false"/>.</returns>
-        public bool ContainsCookie(string name)
+        public bool ContainsCookie(string url, string name)
         {
             if (Cookies == null)
             {
                 return false;
             }
 
-            return Cookies.ContainsKey(name);
+            return Cookies.ContainsKey(url, name);
         }
-
-        /// <summary>
-        /// Определяет, содержится ли сырое значение указанной куки.
-        /// </summary>
-        /// <param name="name">Название куки.</param>
-        /// <returns>Значение <see langword="true"/>, если указанные куки содержатся, иначе значение <see langword="false"/>.</returns>
-        /// <remarks>Это куки, которые были заданы в текущем ответе. Их сырые значения могут быть использованы для получения каких-нибудь дополнительных данных.</remarks>
-        public bool ContainsRawCookie(string name)
-        {
-            return _rawCookies.ContainsKey(name);
-        }
-
-        /// <summary>
-        /// Возвращает сырое значение куки.
-        /// </summary>
-        /// <param name="name">Название куки.</param>
-        /// <returns>Значение куки, если она задана, иначе пустая строка.</returns>
-        /// <remarks>Это куки, которые были заданы в текущем ответе. Их сырые значения могут быть использованы для получения каких-нибудь дополнительных данных.</remarks>
-        public Cookie GetRawCookie(string name)
-        {
-            Cookie value;
-
-            if (!_rawCookies.TryGetValue(name, out value))
-                value = null;
-
-            return value;
-        }
-
-        /// <summary>
-        /// Возвращает перечисляемую коллекцию сырых значений куки.
-        /// </summary>
-        /// <returns>Коллекция сырых значений куки.</returns>
-        /// <remarks>Это куки, которые были заданы в текущем ответе. Их сырые значения могут быть использованы для получения каких-нибудь дополнительных данных.</remarks>
-        public Dictionary<string, Cookie>.Enumerator EnumerateRawCookies()
-        {
-            return _rawCookies.GetEnumerator();
-        }
-
+        
         #endregion
 
         #region Работа с заголовками
@@ -972,12 +936,12 @@ namespace SharpNet
             MaximumKeepAliveRequests = null;
 
             _headers.Clear();
-            _rawCookies.Clear();
+            //_rawCookies.Clear();
 
             if (_request.Cookies != null && !_request.Cookies.IsLocked)
                 Cookies = _request.Cookies;
             else
-                Cookies = new CookieDictionary();
+                Cookies = new CookieStorage();
 
             if (_receiverHelper == null)
             {
@@ -1101,6 +1065,7 @@ namespace SharpNet
             return value.Substring(index, indexEnd - index);                
         }
 
+        /*
         private void SetCookie(string value)
         {
             if (value.Length == 0)
@@ -1220,7 +1185,7 @@ namespace SharpNet
             }
 
             _rawCookies[cookieName] = cRaw;
-        }
+        }*/
 
         private void ReceiveHeaders()
         {
@@ -1248,7 +1213,7 @@ namespace SharpNet
 
                 if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase))
                 {
-                    SetCookie(headerValue);
+                    Cookies.Set(_request.Address, headerValue);
                 }
                 else
                 {
