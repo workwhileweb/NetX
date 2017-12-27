@@ -293,14 +293,11 @@ namespace SharpNet
             {
                 using (var regKey = Registry.ClassesRoot.OpenSubKey(extension))
                 {
-                    if (regKey != null)
-                    {
-                        object keyValue = regKey.GetValue("Content Type");
+                    var keyValue = regKey?.GetValue("Content Type");
 
-                        if (keyValue != null)
-                        {
-                            mediaType = keyValue.ToString();
-                        }
+                    if (keyValue != null)
+                    {
+                        mediaType = keyValue.ToString();
                     }
                 }
             }
@@ -329,7 +326,7 @@ namespace SharpNet
             string version = null;
             string mozillaVersion = null;
             string trident = null;
-            string otherParams = null;
+            string otherParams;
 
             #region Генерация случайной версии
 
@@ -375,9 +372,8 @@ namespace SharpNet
 
             #endregion
 
-            return string.Format(
-                "Mozilla/{0} (compatible; MSIE {1}; {2}; Trident/{3}; {4})",
-                mozillaVersion, version, windowsVersion, trident, otherParams);
+            return
+                $"Mozilla/{mozillaVersion} (compatible; MSIE {version}; {windowsVersion}; Trident/{trident}; {otherParams})";
         }
 
         /// <summary>
@@ -416,9 +412,7 @@ namespace SharpNet
 
             #endregion
 
-            return string.Format(
-                "Opera/9.80 ({0}); U) Presto/{1} Version/{2}",
-                RandomWindowsVersion(), presto, version);
+            return $"Opera/9.80 ({RandomWindowsVersion()}); U) Presto/{presto} Version/{version}";
         }
 
         /// <summary>
@@ -462,9 +456,8 @@ namespace SharpNet
 
             #endregion
 
-            return string.Format(
-                "Mozilla/5.0 ({0}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{1} Safari/{2}",
-                RandomWindowsVersion(), version, safari);
+            return
+                $"Mozilla/5.0 ({RandomWindowsVersion()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{version} Safari/{safari}";
         }
 
         /// <summary>
@@ -552,9 +545,7 @@ namespace SharpNet
 
             #endregion
 
-            return string.Format(
-                "Opera/9.80 ({0}; Opera Mini/{1}/28.2555; U; ru) Presto/{2} Version/{3}",
-                os, miniVersion, presto, version);
+            return $"Opera/9.80 ({os}; Opera Mini/{miniVersion}/28.2555; U; ru) Presto/{presto} Version/{version}";
         }
 
         #endregion
