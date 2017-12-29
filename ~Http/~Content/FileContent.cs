@@ -6,7 +6,7 @@ namespace SharpNet
     /// <summary>
     /// Представляет тело запроса в виде потока данных из определённого файла.
     /// </summary>
-    internal class FileContent : StreamContent
+    public class FileContent : StreamContent
     {
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="FileContent"/> и открывает поток файла.

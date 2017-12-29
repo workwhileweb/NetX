@@ -6,7 +6,7 @@ namespace SharpNet
     /// <summary>
     /// Представляет тело запроса в виде байтов.
     /// </summary>
-    internal class BytesContent : HttpContent
+    public class BytesContent : HttpContent
     {
         #region Поля (защищённые)
 

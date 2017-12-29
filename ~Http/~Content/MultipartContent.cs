@@ -10,7 +10,7 @@ namespace SharpNet
     /// <summary>
     /// Представляет тело запроса в виде состовного содержимого.
     /// </summary>
-    internal class MultipartContent : HttpContent, IEnumerable<HttpContent>
+    public class MultipartContent : HttpContent, IEnumerable<HttpContent>
     {
         private sealed class Element
         {

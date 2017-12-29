@@ -6,7 +6,7 @@ namespace SharpNet
     /// <summary>
     /// Представляет тело запроса в виде потока.
     /// </summary>
-    internal class StreamContent : HttpContent
+    public class StreamContent : HttpContent
     {
         #region Поля (защищённые электромагнитным излучением)
 

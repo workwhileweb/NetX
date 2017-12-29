@@ -6,7 +6,7 @@ namespace SharpNet
     /// <summary>
     /// Представляет тело запроса в виде строки.
     /// </summary>
-    internal class StringContent : BytesContent
+    public class StringContent : BytesContent
     {
         #region Конструкторы (открытые)
 

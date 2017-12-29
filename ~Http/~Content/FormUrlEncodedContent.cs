@@ -7,7 +7,7 @@ namespace SharpNet
     /// <summary>
     /// Представляет тело запроса в виде параметров запроса.
     /// </summary>
-    internal class FormUrlEncodedContent : BytesContent
+    public class FormUrlEncodedContent : BytesContent
     {
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="FormUrlEncodedContent"/>.
