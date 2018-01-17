@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Представляет тело запроса. Освбождается сразу после отправки.

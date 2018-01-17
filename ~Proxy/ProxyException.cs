@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Исключение, которое выбрасывается, в случае возникновения ошибки при работе с прокси.
@@ -32,7 +32,7 @@ namespace SharpNet
             : base(message, innerException) { }
 
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="SharpNet.Net.ProxyException"/> заданным сообщением об ошибке и прокси-клиентом.
+        /// Инициализирует новый экземпляр класса <see cref="Leaf.Net.Net.ProxyException"/> заданным сообщением об ошибке и прокси-клиентом.
         /// </summary>
         /// <param name="message">Сообщение об ошибке с объяснением причины исключения.</param>
         /// <param name="proxyClient">Прокси-клиент, в котором произошла ошибка.</param>

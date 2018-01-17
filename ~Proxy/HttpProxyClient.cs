@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Представляет клиент для HTTP прокси-сервера.
@@ -120,7 +120,7 @@ namespace SharpNet
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="destinationHost"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="destinationHost"/> является пустой строкой.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра <paramref name="destinationPort"/> меньше 1 или больше 65535.</exception>
-        /// <exception cref="SharpNet.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
+        /// <exception cref="Leaf.Net.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
         /// <remarks>Если порт сервера неравен 80, то для подключения используется метод 'CONNECT'.</remarks>
         public override TcpClient CreateConnection(string destinationHost, int destinationPort, TcpClient tcpClient = null)
         {

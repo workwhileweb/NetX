@@ -6,13 +6,13 @@ using System.Resources;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("SharpNet")]
-[assembly: AssemblyDescription("https://github.com/grandsilence/SharpNet")]
+[assembly: AssemblyTitle("Leaf.Net")]
+[assembly: AssemblyDescription("https://github.com/grandsilence/Leaf.Net")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Kelog")]
-[assembly: AssemblyProduct("SharpNet")]
-[assembly: AssemblyCopyright("Copyright © 2017 Grand Silence")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Kelog Studio")]
+[assembly: AssemblyProduct("Leaf.Net")]
+[assembly: AssemblyCopyright("Copyright © 2018. Developed by Grand Silence, Kelog Studio")]
+[assembly: AssemblyTrademark("Kelog™")]
 [assembly: AssemblyCulture("")]
 
 // Параметр ComVisible со значением FALSE делает типы в сборке невидимыми 
@@ -33,6 +33,6 @@ using System.Resources;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.1.0.0")]
+[assembly: AssemblyFileVersion("2.1.0.0")]
 [assembly: NeutralResourcesLanguage("en")]

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     internal delegate void ProgressDelegate(long bytes, long totalBytes, long totalBytesExpected);
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     internal static class ExceptionHelper
     {

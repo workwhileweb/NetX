@@ -1,5 +1,5 @@
 ﻿
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Определяет состояния для класса <see cref="HttpException"/>.

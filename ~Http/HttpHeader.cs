@@ -1,5 +1,5 @@
 ﻿
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// HTTP-заголовки.

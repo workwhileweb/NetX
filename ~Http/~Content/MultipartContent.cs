@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Представляет тело запроса в виде состовного содержимого.

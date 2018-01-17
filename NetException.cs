@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Исключение, которое выбрасывается, в случае возникновения ошибки при работе с сетью.

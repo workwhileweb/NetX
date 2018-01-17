@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Представляет класс, предназначеннный для загрузки ответа от HTTP-сервера.

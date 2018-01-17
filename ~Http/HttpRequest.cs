@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Class to send HTTP-server requests.
@@ -634,7 +634,7 @@ namespace SharpNet
         /// Возвращает или задает куки, связанные с запросом.
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="null"/>.</value>
-        /// <remarks>Куки могут изменяться ответом от HTTP-сервера. Чтобы не допустить этого, нужно установить свойство <see cref="SharpNet.CookieStorage.IsLocked"/> равным <see langword="true"/>.</remarks>
+        /// <remarks>Куки могут изменяться ответом от HTTP-сервера. Чтобы не допустить этого, нужно установить свойство <see cref="Leaf.Net.CookieStorage.IsLocked"/> равным <see langword="true"/>.</remarks>
         public CookieStorage Cookies { get; set; }
 
         #endregion
@@ -919,7 +919,7 @@ namespace SharpNet
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Get(string address, RequestParams urlParams = null)
         {
             if (urlParams != null)
@@ -937,7 +937,7 @@ namespace SharpNet
         /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Get(Uri address, RequestParams urlParams = null)
         {
             if (urlParams != null)
@@ -955,7 +955,7 @@ namespace SharpNet
         /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> GetAsync(string address, RequestParams urlParams = null)
         {
             return await Task.Run(() => {
@@ -970,7 +970,7 @@ namespace SharpNet
         /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> GetAsync(Uri address, RequestParams urlParams = null)
         {
             return await Task.Run<HttpResponse>(() =>
@@ -989,7 +989,7 @@ namespace SharpNet
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(string address)
         {
             return Raw(HttpMethod.POST, address);
@@ -1002,7 +1002,7 @@ namespace SharpNet
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address)
         {
            return await Task.Run(() => {
@@ -1016,7 +1016,7 @@ namespace SharpNet
         /// <param name="address">Адрес интернет-ресурса.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(Uri address)
         {
             return Raw(HttpMethod.POST, address);
@@ -1028,7 +1028,7 @@ namespace SharpNet
         /// <param name="address">Адрес интернет-ресурса.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address)
         {
             return await Task.Run(() => {
@@ -1049,7 +1049,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(string address, RequestParams reqParams, bool dontEscape = false)
         {
             #region Проверка параметров
@@ -1078,7 +1078,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, RequestParams reqParams, bool dontEscape = false)
         {
             return await Task.Run(() => {
@@ -1098,7 +1098,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(Uri address, RequestParams reqParams, bool dontEscape = false)
         {
             #region Проверка параметров
@@ -1125,7 +1125,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, RequestParams reqParams, bool dontEscape = false)
         {
             return await Task.Run(() => {
@@ -1154,7 +1154,7 @@ namespace SharpNet
         /// -или
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(string address, string str, string contentType)
         {
             #region Проверка параметров
@@ -1210,7 +1210,7 @@ namespace SharpNet
         /// -или
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, string str, string contentType)
         {
             return await Task.Run(() => {
@@ -1237,7 +1237,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(Uri address, string str, string contentType)
         {
             #region Проверка параметров
@@ -1291,7 +1291,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, string str, string contentType)
         {
             return await Task.Run(() => {
@@ -1318,7 +1318,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(string address, byte[] bytes, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1367,7 +1367,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, byte[] bytes, string contentType = "application/octet-stream")
         {
             return await Task.Run(() => {
@@ -1390,7 +1390,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(Uri address, byte[] bytes, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1436,7 +1436,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, byte[] bytes, string contentType = "application/octet-stream")
         {
             return await Task.Run(() =>
@@ -1464,7 +1464,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(string address, Stream stream, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1513,7 +1513,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, Stream stream, string contentType = "application/octet-stream")
         {
             return await Task.Run(() => {
@@ -1536,7 +1536,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(Uri address, Stream stream, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1581,7 +1581,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, Stream stream, string contentType = "application/octet-stream")
         {
             return await Task.Run(() => {
@@ -1605,7 +1605,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="path"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(string address, string path)
         {
             #region Проверка параметров
@@ -1641,7 +1641,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="path"/> является пустой строкой.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, string path)
         {
             return await Task.Run(() => {
@@ -1661,7 +1661,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(Uri address, string path)
         {
             #region Проверка параметров
@@ -1693,7 +1693,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, string path)
         {
             return await Task.Run(() => {
@@ -1713,7 +1713,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(string address, HttpContent content)
         {
             #region Проверка параметров
@@ -1740,7 +1740,7 @@ namespace SharpNet
         /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(string address, HttpContent content)
         {
             return await Task.Run(() => {
@@ -1759,7 +1759,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Post(Uri address, HttpContent content)
         {
             #region Проверка параметров
@@ -1786,7 +1786,7 @@ namespace SharpNet
         /// -или-
         /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
         /// </exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public async Task<HttpResponse> PostAsync(Uri address, HttpContent content)
         {        
             return await Task.Run(() => {
@@ -1807,7 +1807,7 @@ namespace SharpNet
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Raw(HttpMethod method, string address, HttpContent content = null)
         {
             #region Проверка параметров
@@ -1841,7 +1841,7 @@ namespace SharpNet
         /// <param name="content">Контент, отправляемый HTTP-серверу, или значение <see langword="null"/>.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="SharpNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Raw(HttpMethod method, Uri address, HttpContent content = null)
         {
             #region Проверка параметров

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Представляет данные для события, сообщающим о прогрессе выгрузки данных.

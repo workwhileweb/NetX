@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     internal static class HttpExtensions
     {

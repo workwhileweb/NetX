@@ -1,19 +1,18 @@
-# SharpNet
-### beta
+# Leaf.Net
+### Beta Release 2.1.0
 
-[![NuGet version](https://badge.fury.io/nu/SharpNet.svg)](https://badge.fury.io/nu/SharpNet)
+[![NuGet version](https://badge.fury.io/nu/Leaf.Net.svg)](https://badge.fury.io/nu/Leaf.Net)
 
-**SharpNet** beta - provides Http(s), Socks4a, Socks4, Socks5, Chain proxy for .Net framework's HttpClient class
+**Leaf.Net** beta - provides Http(s), Socks4a, Socks4, Socks5, Chain proxy for .Net framework's HttpClient class
 
-**SharpNet** it's a fork of [xNet](https://github.com/X-rus/xNet)
+**Leaf.Net** it's a based on [Extreme.Net](https://github.com/Fedorus/Extreme.Net). And original library [xNet](https://github.com/X-rus/xNet).
 
 
 # Installation
- 
-Install via NuGet
- 
+Install via NuGet will be in the future.
+
 ```
-PM > Install-Package SharpNet
+// PM > Install-Package Leaf.Net
 ```
  
 # Examples
@@ -32,4 +31,4 @@ PM > Install-Package SharpNet
 
     var response = await client.PostAsync("http://httpbin.org/post", encodedContent);
     var content  = await response.Content.ReadAsStringAsync();
-``` 
+```

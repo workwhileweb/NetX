@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.Win32;
 using System.Net.Security;
 
-namespace SharpNet
+namespace Leaf.Net
 {
     /// <summary>
     /// Представляет статический класс, предназначенный для помощи в работе с HTTP-протоколом.
