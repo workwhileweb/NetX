@@ -1228,7 +1228,8 @@ namespace Leaf.Net
 
         private IEnumerable<BytesWraper> GetMessageBodySource()
         {
-            if (_headers.ContainsKey("Content-Encoding"))
+            if (_headers.ContainsKey("Content-Encoding") &&
+                !string.Equals(_headers["Content-Encoding"], "utf-8", StringComparison.OrdinalIgnoreCase)) // Yandex oauth
             {
                 return GetMessageBodySourceZip();
             }

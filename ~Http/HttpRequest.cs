@@ -8,6 +8,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security;
 using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -2650,7 +2651,7 @@ namespace Leaf.Net
 
         private void CloseConnectionIfNeeded()
         {
-            var hasConnection = (_connection != null);
+            var hasConnection = _connection != null && _connectionCommonStream != null;
 
             if (hasConnection && !_response.HasError &&
                 !_response.MessageBodyLoaded)
@@ -2952,7 +2953,18 @@ namespace Leaf.Net
                         sslStream = new SslStream(_connectionNetworkStream, false, SslCertificateValidatorCallback);
                     }
 
-                    sslStream.AuthenticateAsClient(address.Host);
+                    var supportedProtocols = SslProtocols.Tls | SslProtocols.Ssl3;
+
+                    // TLS support by https://github.com/avQse. Thank you.
+                    // TLS 1.1 support
+                    if (Enum.IsDefined(typeof(SecurityProtocolType), 768))
+                        supportedProtocols |= (SslProtocols)768;
+
+                    // TLS 1.2 support
+                    if (Enum.IsDefined(typeof(SecurityProtocolType), 3072))
+                        supportedProtocols |= (SslProtocols)3072; 
+                    
+                    sslStream.AuthenticateAsClient(address.Host, new X509CertificateCollection(), supportedProtocols, false);
                     _connectionCommonStream = sslStream;
                 }
                 catch (Exception ex)
@@ -3093,7 +3105,7 @@ namespace Leaf.Net
             #region Content
 
             if (EnableEncodingContent)
-                headers["Accept-Encoding"] = "gzip,deflate";
+                headers["Accept-Encoding"] = "gzip, deflate";
 
             if (Culture != null)
                 headers["Accept-Language"] = GetLanguageHeader();
