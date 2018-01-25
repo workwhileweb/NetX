@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Leaf.Net
 {
     public class CookieStorage
     {
-        private CookieContainer _container;
+        public CookieContainer Container { get; private set; }
 
         public CookieStorage(bool isLocked = false, CookieContainer container = null)
         {
             IsLocked = isLocked;
-            _container = container ?? new CookieContainer();
+            Container = container ?? new CookieContainer();
         }
 
         /// <summary>
@@ -26,32 +21,32 @@ namespace Leaf.Net
 
         public void Set(CookieCollection cookies)
         {
-            _container.Add(cookies);
+            Container.Add(cookies);
         }
 
         public void Set(Cookie cookie)
         {
-            _container.Add(cookie);
+            Container.Add(cookie);
         }
 
         public void Set(string name, string value, string domain, string path = "/")
         {
-            _container.Add(new Cookie(name, value, path, domain));
+            Container.Add(new Cookie(name, value, path, domain));
         }
 
         public void Set(string url, string rawCookie)
         {
-            _container.SetCookies(new Uri(url), rawCookie);
+            Container.SetCookies(new Uri(url), rawCookie);
         }
 
         public void Set(Uri uri, string rawCookie)
         {
-            _container.SetCookies(uri, rawCookie);
+            Container.SetCookies(uri, rawCookie);
         }
 
         public void Clear()
         {
-            _container = new CookieContainer();
+            Container = new CookieContainer();
         }
 
         public void Remove(string url)
@@ -61,7 +56,7 @@ namespace Leaf.Net
 
         public void Remove(Uri uri)
         {
-            var cookies = _container.GetCookies(uri);
+            var cookies = Container.GetCookies(uri);
             foreach (Cookie cookie in cookies)
                 cookie.Expired = true;
         }
@@ -73,7 +68,7 @@ namespace Leaf.Net
 
         public void Remove(Uri uri, string name)
         {
-            var cookies = _container.GetCookies(uri);
+            var cookies = Container.GetCookies(uri);
             foreach (Cookie cookie in cookies)
             {
                 if (cookie.Name == name)
@@ -88,7 +83,7 @@ namespace Leaf.Net
 
         public string GetCookieHeader(Uri uri)
         {
-            return _container.GetCookieHeader(uri);
+            return Container.GetCookieHeader(uri);
         }
 
         public CookieCollection GetCookies(string url)
@@ -98,7 +93,7 @@ namespace Leaf.Net
 
         public CookieCollection GetCookies(Uri uri)
         {
-            return _container.GetCookies(uri);
+            return Container.GetCookies(uri);
         }
 
         public bool ContainsKey(string url, string name)
@@ -108,13 +103,13 @@ namespace Leaf.Net
 
         public bool ContainsKey(Uri uri, string name)
         {
-            if (_container.Count <= 0)
+            if (Container.Count <= 0)
                 return false;
 
-            var cookies = _container.GetCookies(uri);
+            var cookies = Container.GetCookies(uri);
             return cookies[name] != null;
         }
 
-        public int Count => _container.Count;
+        public int Count => Container.Count;
     }
 }

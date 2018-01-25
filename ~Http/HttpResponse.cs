@@ -327,6 +327,9 @@ namespace Leaf.Net
         private readonly Dictionary<string, string> _headers =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+
+        private string _loadedMessageBody = null;
+        //private MemoryStream _loadedMessageBody;
         //private readonly CookieStorage _rawCookies = new CookieStorage();
 
         #endregion
@@ -454,7 +457,7 @@ namespace Leaf.Net
         /// Возвращает куки, образовавшиеся в результате запроса, или установленные в <see cref="HttpRequest"/>.
         /// </summary>
         /// <remarks>Если куки были установлены в <see cref="HttpRequest"/> и значение свойства <see cref="CookieStorage.IsLocked"/> равно <see langword="true"/>, то будут созданы новые куки.</remarks>
-        public CookieStorage Cookies { get; private set; }
+        public CookieStorage Cookies { get; private set; }        
 
         /// <summary>
         /// Возвращает время простаивания постоянного соединения в миллисекундах.
@@ -615,7 +618,7 @@ namespace Leaf.Net
 
             if (MessageBodyLoaded)
             {
-                return string.Empty;
+                return _loadedMessageBody;
             }
 
             var memoryStream = new MemoryStream(
@@ -649,10 +652,12 @@ namespace Leaf.Net
 
             MessageBodyLoaded = true;
 
-            string text = CharacterSet.GetString(
+            _loadedMessageBody = CharacterSet.GetString(
                 memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
 
-            return text;
+            memoryStream.Dispose(); // TODO: case to an error?
+
+            return _loadedMessageBody;
         }
 
         /// <summary>
