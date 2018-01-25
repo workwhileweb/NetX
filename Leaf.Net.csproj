@@ -53,12 +53,8 @@
     <Compile Include="RequestParams.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolution.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolver.cs" />
-    <Compile Include="Services\Cloudflare\ClearanceHandler.cs" />
-    <Compile Include="Services\Cloudflare\CloudflareClearanceException.cs" />
-    <Compile Include="Services\Cloudflare\CookieExtensions.cs" />
-    <Compile Include="Services\Cloudflare\HttpHeader.cs" />
-    <Compile Include="Services\Cloudflare\HttpMessageHandlerExtensions.cs" />
-    <Compile Include="Services\Cloudflare\HttpRequestExtentions.cs" />
+    <Compile Include="Services\Cloudflare\CloudflareBypass.cs" />
+    <Compile Include="Services\Cloudflare\CloudflareException.cs" />
     <Compile Include="~Extensions\HttpExtensions.cs" />
     <Compile Include="~Http\CookieStorage.cs" />
     <Compile Include="~Http\HttpExceptionStatus.cs" />

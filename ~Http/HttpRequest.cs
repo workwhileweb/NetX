@@ -257,7 +257,9 @@ namespace Leaf.Net
         private EventHandler<UploadProgressChangedEventArgs> _uploadProgressChangedHandler;
         private EventHandler<DownloadProgressChangedEventArgs> _downloadProgressChangedHandler;
 
-
+        // Переменные для хранения исходных свойств для переключателя ManualMode (ручной режим)
+        private bool _tempAllowAutoRedirect;
+        private bool _tempIgnoreProtocolErrors;
         #endregion
 
 
@@ -339,6 +341,31 @@ namespace Leaf.Net
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="true"/>.</value>
         public bool AllowAutoRedirect { get; set; }
+
+        /// <summary>
+        /// Пререводит работу запросами в ручной режим. Указав значение false - вернет исходные значения полей AllowAutoRedirect и IgnoreProtocolErrors.
+        /// 1. Отключаются проверка возвращаемых HTTP кодов, исключения не будет если код отличнен от 200 OK.
+        /// 2. Отключается автоматическая переадресация. 
+        /// </summary>
+        public bool ManualMode
+        {
+            get => !AllowAutoRedirect && IgnoreProtocolErrors;
+            set {
+                if (value)
+                {
+                    _tempAllowAutoRedirect = AllowAutoRedirect;
+                    _tempIgnoreProtocolErrors = IgnoreProtocolErrors;
+
+                    AllowAutoRedirect = false;
+                    IgnoreProtocolErrors = true;
+                }
+                else
+                {
+                    AllowAutoRedirect = _tempAllowAutoRedirect;
+                    IgnoreProtocolErrors = _tempIgnoreProtocolErrors;
+                }
+            }
+        }
 
         /// <summary>
         /// Возвращает или задает максимальное количество последовательных переадресаций.
@@ -2522,13 +2549,14 @@ namespace Leaf.Net
 
         #endregion
 
-
         #region Методы (закрытые)
 
         private void Init()
         {
             KeepAlive = true;
             AllowAutoRedirect = true;
+            _tempAllowAutoRedirect = AllowAutoRedirect;
+
             EnableEncodingContent = true;
 
             _response = new HttpResponse(this);

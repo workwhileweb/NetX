@@ -1,4 +1,5 @@
 ﻿
+// ReSharper disable InconsistentNaming
 namespace Leaf.Net
 {
     /// <summary>
@@ -9,7 +10,9 @@ namespace Leaf.Net
         GET,
         HEAD,
         DELETE,
+        OPTION,        
         POST,
+        PATCH,
         PUT,
     }
 }

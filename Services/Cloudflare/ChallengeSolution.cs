@@ -5,7 +5,7 @@ namespace Leaf.Net.Services.Cloudflare
     /// <summary>
     /// Holds the information, which is required to pass the CloudFlare clearance.
     /// </summary>
-    public struct ChallengeSolution : IEquatable<ChallengeSolution>
+    internal struct ChallengeSolution : IEquatable<ChallengeSolution>
     {
         public ChallengeSolution(string clearancePage, string verificationCode, string pass, int answer)
         {

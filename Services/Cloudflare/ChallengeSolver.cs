@@ -7,7 +7,7 @@ namespace Leaf.Net.Services.Cloudflare
     /// <summary>
     /// Provides methods to solve the JavaScript challenge, which is part of CloudFlares clearance process.
     /// </summary>
-    public static class ChallengeSolver
+    internal static class ChallengeSolver
     {
         private const string ScriptTagPattern = @"<script\b[^>]*>(?<Content>.*?)<\/script>";
         private const string ObfuscatedNumberPattern = @"(?<Number>[\(\)\+\!\[\]]+)";
