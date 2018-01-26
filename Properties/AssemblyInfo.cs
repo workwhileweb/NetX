@@ -7,7 +7,7 @@ using System.Resources;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("Leaf.Net")]
-[assembly: AssemblyDescription("https://github.com/grandsilence/Leaf.Net")]
+[assembly: AssemblyDescription("https://github.com/csharp-leaf/Leaf.Net")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Kelog Studio")]
 [assembly: AssemblyProduct("Leaf.Net")]
@@ -33,6 +33,6 @@ using System.Resources;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("4.0.0.0")]
-[assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: AssemblyVersion("4.1.0.0")]
+[assembly: AssemblyFileVersion("4.1.0.0")]
 [assembly: NeutralResourcesLanguage("en")]
