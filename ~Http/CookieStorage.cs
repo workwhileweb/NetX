@@ -3,6 +3,7 @@ using System.Net;
 
 namespace Leaf.Net
 {
+    [Serializable]
     public class CookieStorage
     {
         public CookieContainer Container { get; private set; }
