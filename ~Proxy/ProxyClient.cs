@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Security;
 using System.Text;
@@ -257,7 +258,18 @@ namespace Leaf.Net
         #endregion
 
 
-        #region Статические методы (открытые)
+        #region Статические методы
+        /// <summary>
+        /// Служит для преобразования строковых прокси к объекту ProxyClient.
+        /// </summary>
+        private static readonly Dictionary<string, ProxyType> ProxyProtocol = new Dictionary<string, ProxyType> {
+            { "http", ProxyType.Http },
+            { "https", ProxyType.Http },
+            { "socks4", ProxyType.Socks4 },
+            { "socks4a", ProxyType.Socks4a },
+            { "socks5", ProxyType.Socks5 },
+            { "socks", ProxyType.Socks5 }
+        };
 
         /// <summary>
         /// Преобразует строку в экземпляр класса прокси-клиента, унаследованный от <see cref="ProxyClient"/>.
@@ -334,6 +346,23 @@ namespace Leaf.Net
             return ProxyHelper.CreateProxyClient(proxyType, host, port, username, password);
         }
 
+        /// <inheritdoc cref="Parse(Leaf.Net.ProxyType,string)"/>
+        /// <param name="protoProxyAddress">Строка вида - протокол://хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
+        /// <returns>Экземпляр класса прокси-клиента, унаследованный от <see cref="ProxyClient"/>.</returns>
+        public static ProxyClient Parse(string protoProxyAddress)
+        {
+            var proxy = protoProxyAddress.Split(new[] { "://" }, StringSplitOptions.RemoveEmptyEntries);
+            if (proxy.Length < 2)
+                return null;
+
+            string proto = proxy[0];
+            if (!ProxyProtocol.ContainsKey(proto))
+                return null;
+
+            var proxyType = ProxyProtocol[proto];
+            return Parse(proxyType, proxy[1]);
+        }
+
         /// <summary>
         /// Преобразует строку в экземпляр класса прокси-клиента, унаследованный от <see cref="ProxyClient"/>. Возвращает значение, указывающее, успешно ли выполнено преобразование.
         /// </summary>
@@ -390,6 +419,22 @@ namespace Leaf.Net
             }
 
             return true;
+        }
+
+        /// <inheritdoc cref="TryParse(Leaf.Net.ProxyType,string,out Leaf.Net.ProxyClient)"/>
+        /// <param name="protoProxyAddress">Строка вида - протокол://хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
+        /// <returns>Значение <see langword="true"/>, если параметр <paramref name="protoProxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
+        public static bool TryParse(string protoProxyAddress, out ProxyClient result)
+        {
+            var proxy = protoProxyAddress.Split(new[] {"://"}, StringSplitOptions.RemoveEmptyEntries);
+            if (proxy.Length < 2 || !ProxyProtocol.ContainsKey(proxy[0]))
+            {
+                result = null;
+                return false;
+            }
+
+            var proxyType = ProxyProtocol[proxy[0]];
+            return TryParse(proxyType, proxy[1], out result);
         }
 
         #endregion
