@@ -27,9 +27,9 @@ namespace Leaf.Net
         protected string _password;
 
         /// <summary>Время ожидания в миллисекундах при подключении к прокси-серверу.</summary>
-        protected int _connectTimeout = 60000;
+        protected int _connectTimeout = 9 * 1000; // 9 Seconds
         /// <summary>Время ожидания в миллисекундах при записи в поток или при чтении из него.</summary>
-        protected int _readWriteTimeout = 60000;
+        protected int _readWriteTimeout = 24 * 1000; // 20 Seconds
 
         #endregion
 

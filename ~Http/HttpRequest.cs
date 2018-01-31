@@ -220,8 +220,8 @@ namespace Leaf.Net
         private int _redirectionCount = 0;
         private int _maximumAutomaticRedirections = 5;
 
-        private int _connectTimeout = 60 * 1000;
-        private int _readWriteTimeout = 60 * 1000;
+        private int _connectTimeout = 9 * 1000; // 9 Seconds
+        private int _readWriteTimeout = 24 * 1000; // 24 Seconds
 
         private DateTime _whenConnectionIdle;
         private int _keepAliveTimeout = 30 * 1000;
