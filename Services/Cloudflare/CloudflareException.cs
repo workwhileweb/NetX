@@ -5,6 +5,7 @@ namespace Leaf.Net.Services.Cloudflare
     /// <summary>
     /// The exception that is thrown if Cloudflare clearance failed after the declared number of attempts.
     /// </summary>
+    [Serializable]
     public class CloudflareException : Exception
     {
         public CloudflareException(int attempts) : this(attempts, $"Clearance failed after {attempts} attempt(s).") { }

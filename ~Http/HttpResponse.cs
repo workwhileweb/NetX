@@ -610,8 +610,9 @@ namespace Leaf.Net
 
             if (HasError)
             {
-                throw new InvalidOperationException(
-                    Resources.InvalidOperationException_HttpResponse_HasError);
+                return string.Empty;
+                //throw new InvalidOperationException(
+                  //  Resources.InvalidOperationException_HttpResponse_HasError);
             }
 
             #endregion

@@ -41,6 +41,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +52,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RequestParams.cs" />
+    <Compile Include="Services\Captcha\CaptchaException.cs" />
+    <Compile Include="Services\Captcha\Rucaptcha.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolution.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolver.cs" />
     <Compile Include="Services\Cloudflare\CloudflareBypass.cs" />
