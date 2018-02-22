@@ -19,20 +19,15 @@ namespace Leaf.Net
             set
             {
                 #region Проверка параметра
-
                 if (paramName == null)
-                {
-                    throw new ArgumentNullException("paramName");
-                }
+                    throw new ArgumentNullException(nameof(paramName));
 
                 if (paramName.Length == 0)
-                {
-                    throw ExceptionHelper.EmptyString("paramName");
-                }
+                    throw ExceptionHelper.EmptyString(nameof(paramName));
 
                 #endregion
 
-                string str = (value == null ? string.Empty : value.ToString());
+                string str = value?.ToString() ?? string.Empty;
 
                 Add(new KeyValuePair<string, string>(paramName, str));
             }

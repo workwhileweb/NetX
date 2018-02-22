@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 
@@ -10,20 +6,19 @@ namespace Leaf.Net
 {
     public class ProxyHandler : HttpClientHandler
     {
-        private ProxyClient proxyClient;
+        private readonly ProxyClient _proxyClient;
 
         public ProxyHandler(ProxyClient proxyClient)
         {
-            this.proxyClient = proxyClient;
+            _proxyClient = proxyClient;
         }
         
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            HttpResponseMessage response = null;
             HttpResponse httpResponse;
 
             var httpRequest   = request.ToHttpRequest(CookieContainer);
-            httpRequest.Proxy = proxyClient;
+            httpRequest.Proxy = _proxyClient;
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -44,36 +39,34 @@ namespace Leaf.Net
 
             HttpExtensions.FillCookieContainer(CookieContainer, httpResponse);
 
-            response = httpResponse.ToHttpResponseMessage();
+            var response = httpResponse.ToHttpResponseMessage();
             response.RequestMessage = request;
 
             var stream = httpResponse.ToMemoryStream();
             if (stream != null)
-            {
                 response.Content = new ProgressStreamContent(stream, CancellationToken.None);
-            }
 
             return response;
         }
 
-        private async Task<HttpResponse> GetAsync(HttpRequest request, HttpRequestMessage message)
+        private static async Task<HttpResponse> GetAsync(HttpRequest request, HttpRequestMessage message)
         {
             return await request.GetAsync(message.RequestUri.ToString());
         }
 
-        private async Task<HttpResponse> PostAsync(HttpRequest request, HttpRequestMessage message)
+        private static async Task<HttpResponse> PostAsync(HttpRequest request, HttpRequestMessage message)
         {
             var content = await message.Content.ReadAsByteArrayAsync();
             return await request.PostAsync(message.RequestUri.ToString(), content);
         }
 
-        private async Task<HttpResponse> RawAsync(HttpRequest request, HttpRequestMessage message)
+        private static async Task<HttpResponse> RawAsync(HttpRequest request, HttpRequestMessage message)
         {
             var method = ConvertMethod(message.Method);
             return await request.RawAsync(method, message.RequestUri.ToString());
         }
 
-        private HttpMethod ConvertMethod(System.Net.Http.HttpMethod netHttpMethod)
+        private static HttpMethod ConvertMethod(System.Net.Http.HttpMethod netHttpMethod)
         {
             if (netHttpMethod == System.Net.Http.HttpMethod.Head)
                 return HttpMethod.HEAD;

@@ -3,14 +3,12 @@ using System.Net;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Leaf.Net
 {
     internal static class HttpExtensions
     {
-        readonly static Dictionary<string, string> headerSeparators = new Dictionary<string, string>(){
+        private static readonly Dictionary<string, string> HeaderSeparators = new Dictionary<string, string>(){
                 {"User-Agent", " "}
         };
 
@@ -47,7 +45,7 @@ namespace Leaf.Net
 
             foreach (var keyValue in headers)
             {
-                httpRequest.AddHeader(keyValue.Key, String.Join(GetHeaderSeparator(keyValue.Key), keyValue.Value));
+                httpRequest.AddHeader(keyValue.Key, string.Join(GetHeaderSeparator(keyValue.Key), keyValue.Value));
             }
 
             return httpRequest;
@@ -65,12 +63,7 @@ namespace Leaf.Net
 
         private static string GetHeaderSeparator(string name)
         {
-            if (headerSeparators.ContainsKey(name))
-            {
-                return headerSeparators[name];
-            }
-
-            return ",";
+            return HeaderSeparators.ContainsKey(name) ? HeaderSeparators[name] : ",";
         }
     }
 }

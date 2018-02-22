@@ -20,7 +20,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает код состояния ответа от HTTP-сервера.
         /// </summary>
-        public HttpStatusCode HttpStatusCode { get; private set; }
+        public HttpStatusCode HttpStatusCode { get; }
 
         #endregion
 
@@ -86,11 +86,8 @@ namespace Leaf.Net
         {
             base.GetObjectData(serializationInfo, streamingContext);
 
-            if (serializationInfo != null)
-            {
-                serializationInfo.AddValue("Status", (int)Status);
-                serializationInfo.AddValue("HttpStatusCode", (int)HttpStatusCode);
-            }
+            serializationInfo.AddValue("Status", (int)Status);
+            serializationInfo.AddValue("HttpStatusCode", (int)HttpStatusCode);
         }
     }
 }

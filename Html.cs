@@ -8,11 +8,12 @@ namespace Leaf.Net
     /// <summary>
     /// Static class for help working with HTML and other text data
     /// </summary>
+    /// TODO: refactor. Remove dub code.
     public static class Html
     {
         #region Static Fields (private)
 
-        private static readonly Dictionary<string, string> _htmlMnemonics = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> HtmlMnemonics = new Dictionary<string, string>()
         {
             { "apos", "'" },
             { "quot", "\"" },
@@ -47,7 +48,7 @@ namespace Leaf.Net
                 {
                     string value;
 
-                    if (_htmlMnemonics.TryGetValue(match.Groups["text"].Value, out value))
+                    if (HtmlMnemonics.TryGetValue(match.Groups["text"].Value, out value))
                     {
                         return value;
                     }
