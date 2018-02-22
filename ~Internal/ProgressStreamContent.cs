@@ -1,10 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 
@@ -15,7 +11,7 @@ namespace Leaf.Net
     internal class ProgressStreamContent : System.Net.Http.StreamContent
     {
         public ProgressStreamContent(Stream stream, CancellationToken token)
-               : this(new ProgressStream(stream, token))
+            : this(new ProgressStream(stream, token))
         {
         }
 
@@ -24,34 +20,28 @@ namespace Leaf.Net
         {
         }
 
-        ProgressStreamContent(ProgressStream stream)
-            : base(stream)
-        {
-            init(stream);
-        }
+        private ProgressStreamContent(ProgressStream stream)
+            : base(stream) => Init(stream);
 
-        ProgressStreamContent(ProgressStream stream, int bufferSize)
-            : base(stream, bufferSize)
-        {
-            init(stream);
-        }
+        private ProgressStreamContent(ProgressStream stream, int bufferSize)
+            : base(stream, bufferSize) => Init(stream);
 
-        void init(ProgressStream stream)
+        private void Init(ProgressStream stream)
         {
-            stream.ReadCallback = readBytes;
+            stream.ReadCallback = ReadBytes;
 
             Progress = delegate { };
         }
 
-        void reset()
+        private void Reset()
         {
             _totalBytes = 0L;
         }
 
-        long _totalBytes;
-        long _totalBytesExpected = -1;
+        private long _totalBytes;
+        private long _totalBytesExpected = -1;
 
-        void readBytes(long bytes)
+        private void ReadBytes(long bytes)
         {
             if (_totalBytesExpected == -1)
                 _totalBytesExpected = Headers.ContentLength ?? -1;
@@ -67,20 +57,16 @@ namespace Leaf.Net
             Progress(bytes, _totalBytes, _totalBytesExpected);
         }
 
-        ProgressDelegate _progress;
+        private ProgressDelegate _progress;
         public ProgressDelegate Progress
         {
-            get { return _progress; }
-            set
-            {
-                if (value == null) _progress = delegate { };
-                else _progress = value;
-            }
+            get => _progress;
+            set => _progress = value ?? delegate { };
         }
 
         protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
-            reset();
+            Reset();
             return base.SerializeToStreamAsync(stream, context);
         }
 
@@ -91,34 +77,34 @@ namespace Leaf.Net
             return result;
         }
 
-        class ProgressStream : Stream
+        private class ProgressStream : Stream
         {
-            CancellationToken token;
+            private CancellationToken _token;
 
             public ProgressStream(Stream stream, CancellationToken token)
             {
                 ParentStream = stream;
-                this.token = token;
+                _token = token;
 
                 ReadCallback = delegate { };
                 WriteCallback = delegate { };
             }
 
-            public Action<long> ReadCallback { get; set; }
+            public Action<long> ReadCallback { private get; set; }
 
-            public Action<long> WriteCallback { get; set; }
+            private Action<long> WriteCallback { get;}
 
-            public Stream ParentStream { get; private set; }
+            private Stream ParentStream { get; }
 
-            public override bool CanRead { get { return ParentStream.CanRead; } }
+            public override bool CanRead => ParentStream.CanRead;
 
-            public override bool CanSeek { get { return ParentStream.CanSeek; } }
+            public override bool CanSeek => ParentStream.CanSeek;
 
-            public override bool CanWrite { get { return ParentStream.CanWrite; } }
+            public override bool CanWrite => ParentStream.CanWrite;
 
-            public override bool CanTimeout { get { return ParentStream.CanTimeout; } }
+            public override bool CanTimeout => ParentStream.CanTimeout;
 
-            public override long Length { get { return ParentStream.Length; } }
+            public override long Length => ParentStream.Length;
 
             public override void Flush()
             {
@@ -132,13 +118,13 @@ namespace Leaf.Net
 
             public override long Position
             {
-                get { return ParentStream.Position; }
-                set { ParentStream.Position = value; }
+                get => ParentStream.Position;
+                set => ParentStream.Position = value;
             }
 
             public override int Read(byte[] buffer, int offset, int count)
             {
-                token.ThrowIfCancellationRequested();
+                _token.ThrowIfCancellationRequested();
 
                 var readCount = ParentStream.Read(buffer, offset, count);
                 ReadCallback(readCount);
@@ -147,27 +133,27 @@ namespace Leaf.Net
 
             public override long Seek(long offset, SeekOrigin origin)
             {
-                token.ThrowIfCancellationRequested();
+                _token.ThrowIfCancellationRequested();
                 return ParentStream.Seek(offset, origin);
             }
 
             public override void SetLength(long value)
             {
-                token.ThrowIfCancellationRequested();
+                _token.ThrowIfCancellationRequested();
                 ParentStream.SetLength(value);
             }
 
             public override void Write(byte[] buffer, int offset, int count)
             {
-                token.ThrowIfCancellationRequested();
+                _token.ThrowIfCancellationRequested();
                 ParentStream.Write(buffer, offset, count);
                 WriteCallback(count);
             }
 
             public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {
-                token.ThrowIfCancellationRequested();
-                var linked = CancellationTokenSource.CreateLinkedTokenSource(token, cancellationToken);
+                _token.ThrowIfCancellationRequested();
+                var linked = CancellationTokenSource.CreateLinkedTokenSource(_token, cancellationToken);
 
                 var readCount = await ParentStream.ReadAsync(buffer, offset, count, linked.Token);
 
@@ -177,23 +163,29 @@ namespace Leaf.Net
 
             public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {
-                token.ThrowIfCancellationRequested();
+                _token.ThrowIfCancellationRequested();
 
-                var linked = CancellationTokenSource.CreateLinkedTokenSource(token, cancellationToken);
+                var linked = CancellationTokenSource.CreateLinkedTokenSource(_token, cancellationToken);
                 var task = ParentStream.WriteAsync(buffer, offset, count, linked.Token);
 
                 WriteCallback(count);
                 return task;
             }
 
+
+            #region Dispose
+            private bool _disposed;
             protected override void Dispose(bool disposing)
             {
+                if (_disposed)
+                    return;
+                
                 if (disposing)
-                {
-                    ParentStream.Dispose();
-                }
-            }
+                    ParentStream?.Dispose();
 
+                _disposed = true;
+            }
+            #endregion
         }
     }
 }

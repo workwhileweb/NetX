@@ -68,11 +68,11 @@ namespace Leaf.Net
         protected HttpException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {
-            if (serializationInfo != null)
-            {
-                Status = (HttpExceptionStatus)serializationInfo.GetInt32("Status");
-                HttpStatusCode = (HttpStatusCode)serializationInfo.GetInt32("HttpStatusCode");
-            }
+            if (serializationInfo == null)
+                return;
+
+            Status = (HttpExceptionStatus)serializationInfo.GetInt32("Status");
+            HttpStatusCode = (HttpStatusCode)serializationInfo.GetInt32("HttpStatusCode");
         }
 
 

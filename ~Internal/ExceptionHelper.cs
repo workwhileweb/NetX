@@ -28,18 +28,10 @@ namespace Leaf.Net
 
         internal static ArgumentOutOfRangeException WrongTcpPort(string paramName)
         {
-            return new ArgumentOutOfRangeException("port", string.Format(
+            return new ArgumentOutOfRangeException(paramName, string.Format(
                 Resources.ArgumentOutOfRangeException_CanNotBeLessOrGreater, 1, 65535));
         }
 
-        internal static bool ValidateTcpPort(int port)
-        {
-            if (port < 1 || port > 65535)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        internal static bool ValidateTcpPort(int port) => port >= 1 && port <= 65535;
     }
 }
