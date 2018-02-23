@@ -220,7 +220,7 @@ namespace Leaf.Net
         public event EventHandler<UploadProgressChangedEventArgs> UploadProgressChanged
         {
             add => _uploadProgressChangedHandler += value;
-            remove => _uploadProgressChangedHandler -= value;
+            remove => _uploadProgressChangedHandler -= value; // TODO: delegate sub
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace Leaf.Net
         public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged
         {
             add => _downloadProgressChangedHandler += value;
-            remove => _downloadProgressChangedHandler -= value;
+            remove => _downloadProgressChangedHandler -= value; // TODO: delegate sub
         }
 
         #endregion
@@ -2317,8 +2317,8 @@ namespace Leaf.Net
         {
             var proxy = GetProxy();
 
-            var hasConnection = (TcpClient != null);
-            var proxyChanged = (_currentProxy != proxy);
+            var hasConnection = TcpClient != null;
+            var proxyChanged = !Equals(_currentProxy, proxy);
 
             var addressChanged =
                 (previousAddress == null) ||
@@ -2574,9 +2574,7 @@ namespace Leaf.Net
             {
                 try
                 {
-                    SslStream sslStream;
-
-                    sslStream = SslCertificateValidatorCallback == null 
+                    var sslStream = SslCertificateValidatorCallback == null 
                         ? new SslStream(ClientNetworkStream, false, Http.AcceptAllCertificationsCallback) 
                         : new SslStream(ClientNetworkStream, false, SslCertificateValidatorCallback);
 
@@ -2671,16 +2669,10 @@ namespace Leaf.Net
 
         private Dictionary<string, string> GenerateCommonHeaders(HttpMethod method, long contentLength = 0, string contentType = null)
         {
-            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            #region Host
-
-            headers["Host"] = Address.IsDefaultPort 
-                ? Address.Host
-                : $"{Address.Host}:{Address.Port}";
-
-            #endregion
-
+            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
+                ["Host"] = Address.IsDefaultPort ? Address.Host : $"{Address.Host}:{Address.Port}"
+            };
+            
             #region Connection и Authorization
 
             HttpProxyClient httpProxy = null;
@@ -2701,9 +2693,7 @@ namespace Leaf.Net
                 }
             }
             else
-            {
                 headers["Connection"] = KeepAlive ? "keep-alive" : "close";
-            }
 
             if (!string.IsNullOrEmpty(Username) || !string.IsNullOrEmpty(Password))
                 headers["Authorization"] = GetAuthorizationHeader();
@@ -2787,6 +2777,7 @@ namespace Leaf.Net
             // В приоритете найти прокси, который требует авторизацию.
             foreach (var proxy in chainProxy.Proxies)
             {
+                // ReSharper disable once SwitchStatementMissingSomeCases
                 switch (proxy.Type) {
                     case ProxyType.HTTP:
                         foundProxy = proxy as HttpProxyClient;

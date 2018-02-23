@@ -11,11 +11,11 @@ namespace Leaf.Net
         #region Поля (защищённые электромагнитным излучением)
 
         /// <summary>Содержимое тела запроса.</summary>
-        protected Stream _content;
+        protected Stream ContentStream;
         /// <summary>Размер буфера в байтах для потока.</summary>
-        protected int _bufferSize;
+        protected int BufferSize;
         /// <summary>Позиция в байтах, с которой начинается считывание данных из потока.</summary>
-        protected long _initialStreamPosition;
+        protected long InitialStreamPosition;
 
         #endregion
 
@@ -29,24 +29,24 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentException">Поток <paramref name="content"/> не поддерживает чтение или перемещение позиции.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException"> Значение параметра <paramref name="bufferSize"/> меньше 1.</exception>
         /// <remarks>По умолчанию используется тип контента - 'application/octet-stream'.</remarks>
-        public StreamContent(Stream content, int bufferSize = 32768)
+        public StreamContent(Stream contentStream, int bufferSize = 32768)
         {
             #region Проверка параметров
 
-            if (content == null)
-                throw new ArgumentNullException(nameof(content));
+            if (contentStream == null)
+                throw new ArgumentNullException(nameof(contentStream));
 
-            if (!content.CanRead || !content.CanSeek)
-                throw new ArgumentException(Resources.ArgumentException_CanNotReadOrSeek, nameof(content));
+            if (!contentStream.CanRead || !contentStream.CanSeek)
+                throw new ArgumentException(Resources.ArgumentException_CanNotReadOrSeek, nameof(contentStream));
 
             if (bufferSize < 1)
                 throw ExceptionHelper.CanNotBeLess(nameof(bufferSize), 1);
 
             #endregion
 
-            _content = content;
-            _bufferSize = bufferSize;
-            _initialStreamPosition = _content.Position;
+            ContentStream = contentStream;
+            BufferSize = bufferSize;
+            InitialStreamPosition = ContentStream.Position;
 
             _contentType = "application/octet-stream";
         }
@@ -69,7 +69,7 @@ namespace Leaf.Net
         {
             ThrowIfDisposed();
 
-            return _content.Length;
+            return ContentStream.Length;
         }
 
         /// <summary>
@@ -89,13 +89,13 @@ namespace Leaf.Net
 
             #endregion
 
-            _content.Position = _initialStreamPosition;
+            ContentStream.Position = InitialStreamPosition;
 
-            var buffer = new byte[_bufferSize];
+            var buffer = new byte[BufferSize];
 
             while (true)
             {
-                int bytesRead = _content.Read(buffer, 0, buffer.Length);
+                int bytesRead = ContentStream.Read(buffer, 0, buffer.Length);
 
                 if (bytesRead == 0)
                     break;
@@ -113,17 +113,17 @@ namespace Leaf.Net
         /// <param name="disposing">Значение <see langword="true"/> позволяет освободить управляемые и неуправляемые ресурсы; значение <see langword="false"/> позволяет освободить только неуправляемые ресурсы.</param>
         protected override void Dispose(bool disposing)
         {
-            if (!disposing || _content == null)
+            if (!disposing || ContentStream == null)
                 return;
 
-            _content.Dispose();
-            _content = null;
+            ContentStream.Dispose();
+            ContentStream = null;
         }
 
 
         private void ThrowIfDisposed()
         {
-            if (_content == null)
+            if (ContentStream == null)
                 throw new ObjectDisposedException("StreamContent");
         }
     }

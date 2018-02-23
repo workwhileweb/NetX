@@ -44,9 +44,9 @@ namespace Leaf.Net
 
             #endregion
 
-            _content = new FileStream(pathToContent, FileMode.Open, FileAccess.Read);
-            _bufferSize = bufferSize;
-            _initialStreamPosition = 0;
+            ContentStream = new FileStream(pathToContent, FileMode.Open, FileAccess.Read);
+            BufferSize = bufferSize;
+            InitialStreamPosition = 0;
 
             _contentType = Http.DetermineMediaType(
                 Path.GetExtension(pathToContent));

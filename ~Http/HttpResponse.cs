@@ -691,7 +691,7 @@ namespace Leaf.Net
                 {
                     var source = GetMessageBodySource();
 
-                    foreach (var bytes in source) { }
+                    foreach (var unused in source) { }
                 }
                 catch (Exception ex)
                 {

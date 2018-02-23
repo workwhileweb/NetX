@@ -300,10 +300,7 @@ namespace Leaf.Net
                         FieldFileTemplate, element.Name, element.FileName, element.Content.ContentType);
                 }
                 else
-                {
-                    field = string.Format(
-                        FieldTemplate, element.Name);
-                }
+                    field = string.Format(FieldTemplate, element.Name);
 
                 var fieldBytes = Encoding.ASCII.GetBytes(field);
                 stream.Write(fieldBytes, 0, fieldBytes.Length);
