@@ -39,6 +39,7 @@ namespace Leaf.Net
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
         public override string Host
         {
+            // ReSharper disable once ArrangeAccessorOwnerBody
             get => throw new NotSupportedException();
             //set => throw new NotSupportedException();
         }
@@ -49,6 +50,7 @@ namespace Leaf.Net
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
         public override int Port
         {
+            // ReSharper disable once ArrangeAccessorOwnerBody
             get => throw new NotSupportedException();
             //set => throw new NotSupportedException();
         }

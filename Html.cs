@@ -49,9 +49,7 @@ namespace Leaf.Net
                     string value;
 
                     if (HtmlMnemonics.TryGetValue(match.Groups["text"].Value, out value))
-                    {
                         return value;
-                    }
                 }
                 else if (match.Groups["code"].Success)
                 {
@@ -74,9 +72,7 @@ namespace Leaf.Net
         public static string ReplaceUnicode(this string str)
         {
             if (string.IsNullOrEmpty(str))
-            {
                 return string.Empty;
-            }
 
             var regex = new Regex(@"\\u(?<code>[0-9a-f]{4})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -111,30 +107,22 @@ namespace Leaf.Net
             int startIndex, StringComparison comparsion = StringComparison.Ordinal)
         {
             if (string.IsNullOrEmpty(str))
-            {
                 return string.Empty;
-            }
 
             #region Проверка параметров
 
             if (left == null)
-            {
-                throw new ArgumentNullException("left");
-            }
+                throw new ArgumentNullException(nameof(left));
 
             if (left.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("left");
-            }
+                throw ExceptionHelper.EmptyString(nameof(left));
 
             if (startIndex < 0)
-            {
-                throw ExceptionHelper.CanNotBeLess("startIndex", 0);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(startIndex), 0);
 
             if (startIndex >= str.Length)
             {
-                throw new ArgumentOutOfRangeException("startIndex",
+                throw new ArgumentOutOfRangeException(nameof(startIndex),
                     Resources.ArgumentOutOfRangeException_StringHelper_MoreLengthString);
             }
 
@@ -144,9 +132,7 @@ namespace Leaf.Net
             int leftPosBegin = str.IndexOf(left, startIndex, comparsion);
 
             if (leftPosBegin == -1)
-            {
                 return string.Empty;
-            }
 
             // Вычисляем конец позиции левой подстроки.
             int leftPosEnd = leftPosBegin + left.Length;
@@ -171,21 +157,6 @@ namespace Leaf.Net
         {
             return Substring(str, left, 0, comparsion);
         }
-        /// <summary>
-        /// Удаляет из строки Steam Items спец. символы
-        /// </summary>
-        /// <param name="str">Строка с именем вещи</param>
-        /// <returns>Строка с именем вещи без спец. символов</returns>
-        public static string ClearSteamSpecialChars(this string str)
-        {
-            string[] symbols = new string[] { "™", "★", "☆", "\u2605", @"\u2605", @"\u2122", "\u2122", "★" };
-
-            foreach (string symbol in symbols)
-            {
-                str = str.Replace(symbol, "");
-            }
-            return str;
-        }
 
         /// <summary>
         /// Извлекает подстроку из строки. Подстрока ищется между двумя заданными строками, начиная с заданной позиции.
@@ -207,42 +178,28 @@ namespace Leaf.Net
             int startIndex, StringComparison comparsion = StringComparison.Ordinal)
         {
             if (string.IsNullOrEmpty(str))
-            {
                 return string.Empty;
-            }
 
             #region Проверка параметров
 
             if (left == null)
-            {
-                throw new ArgumentNullException("left");
-            }
+                throw new ArgumentNullException(nameof(left));
 
             if (left.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("left");
-            }
+                throw ExceptionHelper.EmptyString(nameof(left));
 
             if (right == null)
-            {
-                throw new ArgumentNullException("right");
-            }
+                throw new ArgumentNullException(nameof(right));
 
             if (right.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("right");
-            }
+                throw ExceptionHelper.EmptyString(nameof(right));
 
             if (startIndex < 0)
-            {
-                throw ExceptionHelper.CanNotBeLess("startIndex", 0);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(startIndex), 0);
 
             if (startIndex >= str.Length)
-            {
-                throw new ArgumentOutOfRangeException("startIndex",
+                throw new ArgumentOutOfRangeException(nameof(startIndex),
                     Resources.ArgumentOutOfRangeException_StringHelper_MoreLengthString);
-            }
 
             #endregion
 
@@ -250,9 +207,7 @@ namespace Leaf.Net
             int leftPosBegin = str.IndexOf(left, startIndex, comparsion);
 
             if (leftPosBegin == -1)
-            {
                 return string.Empty;
-            }
 
             // Вычисляем конец позиции левой подстроки.
             int leftPosEnd = leftPosBegin + left.Length;
@@ -261,9 +216,7 @@ namespace Leaf.Net
             int rightPos = str.IndexOf(right, leftPosEnd, comparsion);
 
             if (rightPos == -1)
-            {
                 return string.Empty;
-            }
 
             // Вычисляем длину найденной подстроки.
             int length = rightPos - leftPosEnd;
@@ -306,30 +259,22 @@ namespace Leaf.Net
             int startIndex, StringComparison comparsion = StringComparison.Ordinal)
         {
             if (string.IsNullOrEmpty(str))
-            {
                 return string.Empty;
-            }
 
             #region Проверка параметров
 
             if (left == null)
-            {
-                throw new ArgumentNullException("left");
-            }
+                throw new ArgumentNullException(nameof(left));
 
             if (left.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("left");
-            }
+                throw ExceptionHelper.EmptyString(nameof(left));
 
             if (startIndex < 0)
-            {
-                throw ExceptionHelper.CanNotBeLess("startIndex", 0);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(startIndex), 0);
 
             if (startIndex >= str.Length)
             {
-                throw new ArgumentOutOfRangeException("startIndex",
+                throw new ArgumentOutOfRangeException(nameof(startIndex),
                     Resources.ArgumentOutOfRangeException_StringHelper_MoreLengthString);
             }
 
@@ -339,9 +284,7 @@ namespace Leaf.Net
             int leftPosBegin = str.LastIndexOf(left, startIndex, comparsion);
 
             if (leftPosBegin == -1)
-            {
                 return string.Empty;
-            }
 
             // Вычисляем конец позиции левой подстроки.
             int leftPosEnd = leftPosBegin + left.Length;
@@ -364,12 +307,9 @@ namespace Leaf.Net
         public static string LastSubstring(this string str,
             string left, StringComparison comparsion = StringComparison.Ordinal)
         {
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            return LastSubstring(str, left, str.Length - 1, comparsion);
+            return !string.IsNullOrEmpty(str)
+                ? LastSubstring(str, left, str.Length - 1, comparsion)
+                : string.Empty;
         }
 
         /// <summary>
@@ -388,79 +328,62 @@ namespace Leaf.Net
         /// -или-
         /// Значение параметра <paramref name="startIndex"/> равно или больше длины строки <paramref name="str"/>.
         /// </exception>
-        public static string LastSubstring(this string str, string left, string right,
-            int startIndex, StringComparison comparsion = StringComparison.Ordinal)
+        public static string LastSubstring(this string str, string left, string right, int startIndex, StringComparison comparsion = StringComparison.Ordinal)
         {
-            if (string.IsNullOrEmpty(str))
+            while (true)
             {
-                return string.Empty;
-            }
-
-            #region Проверка параметров
-
-            if (left == null)
-            {
-                throw new ArgumentNullException("left");
-            }
-
-            if (left.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("left");
-            }
-
-            if (right == null)
-            {
-                throw new ArgumentNullException("right");
-            }
-
-            if (right.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("right");
-            }
-
-            if (startIndex < 0)
-            {
-                throw ExceptionHelper.CanNotBeLess("startIndex", 0);
-            }
-
-            if (startIndex >= str.Length)
-            {
-                throw new ArgumentOutOfRangeException("startIndex",
-                    Resources.ArgumentOutOfRangeException_StringHelper_MoreLengthString);
-            }
-
-            #endregion
-
-            // Ищем начало позиции левой подстроки.
-            int leftPosBegin = str.LastIndexOf(left, startIndex, comparsion);
-
-            if (leftPosBegin == -1)
-            {
-                return string.Empty;
-            }
-
-            // Вычисляем конец позиции левой подстроки.
-            int leftPosEnd = leftPosBegin + left.Length;
-
-            // Ищем начало позиции правой подстроки.
-            int rightPos = str.IndexOf(right, leftPosEnd, comparsion);
-
-            if (rightPos == -1)
-            {
-                if (leftPosBegin == 0)
-                {
+                if (string.IsNullOrEmpty(str))
                     return string.Empty;
-                }
-                else
+
+                #region Проверка параметров
+
+                if (left == null)
+                    throw new ArgumentNullException(nameof(left));
+
+                if (left.Length == 0)
+                    throw ExceptionHelper.EmptyString(nameof(left));
+
+                if (right == null)
+                    throw new ArgumentNullException(nameof(right));
+
+                if (right.Length == 0)
+                    throw ExceptionHelper.EmptyString(nameof(right));
+
+                if (startIndex < 0)
+                    throw ExceptionHelper.CanNotBeLess(nameof(startIndex), 0);
+
+                if (startIndex >= str.Length)
+                    throw new ArgumentOutOfRangeException(nameof(startIndex),
+                        Resources.ArgumentOutOfRangeException_StringHelper_MoreLengthString);
+
+                #endregion
+
+                // Ищем начало позиции левой подстроки.
+                int leftPosBegin = str.LastIndexOf(left, startIndex, comparsion);
+
+                if (leftPosBegin == -1)
+                    return string.Empty;
+
+                // Вычисляем конец позиции левой подстроки.
+                int leftPosEnd = leftPosBegin + left.Length;
+
+                // Ищем начало позиции правой подстроки.
+                int rightPos = str.IndexOf(right, leftPosEnd, comparsion);
+
+                if (rightPos == -1)
                 {
-                    return LastSubstring(str, left, right, leftPosBegin - 1, comparsion);
+                    if (leftPosBegin == 0)
+                        return string.Empty;
+
+                    startIndex = leftPosBegin - 1;
+                    continue;
                 }
+
+                // Вычисляем длину найденной подстроки.
+                int length = rightPos - leftPosEnd;
+
+                return str.Substring(leftPosEnd, length);
             }
-
-            // Вычисляем длину найденной подстроки.
-            int length = rightPos - leftPosEnd;
-
-            return str.Substring(leftPosEnd, length);
         }
 
         /// <summary>
@@ -476,12 +399,9 @@ namespace Leaf.Net
         public static string LastSubstring(this string str, string left, string right,
             StringComparison comparsion = StringComparison.Ordinal)
         {
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            return str.LastSubstring(left, right, str.Length - 1, comparsion);
+            return !string.IsNullOrEmpty(str)
+                ? str.LastSubstring(left, right, str.Length - 1, comparsion)
+                : string.Empty;
         }
 
         /// <summary>
@@ -504,57 +424,42 @@ namespace Leaf.Net
             int startIndex, StringComparison comparsion = StringComparison.Ordinal)
         {
             if (string.IsNullOrEmpty(str))
-            {
                 return new string[0];
-            }
 
             #region Проверка параметров
 
             if (left == null)
-            {
-                throw new ArgumentNullException("left");
-            }
+                throw new ArgumentNullException(nameof(left));
 
             if (left.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("left");
-            }
+                throw ExceptionHelper.EmptyString(nameof(left));
 
             if (right == null)
-            {
-                throw new ArgumentNullException("right");
-            }
+                throw new ArgumentNullException(nameof(right));
 
             if (right.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("right");
-            }
+                throw ExceptionHelper.EmptyString(nameof(right));
 
             if (startIndex < 0)
-            {
-                throw ExceptionHelper.CanNotBeLess("startIndex", 0);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(startIndex), 0);
 
             if (startIndex >= str.Length)
             {
-                throw new ArgumentOutOfRangeException("startIndex",
+                throw new ArgumentOutOfRangeException(nameof(startIndex),
                     Resources.ArgumentOutOfRangeException_StringHelper_MoreLengthString);
             }
 
             #endregion
 
             int currentStartIndex = startIndex;
-            List<string> strings = new List<string>();
+            var strings = new List<string>();
 
             while (true)
             {
                 // Ищем начало позиции левой подстроки.
                 int leftPosBegin = str.IndexOf(left, currentStartIndex, comparsion);
-
                 if (leftPosBegin == -1)
-                {
                     break;
-                }
 
                 // Вычисляем конец позиции левой подстроки.
                 int leftPosEnd = leftPosBegin + left.Length;
@@ -563,9 +468,7 @@ namespace Leaf.Net
                 int rightPos = str.IndexOf(right, leftPosEnd, comparsion);
 
                 if (rightPos == -1)
-                {
                     break;
-                }
 
                 // Вычисляем длину найденной подстроки.
                 int length = rightPos - leftPosEnd;

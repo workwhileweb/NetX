@@ -23,17 +23,11 @@ namespace Leaf.Net
             cancellationToken.ThrowIfCancellationRequested();
 
             if (request.Method == System.Net.Http.HttpMethod.Get)
-            {
                 httpResponse = await GetAsync(httpRequest, request);
-            }
-            else if(request.Method == System.Net.Http.HttpMethod.Post)
-            {
+            else if (request.Method == System.Net.Http.HttpMethod.Post)
                 httpResponse = await PostAsync(httpRequest, request);
-            }
             else
-            {
                 httpResponse = await RawAsync(httpRequest, request);
-            }
 
             cancellationToken.ThrowIfCancellationRequested();
 

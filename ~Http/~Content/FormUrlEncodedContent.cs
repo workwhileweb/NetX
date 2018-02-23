@@ -32,7 +32,7 @@ namespace Leaf.Net
             Offset = 0;
             Count = Content.Length;
 
-            _contentType = "application/x-www-form-urlencoded";
+            MimeContentType = "application/x-www-form-urlencoded";
         }
     }
 }

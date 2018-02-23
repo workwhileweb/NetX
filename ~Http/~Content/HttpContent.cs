@@ -8,7 +8,7 @@ namespace Leaf.Net
     public abstract class HttpContent
     {
         /// <summary>MIME-тип контента.</summary>
-        protected string _contentType = string.Empty;
+        protected string MimeContentType = string.Empty;
 
 
         /// <summary>
@@ -16,8 +16,8 @@ namespace Leaf.Net
         /// </summary>
         public string ContentType
         {
-            get => _contentType;
-            set => _contentType = value ?? string.Empty;
+            get => MimeContentType;
+            set => MimeContentType = value ?? string.Empty;
         }
 
 

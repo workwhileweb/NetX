@@ -89,7 +89,7 @@ namespace Leaf.Net
 
             _boundary = boundary;
 
-            _contentType = $"multipart/form-data; boundary={_boundary}";
+            MimeContentType = $"multipart/form-data; boundary={_boundary}";
         }
 
         #endregion

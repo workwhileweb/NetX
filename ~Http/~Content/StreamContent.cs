@@ -48,7 +48,7 @@ namespace Leaf.Net
             BufferSize = bufferSize;
             InitialStreamPosition = ContentStream.Position;
 
-            _contentType = "application/octet-stream";
+            MimeContentType = "application/octet-stream";
         }
 
 

@@ -48,7 +48,7 @@ namespace Leaf.Net
             BufferSize = bufferSize;
             InitialStreamPosition = 0;
 
-            _contentType = Http.DetermineMediaType(
+            MimeContentType = Http.DetermineMediaType(
                 Path.GetExtension(pathToContent));
         }
     }

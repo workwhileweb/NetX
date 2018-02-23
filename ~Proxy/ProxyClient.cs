@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Security;
 using System.Text;
 using System.Threading;
+// ReSharper disable InconsistentNaming
 
 namespace Leaf.Net
 {

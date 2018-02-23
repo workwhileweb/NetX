@@ -39,7 +39,7 @@ namespace Leaf.Net
             Offset = 0;
             Count = Content.Length;
 
-            _contentType = "text/plain";
+            MimeContentType = "text/plain";
         }
 
         #endregion

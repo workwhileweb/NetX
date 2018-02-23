@@ -72,7 +72,7 @@ namespace Leaf.Net
             Offset = offset;
             Count = count;
 
-            _contentType = "application/octet-stream";
+            MimeContentType = "application/octet-stream";
         }
 
         #endregion
