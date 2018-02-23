@@ -1325,12 +1325,12 @@ namespace Leaf.Net
 
         private string GetContentType()
         {
-            string contentLengthHeader = Http.Headers[HttpHeader.ContentLength];
+            string contentTypeHeader = Http.Headers[HttpHeader.ContentType];
 
-            if (!_headers.ContainsKey(contentLengthHeader))
+            if (!_headers.ContainsKey(contentTypeHeader))
                 return string.Empty;
 
-            string contentType = _headers[contentLengthHeader];
+            string contentType = _headers[contentTypeHeader];
 
             // Ищем позицию, где заканчивается описание типа контента и начинается описание его параметров.
             int endTypePos = contentType.IndexOf(';');
@@ -1345,8 +1345,9 @@ namespace Leaf.Net
         private void WaitData()
         {
             int sleepTime = 0;
-            int delay = (_request.TcpClient.ReceiveTimeout < 10) ?
-                10 : _request.TcpClient.ReceiveTimeout;
+            int delay = _request.TcpClient.ReceiveTimeout < 10
+                ? 10 
+                : _request.TcpClient.ReceiveTimeout;
 
             while (!_request.ClientNetworkStream.DataAvailable)
             {
@@ -1360,7 +1361,7 @@ namespace Leaf.Net
 
         private Stream GetZipStream(Stream stream)
         {
-            string contentEncoding = _headers[Http.Headers[HttpHeader.ContentLength]].ToLower();
+            string contentEncoding = _headers[Http.Headers[HttpHeader.ContentEncoding]].ToLower();
 
             switch (contentEncoding)
             {
@@ -1376,13 +1377,16 @@ namespace Leaf.Net
             }
         }
 
-        private static bool FindSignature(IReadOnlyList<byte> source, int sourceLength, IReadOnlyList<byte> signature)
+        // ReSharper disable once SuggestBaseTypeForParameter        
+        private static bool FindSignature(byte[] source, int sourceLength,
+            // ReSharper disable once SuggestBaseTypeForParameter
+            byte[] signature)
         {
-            int length = (sourceLength - signature.Count) + 1;
+            int length = sourceLength - signature.Length + 1;
 
             for (int sourceIndex = 0; sourceIndex < length; ++sourceIndex)
             {
-                for (int signatureIndex = 0; signatureIndex < signature.Count; ++signatureIndex)
+                for (int signatureIndex = 0; signatureIndex < signature.Length; ++signatureIndex)
                 {
                     byte sourceByte = source[signatureIndex + sourceIndex];
                     char sourceChar = (char)sourceByte;
@@ -1395,7 +1399,7 @@ namespace Leaf.Net
                     if (sourceByte != signature[signatureIndex])
                         break;
 
-                    if (signatureIndex == signature.Count - 1)
+                    if (signatureIndex == signature.Length - 1)
                         return true;
                 }
             }
