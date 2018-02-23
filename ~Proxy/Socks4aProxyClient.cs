@@ -6,41 +6,41 @@ namespace Leaf.Net
     /// <summary>
     /// Представляет клиент для Socks4a прокси-сервера.
     /// </summary>
-    public class Socks4aProxyClient : Socks4ProxyClient 
+    public class Socks4AProxyClient : Socks4ProxyClient 
     {
         #region Конструкторы (открытые)
 
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks4aProxyClient"/>.
+        /// Инициализирует новый экземпляр класса <see cref="Socks4AProxyClient"/>.
         /// </summary>
-        public Socks4aProxyClient()
+        public Socks4AProxyClient()
             : this(null) { }
 
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks4aProxyClient"/> заданным хостом прокси-сервера, и устанавливает порт равным - 1080.
+        /// Инициализирует новый экземпляр класса <see cref="Socks4AProxyClient"/> заданным хостом прокси-сервера, и устанавливает порт равным - 1080.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
-        public Socks4aProxyClient(string host)
+        public Socks4AProxyClient(string host)
             : this(host, DefaultPort) { }
 
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks4aProxyClient"/> заданными данными о прокси-сервере.
+        /// Инициализирует новый экземпляр класса <see cref="Socks4AProxyClient"/> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
-        public Socks4aProxyClient(string host, int port)
+        public Socks4AProxyClient(string host, int port)
             : this(host, port, string.Empty) { }
 
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks4aProxyClient"/> заданными данными о прокси-сервере.
+        /// Инициализирует новый экземпляр класса <see cref="Socks4AProxyClient"/> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
         /// <param name="username">Имя пользователя для авторизации на прокси-сервере.</param>
-        public Socks4aProxyClient(string host, int port, string username)
+        public Socks4AProxyClient(string host, int port, string username)
             : base(host, port, username)
         {
-            _type = ProxyType.Socks4a;
+            _type = ProxyType.Socks4A;
         }
 
         #endregion
@@ -49,58 +49,54 @@ namespace Leaf.Net
         #region Методы (открытые)
 
         /// <summary>
-        /// Преобразует строку в экземпляр класса <see cref="Socks4aProxyClient"/>.
+        /// Преобразует строку в экземпляр класса <see cref="Socks4AProxyClient"/>.
         /// </summary>
         /// <param name="proxyAddress">Строка вида - хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
-        /// <returns>Экземпляр класса <see cref="Socks4aProxyClient"/>.</returns>
+        /// <returns>Экземпляр класса <see cref="Socks4AProxyClient"/>.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="proxyAddress"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="proxyAddress"/> является пустой строкой.</exception>
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
-        public static Socks4aProxyClient Parse(string proxyAddress)
+        public static Socks4AProxyClient Parse(string proxyAddress)
         {
-            return ProxyClient.Parse(ProxyType.Socks4a, proxyAddress) as Socks4aProxyClient;
+            return ProxyClient.Parse(ProxyType.Socks4A, proxyAddress) as Socks4AProxyClient;
         }
 
         /// <summary>
-        /// Преобразует строку в экземпляр класса <see cref="Socks4aProxyClient"/>. Возвращает значение, указывающее, успешно ли выполнено преобразование.
+        /// Преобразует строку в экземпляр класса <see cref="Socks4AProxyClient"/>. Возвращает значение, указывающее, успешно ли выполнено преобразование.
         /// </summary>
         /// <param name="proxyAddress">Строка вида - хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
-        /// <param name="result">Если преобразование выполнено успешно, то содержит экземпляр класса <see cref="Socks4aProxyClient"/>, иначе <see langword="null"/>.</param>
+        /// <param name="result">Если преобразование выполнено успешно, то содержит экземпляр класса <see cref="Socks4AProxyClient"/>, иначе <see langword="null"/>.</param>
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="proxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
-        public static bool TryParse(string proxyAddress, out Socks4aProxyClient result)
+        public static bool TryParse(string proxyAddress, out Socks4AProxyClient result)
         {
-            ProxyClient proxy;
-
-            if (ProxyClient.TryParse(ProxyType.Socks4a, proxyAddress, out proxy))
-            {
-                result = proxy as Socks4aProxyClient;
-                return true;
-            }
-            else
+            if (!ProxyClient.TryParse(ProxyType.Socks4A, proxyAddress, out ProxyClient proxy))
             {
                 result = null;
-                return false;
+                return false;                
             }
+
+            result = proxy as Socks4AProxyClient;
+            return true;
         }
 
         #endregion
 
 
-        internal protected override void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
+        protected internal override void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
         {
-            byte[] dstPort = GetPortBytes(destinationPort);
+            var dstPort = GetPortBytes(destinationPort);
             byte[] dstIp = { 0, 0, 0, 1 };
 
-            byte[] userId = string.IsNullOrEmpty(_username) ?
+            var userId = string.IsNullOrEmpty(_username) ?
                 new byte[0] : Encoding.ASCII.GetBytes(_username);
 
-            byte[] dstAddr = ASCIIEncoding.ASCII.GetBytes(destinationHost);
+            var dstAddr = Encoding.ASCII.GetBytes(destinationHost);
 
             // +----+----+----+----+----+----+----+----+----+----+....+----+----+----+....+----+
             // | VN | CD | DSTPORT |      DSTIP        | USERID       |NULL| DSTADDR      |NULL|
             // +----+----+----+----+----+----+----+----+----+----+....+----+----+----+....+----+
             //    1    1      2              4           variable       1    variable        1 
-            byte[] request = new byte[10 + userId.Length + dstAddr.Length];
+            var request = new byte[10 + userId.Length + dstAddr.Length];
 
             request[0] = VersionNumber;
             request[1] = command;
@@ -117,7 +113,7 @@ namespace Leaf.Net
             // | VN | CD | DSTPORT |      DSTIP        |
             // +----+----+----+----+----+----+----+----+
             //    1    1      2              4
-            byte[] response = new byte[8];
+            var response = new byte[8];
 
             nStream.Read(response, 0, 8);
 
@@ -125,9 +121,7 @@ namespace Leaf.Net
 
             // Если запрос не выполнен.
             if (reply != CommandReplyRequestGranted)
-            {
                 HandleCommandError(reply);
-            }
         }
     }
 }

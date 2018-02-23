@@ -18,16 +18,16 @@ namespace Leaf.Net
         private const byte VersionNumber = 5;
         private const byte Reserved = 0x00;
         private const byte AuthMethodNoAuthenticationRequired = 0x00;
-        private const byte AuthMethodGssapi = 0x01;
+        //private const byte AuthMethodGssapi = 0x01;
         private const byte AuthMethodUsernamePassword = 0x02;
-        private const byte AuthMethodIanaAssignedRangeBegin = 0x03;
-        private const byte AuthMethodIanaAssignedRangeEnd = 0x7f;
-        private const byte AuthMethodReservedRangeBegin = 0x80;
-        private const byte AuthMethodReservedRangeEnd = 0xfe;
+        //private const byte AuthMethodIanaAssignedRangeBegin = 0x03;
+        //private const byte AuthMethodIanaAssignedRangeEnd = 0x7f;
+        //private const byte AuthMethodReservedRangeBegin = 0x80;
+        //private const byte AuthMethodReservedRangeEnd = 0xfe;
         private const byte AuthMethodReplyNoAcceptableMethods = 0xff;
         private const byte CommandConnect = 0x01;
-        private const byte CommandBind = 0x02;
-        private const byte CommandUdpAssociate = 0x03;
+        //private const byte CommandBind = 0x02;
+        //private const byte CommandUdpAssociate = 0x03;
         private const byte CommandReplySucceeded = 0x00;
         private const byte CommandReplyGeneralSocksServerFailure = 0x01;
         private const byte CommandReplyConnectionNotAllowedByRuleset = 0x02;
@@ -37,9 +37,9 @@ namespace Leaf.Net
         private const byte CommandReplyTTLExpired = 0x06;
         private const byte CommandReplyCommandNotSupported = 0x07;
         private const byte CommandReplyAddressTypeNotSupported = 0x08;
-        private const byte AddressTypeIPV4 = 0x01;
+        private const byte AddressTypeIPv4 = 0x01;
         private const byte AddressTypeDomainName = 0x03;
-        private const byte AddressTypeIPV6 = 0x04;
+        private const byte AddressTypeIPv6 = 0x04;
 
         #endregion
 
@@ -103,18 +103,15 @@ namespace Leaf.Net
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="proxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
         public static bool TryParse(string proxyAddress, out Socks5ProxyClient result)
         {
-            ProxyClient proxy;
-
-            if (ProxyClient.TryParse(ProxyType.Socks5, proxyAddress, out proxy))
-            {
-                result = proxy as Socks5ProxyClient;
-                return true;
-            }
-            else
+            if (!ProxyClient.TryParse(ProxyType.Socks5, proxyAddress, out ProxyClient proxy))
             {
                 result = null;
                 return false;
+                
             }
+
+            result = proxy as Socks5ProxyClient;
+            return true;
         }
 
         #endregion
@@ -147,32 +144,21 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (destinationHost == null)
-            {
-                throw new ArgumentNullException("destinationHost");
-            }
+                throw new ArgumentNullException(nameof(destinationHost));
 
             if (destinationHost.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("destinationHost");
-            }
+                throw ExceptionHelper.EmptyString(nameof(destinationHost));
 
             if (!ExceptionHelper.ValidateTcpPort(destinationPort))
-            {
-                throw ExceptionHelper.WrongTcpPort("destinationPort");
-            }
+                throw ExceptionHelper.WrongTcpPort(nameof(destinationHost));
 
             #endregion
 
-            TcpClient curTcpClient = tcpClient;
-
-            if (curTcpClient == null)
-            {
-                curTcpClient = CreateConnectionToProxy();
-            }
+            var curTcpClient = tcpClient ?? CreateConnectionToProxy();
 
             try
             {
-                NetworkStream nStream = curTcpClient.GetStream();
+                var nStream = curTcpClient.GetStream();
 
                 InitialNegotiation(nStream);
                 SendCommand(nStream, CommandConnect, destinationHost, destinationPort);
@@ -182,9 +168,7 @@ namespace Leaf.Net
                 curTcpClient.Close();
 
                 if (ex is IOException || ex is SocketException)
-                {
                     throw NewProxyException(Resources.ProxyException_Error, ex);
-                }
 
                 throw;
             }
@@ -197,23 +181,16 @@ namespace Leaf.Net
 
         private void InitialNegotiation(NetworkStream nStream)
         {
-            byte authMethod;
-
-            if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
-            {
-                authMethod = AuthMethodUsernamePassword;
-            }
-            else
-            {
-                authMethod = AuthMethodNoAuthenticationRequired;
-            }
+            var authMethod = !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)
+                ? AuthMethodUsernamePassword
+                : AuthMethodNoAuthenticationRequired;
 
             // +----+----------+----------+
             // |VER | NMETHODS | METHODS  |
             // +----+----------+----------+
             // | 1  |    1     | 1 to 255 |
             // +----+----------+----------+
-            byte[] request = new byte[3];
+            var request = new byte[3];
 
             request[0] = VersionNumber;
             request[1] = 1;
@@ -226,28 +203,24 @@ namespace Leaf.Net
             // +----+--------+
             // | 1  |   1    |
             // +----+--------+
-            byte[] response = new byte[2];
+            var response = new byte[2];
 
             nStream.Read(response, 0, response.Length);
 
             byte reply = response[1];
 
             if (authMethod == AuthMethodUsernamePassword && reply == AuthMethodUsernamePassword)
-            {
                 SendUsernameAndPassword(nStream);
-            }
             else if (reply != CommandReplySucceeded)
-            {
                 HandleCommandError(reply);
-            }
         }
 
-        private void SendUsernameAndPassword(NetworkStream nStream)
+        private void SendUsernameAndPassword(Stream nStream)
         {
-            byte[] uname = string.IsNullOrEmpty(_username) ?
+            var uname = string.IsNullOrEmpty(_username) ?
                 new byte[0] : Encoding.ASCII.GetBytes(_username);
 
-            byte[] passwd = string.IsNullOrEmpty(_password) ?
+            var passwd = string.IsNullOrEmpty(_password) ?
                 new byte[0] : Encoding.ASCII.GetBytes(_password);
 
             // +----+------+----------+------+----------+
@@ -255,7 +228,7 @@ namespace Leaf.Net
             // +----+------+----------+------+----------+
             // | 1  |  1   | 1 to 255 |  1   | 1 to 255 |
             // +----+------+----------+------+----------+
-            byte[] request = new byte[uname.Length + passwd.Length + 3];
+            var request = new byte[uname.Length + passwd.Length + 3];
 
             request[0] = 1;
             request[1] = (byte)uname.Length;
@@ -270,30 +243,27 @@ namespace Leaf.Net
             // +----+--------+
             // | 1  |   1    |
             // +----+--------+
-            byte[] response = new byte[2];
+            var response = new byte[2];
 
             nStream.Read(response, 0, response.Length);
 
             byte reply = response[1];
-
             if (reply != CommandReplySucceeded)
-            {
                 throw NewProxyException(Resources.ProxyException_Socks5_FailedAuthOn);
-            }
         }
 
         private void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
         {
             byte aTyp = GetAddressType(destinationHost);
-            byte[] dstAddr = GetAddressBytes(aTyp, destinationHost);
-            byte[] dstPort = GetPortBytes(destinationPort);
+            var dstAddr = GetAddressBytes(aTyp, destinationHost);
+            var dstPort = GetPortBytes(destinationPort);
 
             // +----+-----+-------+------+----------+----------+
             // |VER | CMD |  RSV  | ATYP | DST.ADDR | DST.PORT |
             // +----+-----+-------+------+----------+----------+
             // | 1  |  1  | X'00' |  1   | Variable |    2     |
             // +----+-----+-------+------+----------+----------+
-            byte[] request = new byte[4 + dstAddr.Length + 2];
+            var request = new byte[4 + dstAddr.Length + 2];
 
             request[0] = VersionNumber;
             request[1] = command;
@@ -309,7 +279,7 @@ namespace Leaf.Net
             // +----+-----+-------+------+----------+----------+
             // | 1  |  1  | X'00' |  1   | Variable |    2     |
             // +----+-----+-------+------+----------+----------+
-            byte[] response = new byte[255];
+            var response = new byte[255];
 
             nStream.Read(response, 0, response.Length);
 
@@ -317,45 +287,39 @@ namespace Leaf.Net
 
             // Если запрос не выполнен.
             if (reply != CommandReplySucceeded)
-            {
                 HandleCommandError(reply);
-            }
         }
 
         private byte GetAddressType(string host)
         {
-            IPAddress ipAddr = null;
-
-            if (!IPAddress.TryParse(host, out ipAddr))
-            {
+            if (!IPAddress.TryParse(host, out IPAddress ipAddr))
                 return AddressTypeDomainName;
-            }
 
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (ipAddr.AddressFamily)
             {
                 case AddressFamily.InterNetwork:
-                    return AddressTypeIPV4;
+                    return AddressTypeIPv4;
 
                 case AddressFamily.InterNetworkV6:
-                    return AddressTypeIPV6;
+                    return AddressTypeIPv6;
 
                 default:
                     throw new ProxyException(string.Format(Resources.ProxyException_NotSupportedAddressType,
                         host, Enum.GetName(typeof(AddressFamily), ipAddr.AddressFamily), ToString()), this);
             }
-
         }
 
-        private byte[] GetAddressBytes(byte addressType, string host)
+        private static byte[] GetAddressBytes(byte addressType, string host)
         {
             switch (addressType)
             {
-                case AddressTypeIPV4:
-                case AddressTypeIPV6:
+                case AddressTypeIPv4:
+                case AddressTypeIPv6:
                     return IPAddress.Parse(host).GetAddressBytes();
 
                 case AddressTypeDomainName:
-                    byte[] bytes = new byte[host.Length + 1];
+                    var bytes = new byte[host.Length + 1];
 
                     bytes[0] = (byte)host.Length;
                     Encoding.ASCII.GetBytes(host).CopyTo(bytes, 1);
@@ -367,9 +331,9 @@ namespace Leaf.Net
             }
         }
 
-        private byte[] GetPortBytes(int port)
+        private static byte[] GetPortBytes(int port)
         {
-            byte[] array = new byte[2];
+            var array = new byte[2];
 
             array[0] = (byte)(port / 256);
             array[1] = (byte)(port % 256);

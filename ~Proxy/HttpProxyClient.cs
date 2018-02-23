@@ -50,7 +50,7 @@ namespace Leaf.Net
         /// <param name="username">Имя пользователя для авторизации на прокси-сервере.</param>
         /// <param name="password">Пароль для авторизации на прокси-сервере.</param>
         public HttpProxyClient(string host, int port, string username, string password)
-            : base(ProxyType.Http, host, port, username, password) { }
+            : base(ProxyType.HTTP, host, port, username, password) { }
 
         #endregion
 
@@ -70,7 +70,7 @@ namespace Leaf.Net
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
         public static HttpProxyClient Parse(string proxyAddress)
         {
-            return ProxyClient.Parse(ProxyType.Http, proxyAddress) as HttpProxyClient;
+            return ProxyClient.Parse(ProxyType.HTTP, proxyAddress) as HttpProxyClient;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Leaf.Net
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="proxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
         public static bool TryParse(string proxyAddress, out HttpProxyClient result)
         {
-            if (!ProxyClient.TryParse(ProxyType.Http, proxyAddress, out ProxyClient proxy))
+            if (!ProxyClient.TryParse(ProxyType.HTTP, proxyAddress, out ProxyClient proxy))
             {
                 result = null;
                 return false;

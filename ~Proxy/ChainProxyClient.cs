@@ -40,7 +40,7 @@ namespace Leaf.Net
         public override string Host
         {
             get => throw new NotSupportedException();
-            set => throw new NotSupportedException();
+            //set => throw new NotSupportedException();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Leaf.Net
         public override int Port
         {
             get => throw new NotSupportedException();
-            set => throw new NotSupportedException();
+            //set => throw new NotSupportedException();
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Leaf.Net
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
         public void AddSocks4AProxy(string proxyAddress)
         {
-            Proxies.Add(Socks4aProxyClient.Parse(proxyAddress));
+            Proxies.Add(Socks4AProxyClient.Parse(proxyAddress));
         }
 
         /// <summary>

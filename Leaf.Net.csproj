@@ -87,7 +87,7 @@
     <Compile Include="~Proxy\ProxyType.cs" />
     <Compile Include="~Proxy\ProxyException.cs" />
     <Compile Include="~Internal\ProxyHelper.cs" />
-    <Compile Include="~Proxy\Socks4aProxyClient.cs" />
+    <Compile Include="~Proxy\Socks4AProxyClient.cs" />
     <Compile Include="~Proxy\Socks4ProxyClient.cs" />
     <Compile Include="~Proxy\Socks5ProxyClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

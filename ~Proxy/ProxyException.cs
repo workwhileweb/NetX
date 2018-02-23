@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 
 namespace Leaf.Net
 {
@@ -13,7 +12,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает прокси-клиент, в котором произошла ошибка.
         /// </summary>
-        public ProxyClient ProxyClient { get; private set; }
+        public ProxyClient ProxyClient { get; }
 
         
         #region Конструкторы (открытые)

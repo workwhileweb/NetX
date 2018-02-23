@@ -18,9 +18,9 @@ namespace Leaf.Net
         protected ProxyType _type;
 
         /// <summary>Хост прокси-сервера.</summary>
-        protected string _host;
+        protected readonly string _host;
         /// <summary>Порт прокси-сервера.</summary>
-        protected int _port = 1;
+        protected readonly int _port = 1;
         /// <summary>Имя пользователя для авторизации на прокси-сервере.</summary>
         protected string _username;
         /// <summary>Пароль для авторизации на прокси-сервере.</summary>
@@ -49,7 +49,10 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentException">Значение параметра является пустой строкой.</exception>
         public virtual string Host
         {
+            // ReSharper disable once ArrangeAccessorOwnerBody
             get => _host;
+
+            /*
             set
             {
                 #region Проверка параметра
@@ -63,7 +66,7 @@ namespace Leaf.Net
                 #endregion
 
                 _host = value;
-            }
+            }*/
         }
 
         /// <summary>
@@ -73,7 +76,10 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 1 или больше 65535.</exception>
         public virtual int Port
         {
+            // ReSharper disable once ArrangeAccessorOwnerBody
             get => _port;
+
+            /*
             set
             {
                 #region Проверка параметра
@@ -84,7 +90,7 @@ namespace Leaf.Net
                 #endregion
 
                 _port = value;
-            }
+            }*/
         }
 
         /// <summary>
@@ -229,10 +235,10 @@ namespace Leaf.Net
         /// Служит для преобразования строковых прокси к объекту ProxyClient.
         /// </summary>
         private static readonly Dictionary<string, ProxyType> ProxyProtocol = new Dictionary<string, ProxyType> {
-            { "http", ProxyType.Http },
-            { "https", ProxyType.Http },
+            { "http", ProxyType.HTTP },
+            { "https", ProxyType.HTTP },
             { "socks4", ProxyType.Socks4 },
-            { "socks4a", ProxyType.Socks4a },
+            { "socks4a", ProxyType.Socks4A },
             { "socks5", ProxyType.Socks5 },
             { "socks", ProxyType.Socks5 }
         };
@@ -419,10 +425,7 @@ namespace Leaf.Net
         /// Формирует строку вида - хост:порт, представляющую адрес прокси-сервера.
         /// </summary>
         /// <returns>Строка вида - хост:порт, представляющая адрес прокси-сервера.</returns>
-        public override string ToString()
-        {
-            return $"{_host}:{_port}";
-        }
+        public override string ToString() => $"{_host}:{_port}";
 
         /// <summary>
         /// Формирует строку вида - хост:порт:имя_пользователя:пароль. Последние два параметра добавляются, если они заданы.

@@ -5,9 +5,9 @@
     /// </summary>
     public enum ProxyType
     {
-        Http,
+        HTTP,
         Socks4,
-        Socks4a,
+        Socks4A,
         Socks5,
         Chain
     }
