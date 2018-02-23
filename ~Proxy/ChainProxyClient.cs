@@ -14,22 +14,7 @@ namespace Leaf.Net
         #region Статические поля (закрытые)
 
         [ThreadStatic] private static Random _rand;
-        private static Random Rand
-        {
-            get
-            {
-                if (_rand == null)
-                    _rand = new Random();
-                return _rand;
-            }
-        }
-
-        #endregion
-
-
-        #region Поля (закрытые)
-
-        private List<ProxyClient> _proxies = new List<ProxyClient>();
+        private static Random Rand => _rand ?? (_rand = new Random());
 
         #endregion
 
@@ -44,13 +29,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает список цепочки прокси-серверов.
         /// </summary>
-        public List<ProxyClient> Proxies
-        {
-            get
-            {
-                return _proxies;
-            }
-        }
+        public List<ProxyClient> Proxies { get; } = new List<ProxyClient>();
 
         #region Переопределённые
 
@@ -58,96 +37,60 @@ namespace Leaf.Net
         /// Данное свойство не поддерживается.
         /// </summary>
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
-        override public string Host
+        public override string Host
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         /// <summary>
         /// Данное свойство не поддерживается.
         /// </summary>
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
-        override public int Port
+        public override int Port
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         /// <summary>
         /// Данное свойство не поддерживается.
         /// </summary>
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
-        override public string Username
+        public override string Username
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         /// <summary>
         /// Данное свойство не поддерживается.
         /// </summary>
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
-        override public string Password
+        public override string Password
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         /// <summary>
         /// Данное свойство не поддерживается.
         /// </summary>
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
-        override public int ConnectTimeout
+        public override int ConnectTimeout
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         /// <summary>
         /// Данное свойство не поддерживается.
         /// </summary>
         /// <exception cref="System.NotSupportedException">При любом использовании этого свойства.</exception>
-        override public int ReadWriteTimeout
+        public override int ReadWriteTimeout
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         #endregion
@@ -194,7 +137,7 @@ namespace Leaf.Net
         {
             #region Проверка состояния
 
-            if (_proxies.Count == 0)
+            if (Proxies.Count == 0)
             {
                 throw new InvalidOperationException(
                     Resources.InvalidOperationException_ChainProxyClient_NotProxies);
@@ -206,25 +149,23 @@ namespace Leaf.Net
 
             if (EnableShuffle)
             {
-                proxies = _proxies.ToList();
+                proxies = Proxies.ToList();
 
                 // Перемешиваем прокси.
                 for (int i = 0; i < proxies.Count; i++)
                 {
                     int randI = Rand.Next(proxies.Count);
 
-                    ProxyClient proxy = proxies[i];
+                    var proxy = proxies[i];
                     proxies[i] = proxies[randI];
                     proxies[randI] = proxy;
                 }
             }
             else
-            {
-                proxies = _proxies;
-            }
+                proxies = Proxies;
 
             int length = proxies.Count - 1;
-            TcpClient curTcpClient = tcpClient;
+            var curTcpClient = tcpClient;
 
             for (int i = 0; i < length; i++)
             {
@@ -246,10 +187,8 @@ namespace Leaf.Net
         {
             var strBuilder = new StringBuilder();
 
-            foreach (var proxy in _proxies)
-            {
+            foreach (var proxy in Proxies)
                 strBuilder.AppendLine(proxy.ToString());
-            }
 
             return strBuilder.ToString();
         }
@@ -262,10 +201,8 @@ namespace Leaf.Net
         {
             var strBuilder = new StringBuilder();
 
-            foreach (var proxy in _proxies)
-            {
+            foreach (var proxy in Proxies)
                 strBuilder.AppendLine(proxy.ToExtendedString());
-            }
 
             return strBuilder.ToString();
         }
@@ -282,13 +219,11 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (proxy == null)
-            {
-                throw new ArgumentNullException("proxy");
-            }
+                throw new ArgumentNullException(nameof(proxy));
 
             #endregion
 
-            _proxies.Add(proxy);
+            Proxies.Add(proxy);
         }
 
         /// <summary>
@@ -300,7 +235,7 @@ namespace Leaf.Net
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
         public void AddHttpProxy(string proxyAddress)
         {
-            _proxies.Add(HttpProxyClient.Parse(proxyAddress));
+            Proxies.Add(HttpProxyClient.Parse(proxyAddress));
         }
 
         /// <summary>
@@ -312,7 +247,7 @@ namespace Leaf.Net
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
         public void AddSocks4Proxy(string proxyAddress)
         {
-            _proxies.Add(Socks4ProxyClient.Parse(proxyAddress));
+            Proxies.Add(Socks4ProxyClient.Parse(proxyAddress));
         }
 
         /// <summary>
@@ -322,9 +257,9 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="proxyAddress"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="proxyAddress"/> является пустой строкой.</exception>
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
-        public void AddSocks4aProxy(string proxyAddress)
+        public void AddSocks4AProxy(string proxyAddress)
         {
-            _proxies.Add(Socks4aProxyClient.Parse(proxyAddress));
+            Proxies.Add(Socks4aProxyClient.Parse(proxyAddress));
         }
 
         /// <summary>
@@ -336,7 +271,7 @@ namespace Leaf.Net
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
         public void AddSocks5Proxy(string proxyAddress)
         {
-            _proxies.Add(Socks5ProxyClient.Parse(proxyAddress));
+            Proxies.Add(Socks5ProxyClient.Parse(proxyAddress));
         }
 
         #endregion

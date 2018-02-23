@@ -8,13 +8,13 @@ namespace Leaf.Net
 {
     internal static class HttpExtensions
     {
-        private static readonly Dictionary<string, string> HeaderSeparators = new Dictionary<string, string>(){
-                {"User-Agent", " "}
+        private static readonly Dictionary<string, string> HeaderSeparators = new Dictionary<string, string> {
+            {"User-Agent", " "}
         };
 
         public static HttpResponseMessage ToHttpResponseMessage(this HttpResponse httpResponse)
         {
-            var code     = (System.Net.HttpStatusCode)((int)httpResponse.StatusCode);
+            var code = (System.Net.HttpStatusCode)((int)httpResponse.StatusCode);
 
             var response = new HttpResponseMessage(code); 
             var headers  = httpResponse.EnumerateHeaders();
@@ -32,21 +32,14 @@ namespace Leaf.Net
         {
             var httpRequest = new HttpRequest();
 
-            var headers = request.Headers.Union(request.Content != null 
+            var headers = request.Headers.Union(request.Content != null
                 ? request.Content.Headers 
                 : Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>());
 
             httpRequest.Cookies = new CookieStorage(false, cookieContainer);
-            /*
-            foreach (var cookie in cookieContainer.GetCookies(request.RequestUri).Cast<Cookie>())
-            {
-                httpRequest.Cookies.Add(cookie.Name, cookie);
-            }*/
 
             foreach (var keyValue in headers)
-            {
                 httpRequest.AddHeader(keyValue.Key, string.Join(GetHeaderSeparator(keyValue.Key), keyValue.Value));
-            }
 
             return httpRequest;
         }

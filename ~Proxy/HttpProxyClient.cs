@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -82,18 +81,14 @@ namespace Leaf.Net
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="proxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
         public static bool TryParse(string proxyAddress, out HttpProxyClient result)
         {
-            ProxyClient proxy;
-
-            if (ProxyClient.TryParse(ProxyType.Http, proxyAddress, out proxy))
-            {
-                result = proxy as HttpProxyClient;
-                return true;
-            }
-            else
+            if (!ProxyClient.TryParse(ProxyType.Http, proxyAddress, out ProxyClient proxy))
             {
                 result = null;
                 return false;
             }
+
+            result = proxy as HttpProxyClient;
+            return true;
         }
 
         #endregion
@@ -129,62 +124,47 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (destinationHost == null)
-            {
-                throw new ArgumentNullException("destinationHost");
-            }
+                throw new ArgumentNullException(nameof(destinationHost));
 
             if (destinationHost.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("destinationHost");
-            }
+                throw ExceptionHelper.EmptyString(nameof(destinationHost));
 
             if (!ExceptionHelper.ValidateTcpPort(destinationPort))
-            {
-                throw ExceptionHelper.WrongTcpPort("destinationPort");
-            }
+                throw ExceptionHelper.WrongTcpPort(nameof(destinationHost));
 
             #endregion
 
-            TcpClient curTcpClient = tcpClient;
+            var curTcpClient = tcpClient ?? CreateConnectionToProxy();
 
-            if (curTcpClient == null)
+            if (destinationPort == 80)
+                return curTcpClient;
+
+            HttpStatusCode statusCode;
+
+            try
             {
-                curTcpClient = CreateConnectionToProxy();
+                var nStream = curTcpClient.GetStream();
+
+                SendConnectionCommand(nStream, destinationHost, destinationPort);
+                statusCode = ReceiveResponse(nStream);
+            }
+            catch (Exception ex)
+            {
+                curTcpClient.Close();
+
+                if (ex is IOException || ex is SocketException)
+                    throw NewProxyException(Resources.ProxyException_Error, ex);
+
+                throw;
             }
 
-            if (destinationPort != 80)
-            {
-                HttpStatusCode statusCode = HttpStatusCode.OK;
+            if (statusCode == HttpStatusCode.OK)
+                return curTcpClient;
 
-                try
-                {
-                    NetworkStream nStream = curTcpClient.GetStream();
+            curTcpClient.Close();
 
-                    SendConnectionCommand(nStream, destinationHost, destinationPort);
-                    statusCode = ReceiveResponse(nStream);
-                }
-                catch (Exception ex)
-                {
-                    curTcpClient.Close();
-
-                    if (ex is IOException || ex is SocketException)
-                    {
-                        throw NewProxyException(Resources.ProxyException_Error, ex);
-                    }
-
-                    throw;
-                }
-
-                if (statusCode != HttpStatusCode.OK)
-                {
-                    curTcpClient.Close();
-
-                    throw new ProxyException(string.Format(
-                        Resources.ProxyException_ReceivedWrongStatusCode, statusCode, ToString()), this);
-                }
-            }
-
-            return curTcpClient;
+            throw new ProxyException(string.Format(
+                Resources.ProxyException_ReceivedWrongStatusCode, statusCode, ToString()), this);
         }
 
         #endregion
@@ -194,18 +174,16 @@ namespace Leaf.Net
 
         private string GenerateAuthorizationHeader()
         {
-            if (!string.IsNullOrEmpty(_username) || !string.IsNullOrEmpty(_password))
-            {
-                string data = Convert.ToBase64String(Encoding.UTF8.GetBytes(
-                    string.Format("{0}:{1}", _username, _password)));
+            if (string.IsNullOrEmpty(_username) && string.IsNullOrEmpty(_password))
+                return string.Empty;
 
-                return string.Format("Proxy-Authorization: Basic {0}\r\n", data);
-            }
+            string data = Convert.ToBase64String(Encoding.UTF8.GetBytes(
+                $"{_username}:{_password}"));
 
-            return string.Empty;
+            return $"Proxy-Authorization: Basic {data}\r\n";
         }
 
-        private void SendConnectionCommand(NetworkStream nStream, string destinationHost, int destinationPort)
+        private void SendConnectionCommand(Stream nStream, string destinationHost, int destinationPort)
         {
             var commandBuilder = new StringBuilder();
 
@@ -213,14 +191,14 @@ namespace Leaf.Net
             commandBuilder.AppendFormat(GenerateAuthorizationHeader());
             commandBuilder.AppendLine();
 
-            byte[] buffer = Encoding.ASCII.GetBytes(commandBuilder.ToString());
+            var buffer = Encoding.ASCII.GetBytes(commandBuilder.ToString());
 
             nStream.Write(buffer, 0, buffer.Length);
         }
 
         private HttpStatusCode ReceiveResponse(NetworkStream nStream)
         {
-            byte[] buffer = new byte[BufferSize];
+            var buffer = new byte[BufferSize];
             var responseBuilder = new StringBuilder();
 
             WaitData(nStream);
@@ -234,45 +212,34 @@ namespace Leaf.Net
             string response = responseBuilder.ToString();
 
             if (response.Length == 0)
-            {
                 throw NewProxyException(Resources.ProxyException_ReceivedEmptyResponse);
-            }
 
             // Выделяем строку статуса. Пример: HTTP/1.1 200 OK\r\n
             string strStatus = response.Substring(" ", Http.NewLine);
 
             int simPos = strStatus.IndexOf(' ');
-
             if (simPos == -1)
-            {
                 throw NewProxyException(Resources.ProxyException_ReceivedWrongResponse);
-            }
 
             string statusLine = strStatus.Substring(0, simPos);
 
             if (statusLine.Length == 0)
-            {
                 throw NewProxyException(Resources.ProxyException_ReceivedWrongResponse);
-            }
 
-            HttpStatusCode statusCode = (HttpStatusCode)Enum.Parse(
-                typeof(HttpStatusCode), statusLine);
-
+            var statusCode = (HttpStatusCode)Enum.Parse(typeof(HttpStatusCode), statusLine);
             return statusCode;
         }
 
         private void WaitData(NetworkStream nStream)
         {
             int sleepTime = 0;
-            int delay = (nStream.ReadTimeout < 10) ?
+            int delay = nStream.ReadTimeout < 10 ?
                 10 : nStream.ReadTimeout;
 
             while (!nStream.DataAvailable)
             {
                 if (sleepTime >= delay)
-                {
                     throw NewProxyException(Resources.ProxyException_WaitDataTimeout);
-                }
 
                 sleepTime += 10;
                 Thread.Sleep(10);

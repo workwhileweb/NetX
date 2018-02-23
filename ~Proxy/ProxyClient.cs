@@ -39,13 +39,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает тип прокси-сервера.
         /// </summary>
-        public virtual ProxyType Type
-        {
-            get
-            {
-                return _type;
-            }
-        }
+        public virtual ProxyType Type => _type;
 
         /// <summary>
         /// Возвращает или задаёт хост прокси-сервера.
@@ -55,23 +49,16 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentException">Значение параметра является пустой строкой.</exception>
         public virtual string Host
         {
-            get
-            {
-                return _host;
-            }
+            get => _host;
             set
             {
                 #region Проверка параметра
 
                 if (value == null)
-                {
-                    throw new ArgumentNullException("Host");
-                }
+                    throw new ArgumentNullException(nameof(Host));
 
                 if (value.Length == 0)
-                {
-                    throw ExceptionHelper.EmptyString("Host");
-                }
+                    throw ExceptionHelper.EmptyString(nameof(Host));
 
                 #endregion
 
@@ -86,18 +73,13 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 1 или больше 65535.</exception>
         public virtual int Port
         {
-            get
-            {
-                return _port;
-            }
+            get => _port;
             set
             {
                 #region Проверка параметра
 
                 if (!ExceptionHelper.ValidateTcpPort(value))
-                {
-                    throw ExceptionHelper.WrongTcpPort("Port");
-                }
+                    throw ExceptionHelper.WrongTcpPort(nameof(Port));
 
                 #endregion
 
@@ -112,17 +94,14 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра имеет длину более 255 символов.</exception>
         public virtual string Username
         {
-            get
-            {
-                return _username;
-            }
+            get => _username;
             set
             {   
                 #region Проверка параметра
 
                 if (value != null && value.Length > 255)
                 {
-                    throw new ArgumentOutOfRangeException("Username", string.Format(
+                    throw new ArgumentOutOfRangeException(nameof(Username), string.Format(
                         Resources.ArgumentOutOfRangeException_StringLengthCanNotBeMore, 255));
                 }
 
@@ -139,17 +118,14 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра имеет длину более 255 символов.</exception>
         public virtual string Password
         {
-            get
-            {
-                return _password;
-            }
+            get => _password;
             set
             {
                 #region Проверка параметра
 
                 if (value != null && value.Length > 255)
                 {
-                    throw new ArgumentOutOfRangeException("Password", string.Format(
+                    throw new ArgumentOutOfRangeException(nameof(Password), string.Format(
                         Resources.ArgumentOutOfRangeException_StringLengthCanNotBeMore, 255));
                 }
 
@@ -166,18 +142,13 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 0.</exception>
         public virtual int ConnectTimeout
         {
-            get
-            {
-                return _connectTimeout;
-            }
+            get => _connectTimeout;
             set
             {
                 #region Проверка параметра
 
                 if (value < 0)
-                {
                     throw ExceptionHelper.CanNotBeLess("ConnectTimeout", 0);
-                }
 
                 #endregion
 
@@ -192,18 +163,13 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 0.</exception>
         public virtual int ReadWriteTimeout
         {
-            get
-            {
-                return _readWriteTimeout;
-            }
+            get => _readWriteTimeout;
             set
             {
                 #region Проверка параметра
 
                 if (value < 0)
-                {
-                    throw ExceptionHelper.CanNotBeLess("ReadWriteTimeout", 0);
-                }
+                    throw ExceptionHelper.CanNotBeLess(nameof(ReadWriteTimeout), 0);
 
                 #endregion
 
@@ -220,7 +186,7 @@ namespace Leaf.Net
         /// Инициализирует новый экземпляр класса <see cref="ProxyClient"/>.
         /// </summary>
         /// <param name="proxyType">Тип прокси-сервера.</param>
-        internal protected ProxyClient(ProxyType proxyType)
+        protected internal ProxyClient(ProxyType proxyType)
         {
             _type = proxyType;
         }
@@ -231,7 +197,7 @@ namespace Leaf.Net
         /// <param name="proxyType">Тип прокси-сервера.</param>
         /// <param name="address">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
-        internal protected ProxyClient(ProxyType proxyType, string address, int port)
+        protected internal ProxyClient(ProxyType proxyType, string address, int port)
         {
             _type = proxyType;
             _host = address;
@@ -246,7 +212,7 @@ namespace Leaf.Net
         /// <param name="port">Порт прокси-сервера.</param>
         /// <param name="username">Имя пользователя для авторизации на прокси-сервере.</param>
         /// <param name="password">Пароль для авторизации на прокси-сервере.</param>
-        internal protected ProxyClient(ProxyType proxyType, string address, int port, string username, string password)
+        protected internal ProxyClient(ProxyType proxyType, string address, int port, string username, string password)
         {
             _type = proxyType;
             _host = address;
@@ -286,18 +252,14 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (proxyAddress == null)
-            {
-                throw new ArgumentNullException("proxyAddress");
-            }
+                throw new ArgumentNullException(nameof(proxyAddress));
 
             if (proxyAddress.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("proxyAddress");
-            }
+                throw ExceptionHelper.EmptyString(nameof(proxyAddress));
 
             #endregion
 
-            string[] values = proxyAddress.Split(':');
+            var values = proxyAddress.Split(':');
 
             int port = 0;
             string host = values[0];
@@ -334,14 +296,10 @@ namespace Leaf.Net
             string password = null;
 
             if (values.Length >= 3)
-            {
                 username = values[2];
-            }
 
             if (values.Length >= 4)
-            {
                 password = values[3];
-            }
 
             return ProxyHelper.CreateProxyClient(proxyType, host, port, username, password);
         }
@@ -377,37 +335,29 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (string.IsNullOrEmpty(proxyAddress))
-            {
                 return false;
-            }
 
             #endregion
 
-            string[] values = proxyAddress.Split(':');
+            var values = proxyAddress.Split(':');
 
             int port = 0;
             string host = values[0];
 
-            if (values.Length >= 2)
+            if (values.Length >= 2 &&
+                (!int.TryParse(values[1], out port) || !ExceptionHelper.ValidateTcpPort(port)))
             {
-                if (!int.TryParse(values[1], out port) || !ExceptionHelper.ValidateTcpPort(port))
-                {
-                    return false;
-                }
+                return false;
             }
 
             string username = null;
             string password = null;
 
             if (values.Length >= 3)
-            {
                 username = values[2];
-            }
 
             if (values.Length >= 4)
-            {
                 password = values[3];
-            }
 
             try
             {
@@ -471,7 +421,7 @@ namespace Leaf.Net
         /// <returns>Строка вида - хост:порт, представляющая адрес прокси-сервера.</returns>
         public override string ToString()
         {
-            return string.Format("{0}:{1}", _host, _port);
+            return $"{_host}:{_port}";
         }
 
         /// <summary>
@@ -484,15 +434,13 @@ namespace Leaf.Net
 
             strBuilder.AppendFormat("{0}:{1}", _host, _port);
 
-            if (!string.IsNullOrEmpty(_username))
-            {
-                strBuilder.AppendFormat(":{0}", _username);
+            if (string.IsNullOrEmpty(_username))
+                return strBuilder.ToString();
 
-                if (!string.IsNullOrEmpty(_password))
-                {
-                    strBuilder.AppendFormat(":{0}", _password);
-                }
-            }
+            strBuilder.AppendFormat(":{0}", _username);
+
+            if (!string.IsNullOrEmpty(_password))
+                strBuilder.AppendFormat(":{0}", _password);
 
             return strBuilder.ToString();
         }
@@ -504,11 +452,9 @@ namespace Leaf.Net
         public override int GetHashCode()
         {
             if (string.IsNullOrEmpty(_host))
-            {
                 return 0;
-            }
 
-            return (_host.GetHashCode() ^ _port);
+            return _host.GetHashCode() ^ _port;
         }
 
         /// <summary>
@@ -519,17 +465,9 @@ namespace Leaf.Net
         public bool Equals(ProxyClient proxy)
         {
             if (proxy == null || _host == null)
-            {
                 return false;
-            }
 
-            if (_host.Equals(proxy._host,
-                StringComparison.OrdinalIgnoreCase) && _port == proxy._port)
-            {
-                return true;
-            }
-
-            return false;
+            return _host.Equals(proxy._host, StringComparison.OrdinalIgnoreCase) && _port == proxy._port;
         }
 
         /// <summary>
@@ -541,12 +479,7 @@ namespace Leaf.Net
         {
             var proxy = obj as ProxyClient;
 
-            if (proxy == null)
-            {
-                return false;
-            }
-
-            return Equals(proxy);
+            return proxy != null && Equals(proxy);
         }
 
         #endregion
@@ -561,34 +494,29 @@ namespace Leaf.Net
         /// <exception cref="Leaf.Net.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
         protected TcpClient CreateConnectionToProxy()
         {
-            TcpClient tcpClient = null;
-
             #region Создание подключения
 
-            tcpClient = new TcpClient();
+            var tcpClient = new TcpClient();
             Exception connectException = null;
-            ManualResetEventSlim connectDoneEvent = new ManualResetEventSlim();
+            var connectDoneEvent = new ManualResetEventSlim();
 
             try
             {
-                tcpClient.BeginConnect(_host, _port, new AsyncCallback(
-                    (ar) =>
-                    {
-                        if (tcpClient.Client != null)
-                        {
-                            try
-                            {
-                                tcpClient.EndConnect(ar);
-                            }
-                            catch (Exception ex)
-                            {
-                                connectException = ex;
-                            }
+                tcpClient.BeginConnect(_host, _port, ar => {
+                    if (tcpClient.Client == null)
+                        return;
 
-                            connectDoneEvent.Set();
-                        }
-                    }), tcpClient
-                );
+                    try
+                    {
+                        tcpClient.EndConnect(ar);
+                    }
+                    catch (Exception ex)
+                    {
+                        connectException = ex;
+                    }
+
+                    connectDoneEvent.Set();
+                }, tcpClient);
             }
             #region Catch's
 
@@ -597,9 +525,7 @@ namespace Leaf.Net
                 tcpClient.Close();
 
                 if (ex is SocketException || ex is SecurityException)
-                {
                     throw NewProxyException(Resources.ProxyException_FailedConnect, ex);
-                }
 
                 throw;
             }
@@ -617,13 +543,9 @@ namespace Leaf.Net
                 tcpClient.Close();
 
                 if (connectException is SocketException)
-                {
                     throw NewProxyException(Resources.ProxyException_FailedConnect, connectException);
-                }
-                else
-                {
-                    throw connectException;
-                }
+
+                throw connectException;
             }
 
             if (!tcpClient.Connected)
