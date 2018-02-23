@@ -34,19 +34,13 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
+                throw new ArgumentNullException(nameof(content));
 
             if (!content.CanRead || !content.CanSeek)
-            {
-                throw new ArgumentException(Resources.ArgumentException_CanNotReadOrSeek, "content");
-            }
+                throw new ArgumentException(Resources.ArgumentException_CanNotReadOrSeek, nameof(content));
 
             if (bufferSize < 1)
-            {
-                throw ExceptionHelper.CanNotBeLess("bufferSize", 1);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(bufferSize), 1);
 
             #endregion
 
@@ -91,9 +85,7 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
+                throw new ArgumentNullException(nameof(stream));
 
             #endregion
 
@@ -106,9 +98,7 @@ namespace Leaf.Net
                 int bytesRead = _content.Read(buffer, 0, buffer.Length);
 
                 if (bytesRead == 0)
-                {
                     break;
-                }
 
                 stream.Write(buffer, 0, bytesRead);
             }
@@ -123,20 +113,18 @@ namespace Leaf.Net
         /// <param name="disposing">Значение <see langword="true"/> позволяет освободить управляемые и неуправляемые ресурсы; значение <see langword="false"/> позволяет освободить только неуправляемые ресурсы.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && _content != null)
-            {
-                _content.Dispose();
-                _content = null;
-            }
+            if (!disposing || _content == null)
+                return;
+
+            _content.Dispose();
+            _content = null;
         }
 
 
         private void ThrowIfDisposed()
         {
             if (_content == null)
-            {
                 throw new ObjectDisposedException("StreamContent");
-            }
         }
     }
 }

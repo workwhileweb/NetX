@@ -44,22 +44,14 @@ namespace Leaf.Net
         #region Статические поля (закрытые)
 
         [ThreadStatic] private static Random _rand;
-        private static Random Rand
-        {
-            get
-            {
-                if (_rand == null)
-                    _rand = new Random();
-                return _rand;
-            }
-        }
+        private static Random Rand => _rand ?? (_rand = new Random());
 
         #endregion
 
 
         #region Поля (закрытые)
 
-        private string _boundary;
+        private readonly string _boundary;
         private List<Element> _elements = new List<Element>();
 
         #endregion
@@ -85,25 +77,19 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (boundary == null)
-            {
-                throw new ArgumentNullException("boundary");
-            }
+                throw new ArgumentNullException(nameof(boundary));
 
             if (boundary.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("boundary");
-            }
+                throw ExceptionHelper.EmptyString(nameof(boundary));
 
             if (boundary.Length > 70)
-            {
-                throw ExceptionHelper.CanNotBeGreater("boundary", 70);
-            }
+                throw ExceptionHelper.CanNotBeGreater(nameof(boundary), 70);
 
             #endregion
 
             _boundary = boundary;
 
-            _contentType = string.Format("multipart/form-data; boundary={0}", _boundary);
+            _contentType = $"multipart/form-data; boundary={_boundary}";
         }
 
         #endregion
@@ -128,19 +114,13 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
+                throw new ArgumentNullException(nameof(content));
 
             if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
+                throw new ArgumentNullException(nameof(name));
 
             if (name.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("name");
-            }
+                throw ExceptionHelper.EmptyString(nameof(name));
 
             #endregion
 
@@ -173,31 +153,23 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
+                throw new ArgumentNullException(nameof(content));
 
             if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
+                throw new ArgumentNullException(nameof(name));
 
             if (name.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("name");
-            }
+                throw ExceptionHelper.EmptyString(nameof(name));
 
             if (fileName == null)
-            {
-                throw new ArgumentNullException("fileName");
-            }
+                throw new ArgumentNullException(nameof(fileName));
 
             #endregion
 
             content.ContentType = Http.DetermineMediaType(
                 Path.GetExtension(fileName));
 
-            var element = new Element()
+            var element = new Element
             {
                 Name = name,
                 FileName = fileName,
@@ -230,29 +202,19 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
+                throw new ArgumentNullException(nameof(content));
 
             if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
+                throw new ArgumentNullException(nameof(name));
 
             if (name.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("name");
-            }
+                throw ExceptionHelper.EmptyString(nameof(name));
 
             if (fileName == null)
-            {
-                throw new ArgumentNullException("fileName");
-            }
+                throw new ArgumentNullException(nameof(fileName));
 
             if (contentType == null)
-            {
-                throw new ArgumentNullException("contentType");
-            }
+                throw new ArgumentNullException(nameof(contentType));
 
             #endregion
 
@@ -319,14 +281,12 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
+                throw new ArgumentNullException(nameof(stream));
 
             #endregion
 
-            byte[] newLineBytes = Encoding.ASCII.GetBytes("\r\n");
-            byte[] boundaryBytes = Encoding.ASCII.GetBytes("--" + _boundary + "\r\n");
+            var newLineBytes = Encoding.ASCII.GetBytes("\r\n");
+            var boundaryBytes = Encoding.ASCII.GetBytes("--" + _boundary + "\r\n");
 
             foreach (var element in _elements)
             {
@@ -345,7 +305,7 @@ namespace Leaf.Net
                         FieldTemplate, element.Name);
                 }
 
-                byte[] fieldBytes = Encoding.ASCII.GetBytes(field);
+                var fieldBytes = Encoding.ASCII.GetBytes(field);
                 stream.Write(fieldBytes, 0, fieldBytes.Length);
 
                 element.Content.WriteTo(stream);
@@ -377,15 +337,13 @@ namespace Leaf.Net
         /// <param name="disposing">Значение <see langword="true"/> позволяет освободить управляемые и неуправляемые ресурсы; значение <see langword="false"/> позволяет освободить только неуправляемые ресурсы.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && _elements != null)
-            {
-                foreach (var element in _elements)
-                {
-                    element.Content.Dispose();
-                }
+            if (!disposing || _elements == null)
+                return;
 
-                _elements = null;
-            }
+            foreach (var element in _elements)
+                element.Content.Dispose();
+
+            _elements = null;
         }
 
 
@@ -415,7 +373,7 @@ namespace Leaf.Net
                         strBuilder.Append((char)Rand.Next(97, 123));
                         break;
 
-                    case 2:
+                    default:
                         strBuilder.Append((char)Rand.Next(65, 91));
                         break;
                 }
@@ -427,9 +385,7 @@ namespace Leaf.Net
         private void ThrowIfDisposed()
         {
             if (_elements == null)
-            {
                 throw new ObjectDisposedException("MultipartContent");
-            }
         }
 
         #endregion

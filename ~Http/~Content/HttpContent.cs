@@ -16,14 +16,8 @@ namespace Leaf.Net
         /// </summary>
         public string ContentType
         {
-            get
-            {
-                return _contentType;
-            }
-            set
-            {
-                _contentType = value ?? string.Empty;
-            }
+            get => _contentType;
+            set => _contentType = value ?? string.Empty;
         }
 
 

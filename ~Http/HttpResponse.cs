@@ -1395,7 +1395,7 @@ namespace Leaf.Net
                     if (sourceByte != signature[signatureIndex])
                         break;
 
-                    if (signatureIndex == (signature.Count - 1))
+                    if (signatureIndex == signature.Count - 1)
                         return true;
                 }
             }

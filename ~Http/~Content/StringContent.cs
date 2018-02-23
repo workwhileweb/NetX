@@ -32,23 +32,12 @@ namespace Leaf.Net
         /// <remarks>По умолчанию используется тип контента - 'text/plain'.</remarks>
         public StringContent(string content, Encoding encoding)
         {
-            #region Проверка параметров
-
             if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
+                throw new ArgumentNullException(nameof(content));
 
-            if (encoding == null)
-            {
-                throw new ArgumentNullException("encoding");
-            }
-
-            #endregion
-
-            _content = encoding.GetBytes(content);
-            _offset = 0;
-            _count = _content.Length;
+            Content = encoding?.GetBytes(content) ?? throw new ArgumentNullException(nameof(encoding));
+            Offset = 0;
+            Count = Content.Length;
 
             _contentType = "text/plain";
         }

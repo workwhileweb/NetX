@@ -34,19 +34,13 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (pathToContent == null)
-            {
-                throw new ArgumentNullException("pathToContent");
-            }
+                throw new ArgumentNullException(nameof(pathToContent));
 
             if (pathToContent.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("pathToContent");
-            }
+                throw ExceptionHelper.EmptyString(nameof(pathToContent));
 
             if (bufferSize < 1)
-            {
-                throw ExceptionHelper.CanNotBeLess("bufferSize", 1);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(bufferSize), 1);
 
             #endregion
 

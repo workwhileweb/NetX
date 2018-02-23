@@ -11,11 +11,11 @@ namespace Leaf.Net
         #region Поля (защищённые)
 
         /// <summary>Содержимое тела запроса.</summary>
-        protected byte[] _content;
+        protected byte[] Content;
         /// <summary>Смещение в байтах содержимого тела запроса.</summary>
-        protected int _offset;
+        protected int Offset;
         /// <summary>Число отправляемых байтов содержимого.</summary>
-        protected int _count;
+        protected int Count;
 
         #endregion
 
@@ -52,35 +52,25 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
+                throw new ArgumentNullException(nameof(content));
 
             if (offset < 0)
-            {
-                throw ExceptionHelper.CanNotBeLess("offset", 0);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(offset), 0);
 
             if (offset > content.Length)
-            {
-                throw ExceptionHelper.CanNotBeGreater("offset", content.Length);
-            }
+                throw ExceptionHelper.CanNotBeGreater(nameof(offset), content.Length);
 
             if (count < 0)
-            {
-                throw ExceptionHelper.CanNotBeLess("count", 0);
-            }
+                throw ExceptionHelper.CanNotBeLess(nameof(count), 0);
 
             if (count > (content.Length - offset))
-            {
-                throw ExceptionHelper.CanNotBeGreater("count", content.Length - offset);
-            }
+                throw ExceptionHelper.CanNotBeGreater(nameof(count), content.Length - offset);
 
             #endregion
 
-            _content = content;
-            _offset = offset;
-            _count = count;
+            Content = content;
+            Offset = offset;
+            Count = count;
 
             _contentType = "application/octet-stream";
         }
@@ -102,7 +92,7 @@ namespace Leaf.Net
         /// <returns>Длина тела запроса в байтах.</returns>
         public override long CalculateContentLength()
         {
-            return _content.LongLength;
+            return Content.LongLength;
         }
 
         /// <summary>
@@ -111,7 +101,7 @@ namespace Leaf.Net
         /// <param name="stream">Поток, куда будут записаны данные тела запроса.</param>
         public override void WriteTo(Stream stream)
         {
-            stream.Write(_content, _offset, _count);
+            stream.Write(Content, Offset, Count);
         }
 
         #endregion
