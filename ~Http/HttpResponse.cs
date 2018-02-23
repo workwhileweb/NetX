@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -36,8 +35,8 @@ namespace Leaf.Net
 
             private Stream _stream;
 
-            private byte[] _buffer;
-            private int _bufferSize;
+            private readonly byte[] _buffer;
+            private readonly int _bufferSize;
 
             private int _linePosition;
             private byte[] _lineBuffer = new byte[InitialLineSize];
@@ -47,15 +46,9 @@ namespace Leaf.Net
 
             #region Свойства (открытые)
 
-            public bool HasData
-            {
-                get
-                {
-                    return (Length - Position) != 0;
-                }
-            }
+            public bool HasData => Length - Position != 0;
 
-            public int Length { get; private set; }
+            private int Length { get; set; }
 
             public int Position { get; private set; }
 
@@ -92,9 +85,7 @@ namespace Leaf.Net
                         Length = _stream.Read(_buffer, 0, _bufferSize);
 
                         if (Length == 0)
-                        {
                             break;
-                        }
                     }
 
                     byte b = _buffer[Position++];
@@ -103,19 +94,17 @@ namespace Leaf.Net
 
                     // Если считан символ '\n'.
                     if (b == 10)
-                    {
                         break;
-                    }
 
-                    // Если достигнут максимальный предел размера буфера линии.
-                    if (_linePosition == _lineBuffer.Length)
-                    {
-                        // Увеличиваем размер буфера линии в два раза.
-                        byte[] newLineBuffer = new byte[_lineBuffer.Length * 2];
+                    // Если не достигнут максимальный предел размера буфера линии.
+                    if (_linePosition != _lineBuffer.Length)
+                        continue;
 
-                        _lineBuffer.CopyTo(newLineBuffer, 0);
-                        _lineBuffer = newLineBuffer;
-                    }
+                    // Увеличиваем размер буфера линии в два раза.
+                    var newLineBuffer = new byte[_lineBuffer.Length * 2];
+
+                    _lineBuffer.CopyTo(newLineBuffer, 0);
+                    _lineBuffer = newLineBuffer;
                 }
 
                 return Encoding.ASCII.GetString(_lineBuffer, 0, _linePosition);
@@ -126,9 +115,7 @@ namespace Leaf.Net
                 int curLength = Length - Position;
 
                 if (curLength > length)
-                {
                     curLength = length;
-                }
 
                 Array.Copy(_buffer, Position, buffer, index, curLength);
 
@@ -147,72 +134,36 @@ namespace Leaf.Net
         {
             #region Поля (закрытые)
 
-            private Stream _baseStream;
-            private ReceiverHelper _receiverHelper;
+            private readonly Stream _baseStream;
+            private readonly ReceiverHelper _receiverHelper;
 
             #endregion
 
 
             #region Свойства (открытые)
 
-            public int BytesRead { get; private set; }
+            private int BytesRead { get; set; }
 
             public int TotalBytesRead { get; set; }
 
-            public int LimitBytesRead { get; set; }
+            public int LimitBytesRead { private get; set; }
 
             #region Переопределённые
 
-            public override bool CanRead
-            {
-                get
-                {
-                    return _baseStream.CanRead;
-                }
-            }
+            public override bool CanRead => _baseStream.CanRead;
 
-            public override bool CanSeek
-            {
-                get
-                {
-                    return _baseStream.CanSeek;
-                }
-            }
+            public override bool CanSeek => _baseStream.CanSeek;
 
-            public override bool CanTimeout
-            {
-                get
-                {
-                    return _baseStream.CanTimeout;
-                }
-            }
+            public override bool CanTimeout => _baseStream.CanTimeout;
 
-            public override bool CanWrite
-            {
-                get
-                {
-                    return _baseStream.CanWrite;
-                }
-            }
+            public override bool CanWrite => _baseStream.CanWrite;
 
-            public override long Length
-            {
-                get
-                {
-                    return _baseStream.Length;
-                }
-            }
+            public override long Length => _baseStream.Length;
 
             public override long Position
             {
-                get
-                {
-                    return _baseStream.Position;
-                }
-                set
-                {
-                    _baseStream.Position = value;
-                }
+                get => _baseStream.Position;
+                set => _baseStream.Position = value;
             }
 
             #endregion
@@ -229,15 +180,9 @@ namespace Leaf.Net
 
             #region Методы (открытые)
 
-            public override void Flush()
-            {
-                _baseStream.Flush();
-            }
+            public override void Flush() => _baseStream.Flush();
 
-            public override void SetLength(long value)
-            {
-                _baseStream.SetLength(value);
-            }
+            public override void SetLength(long value) => _baseStream.SetLength(value);
 
             public override long Seek(long offset, SeekOrigin origin)
             {
@@ -253,34 +198,20 @@ namespace Leaf.Net
 
                     // Если лимит достигнут.
                     if (length == 0)
-                    {
                         return 0;
-                    }
 
                     if (length > buffer.Length)
-                    {
                         length = buffer.Length;
-                    }
 
-                    if (_receiverHelper.HasData)
-                    {
-                        BytesRead = _receiverHelper.Read(buffer, offset, length);
-                    }
-                    else
-                    {
-                        BytesRead = _baseStream.Read(buffer, offset, length);
-                    }
+                    BytesRead = _receiverHelper.HasData 
+                        ? _receiverHelper.Read(buffer, offset, length) 
+                        : _baseStream.Read(buffer, offset, length);
                 }
                 else
                 {
-                    if (_receiverHelper.HasData)
-                    {
-                        BytesRead = _receiverHelper.Read(buffer, offset, count);
-                    }
-                    else
-                    {
-                        BytesRead = _baseStream.Read(buffer, offset, count);
-                    }
+                    BytesRead = _receiverHelper.HasData 
+                        ? _receiverHelper.Read(buffer, offset, count) 
+                        : _baseStream.Read(buffer, offset, count);
                 }
 
                 TotalBytesRead += BytesRead;
@@ -301,18 +232,18 @@ namespace Leaf.Net
 
         #region Статические поля (закрытые)
 
-        private static readonly byte[] _openHtmlSignature = Encoding.ASCII.GetBytes("<html");
-        private static readonly byte[] _closeHtmlSignature = Encoding.ASCII.GetBytes("</html>");
+        private static readonly byte[] OpenHtmlSignature = Encoding.ASCII.GetBytes("<html");
+        private static readonly byte[] CloseHtmlSignature = Encoding.ASCII.GetBytes("</html>");
 
-        private static readonly Regex _keepAliveTimeoutRegex = new Regex(
+        private static readonly Regex KeepAliveTimeoutRegex = new Regex(
             @"timeout(|\s+)=(|\s+)(?<value>\d+)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex _keepAliveMaxRegex = new Regex(
+        private static readonly Regex KeepAliveMaxRegex = new Regex(
             @"max(|\s+)=(|\s+)(?<value>\d+)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex _contentCharsetRegex = new Regex(
+        private static readonly Regex ContentCharsetRegex = new Regex(
            @"charset(|\s+)=(|\s+)(?<value>[a-z,0-9,-]+)",
            RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -328,7 +259,7 @@ namespace Leaf.Net
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
 
-        private string _loadedMessageBody = null;
+        private string _loadedMessageBody;
         //private MemoryStream _loadedMessageBody;
         //private readonly CookieStorage _rawCookies = new CookieStorage();
 
@@ -350,39 +281,19 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает значение, указывающие, успешно ли выполнен запрос (код ответа = 200 OK). 
         /// </summary>
-        public bool IsOK
-        {
-            get
-            {
-                return (StatusCode == HttpStatusCode.OK);
-            }
-        }
+        public bool IsOK => StatusCode == HttpStatusCode.OK;
 
         /// <summary>
         /// Возвращает значение, указывающие, имеется ли переадресация.
         /// </summary>
         public bool HasRedirect
         {
-            get
-            {
+            get {
                 int numStatusCode = (int)StatusCode;
 
-                if (numStatusCode >= 300 && numStatusCode < 400)
-                {
-                    return true;
-                }
-
-                if (_headers.ContainsKey("Location"))
-                {
-                    return true;
-                }
-
-                if (_headers.ContainsKey("Redirect-Location"))
-                {
-                    return true;
-                }
-
-                return false;
+                return numStatusCode >= 300 && numStatusCode < 400 
+                    || _headers.ContainsKey("Location")
+                    || _headers.ContainsKey("Redirect-Location");
             }
         }
 
@@ -445,13 +356,7 @@ namespace Leaf.Net
         /// Возвращает значение HTTP-заголовка 'Location'.
         /// </summary>
         /// <returns>Значение заголовка, если такой заголок задан, иначе пустая строка.</returns>
-        public string Location
-        {
-            get
-            {
-                return this["Location"];
-            }
-        }
+        public string Location => this["Location"];
 
         /// <summary>
         /// Возвращает куки, образовавшиеся в результате запроса, или установленные в <see cref="HttpRequest"/>.
@@ -492,23 +397,17 @@ namespace Leaf.Net
                 #region Проверка параметра
 
                 if (headerName == null)
-                {
-                    throw new ArgumentNullException("headerName");
-                }
+                    throw new ArgumentNullException(nameof(headerName));
 
                 if (headerName.Length == 0)
-                {
-                    throw ExceptionHelper.EmptyString("headerName");
-                }
+                    throw ExceptionHelper.EmptyString(nameof(headerName));
 
                 #endregion
 
                 string value;
 
                 if (!_headers.TryGetValue(headerName, out value))
-                {
                     value = string.Empty;
-                }
 
                 return value;
             }
@@ -519,13 +418,7 @@ namespace Leaf.Net
         /// </summary>
         /// <param name="header">HTTP-заголовок.</param>
         /// <value>Значение HTTP-заголовка, если он задан, иначе пустая строка.</value>
-        public string this[HttpHeader header]
-        {
-            get
-            {
-                return this[Http.Headers[header]];
-            }
-        }
+        public string this[HttpHeader header] => this[Http.Headers[header]];
 
         #endregion
 
@@ -560,38 +453,30 @@ namespace Leaf.Net
             #endregion
 
             if (MessageBodyLoaded)
-            {
                 return new byte[0];
-            }
 
             var memoryStream = new MemoryStream(
-                (ContentLength == -1) ? 0 : ContentLength);
+                ContentLength == -1 ? 0 : ContentLength);
 
             try
             {
-                IEnumerable<BytesWraper> source = GetMessageBodySource();
+                var source = GetMessageBodySource();
 
                 foreach (var bytes in source)
-                {
                     memoryStream.Write(bytes.Value, 0, bytes.Length);
-                }
             }
             catch (Exception ex)
             {
                 HasError = true;
 
                 if (ex is IOException || ex is InvalidOperationException)
-                {
                     throw NewHttpException(Resources.HttpException_FailedReceiveMessageBody, ex);
-                }
 
                 throw;
             }
 
             if (ConnectionClosed())
-            {
-                _request.Dispose();
-            }
+                _request?.Dispose();
 
             MessageBodyLoaded = true;
 
@@ -609,47 +494,35 @@ namespace Leaf.Net
             #region Проверка состояния
 
             if (HasError)
-            {
-                return string.Empty;
-                //throw new InvalidOperationException(
-                  //  Resources.InvalidOperationException_HttpResponse_HasError);
-            }
+                return string.Empty; //throw new InvalidOperationException(Resources.InvalidOperationException_HttpResponse_HasError);
 
             #endregion
 
             if (MessageBodyLoaded)
-            {
                 return _loadedMessageBody;
-            }
 
             var memoryStream = new MemoryStream(
-                (ContentLength == -1) ? 0 : ContentLength);
+                ContentLength == -1 ? 0 : ContentLength);
 
             try
             {
-                IEnumerable<BytesWraper> source = GetMessageBodySource();
+                var source = GetMessageBodySource();
 
                 foreach (var bytes in source)
-                {
                     memoryStream.Write(bytes.Value, 0, bytes.Length);
-                }
             }
             catch (Exception ex)
             {
                 HasError = true;
 
                 if (ex is IOException || ex is InvalidOperationException)
-                {
                     throw NewHttpException(Resources.HttpException_FailedReceiveMessageBody, ex);
-                }
 
                 throw;
             }
 
             if (ConnectionClosed())
-            {
                 _request.Dispose();
-            }
 
             MessageBodyLoaded = true;
 
@@ -696,47 +569,39 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
+                throw new ArgumentNullException(nameof(path));
 
             #endregion
 
             if (MessageBodyLoaded)
-            {
                 return;
-            }
 
             try
             {
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
-                    IEnumerable<BytesWraper> source = GetMessageBodySource();
+                    var source = GetMessageBodySource();
 
                     foreach (var bytes in source)
-                    {
                         fileStream.Write(bytes.Value, 0, bytes.Length);
-                    }
                 }
             }
             #region Catch's
 
             catch (ArgumentException ex)
             {
-                throw ExceptionHelper.WrongPath("path", ex);
+                throw ExceptionHelper.WrongPath(nameof(path), ex);
             }
             catch (NotSupportedException ex)
             {
-                throw ExceptionHelper.WrongPath("path", ex);
+                throw ExceptionHelper.WrongPath(nameof(path), ex);
             }
             catch (Exception ex)
             {
                 HasError = true;
 
                 if (ex is IOException || ex is InvalidOperationException)
-                {
                     throw NewHttpException(Resources.HttpException_FailedReceiveMessageBody, ex);
-                }
 
                 throw;
             }
@@ -744,9 +609,7 @@ namespace Leaf.Net
             #endregion
 
             if (ConnectionClosed())
-            {
                 _request.Dispose();
-            }
 
             MessageBodyLoaded = true;
         }
@@ -770,38 +633,30 @@ namespace Leaf.Net
             #endregion
 
             if (MessageBodyLoaded)
-            {
                 return null;
-            }
 
             var memoryStream = new MemoryStream(
-                (ContentLength == -1) ? 0 : ContentLength);
+                ContentLength == -1 ? 0 : ContentLength);
 
             try
             {
-                IEnumerable<BytesWraper> source = GetMessageBodySource();
+                var source = GetMessageBodySource();
 
                 foreach (var bytes in source)
-                {
                     memoryStream.Write(bytes.Value, 0, bytes.Length);
-                }
             }
             catch (Exception ex)
             {
                 HasError = true;
 
                 if (ex is IOException || ex is InvalidOperationException)
-                {
                     throw NewHttpException(Resources.HttpException_FailedReceiveMessageBody, ex);
-                }
 
                 throw;
             }
 
             if (ConnectionClosed())
-            {
                 _request.Dispose();
-            }
 
             MessageBodyLoaded = true;
             memoryStream.Position = 0;
@@ -826,19 +681,15 @@ namespace Leaf.Net
             #endregion
 
             if (MessageBodyLoaded)
-            {
                 return;
-            }
 
             if (ConnectionClosed())
-            {
                 _request.Dispose();
-            }
             else
             {
                 try
                 {
-                    IEnumerable<BytesWraper> source = GetMessageBodySource();
+                    var source = GetMessageBodySource();
 
                     foreach (var bytes in source) { }
                 }
@@ -847,9 +698,7 @@ namespace Leaf.Net
                     HasError = true;
 
                     if (ex is IOException || ex is InvalidOperationException)
-                    {
                         throw NewHttpException(Resources.HttpException_FailedReceiveMessageBody, ex);
-                    }
 
                     throw;
                 }
@@ -868,12 +717,7 @@ namespace Leaf.Net
         /// <returns>Значение <see langword="true"/>, если указанные куки содержатся, иначе значение <see langword="false"/>.</returns>
         public bool ContainsCookie(string url, string name)
         {
-            if (Cookies == null)
-            {
-                return false;
-            }
-
-            return Cookies.ContainsKey(url, name);
+            return Cookies != null && Cookies.ContainsKey(url, name);
         }
         
         #endregion
@@ -892,14 +736,10 @@ namespace Leaf.Net
             #region Проверка параметров
 
             if (headerName == null)
-            {
-                throw new ArgumentNullException("headerName");
-            }
+                throw new ArgumentNullException(nameof(headerName));
 
             if (headerName.Length == 0)
-            {
-                throw ExceptionHelper.EmptyString("headerName");
-            }
+                throw ExceptionHelper.EmptyString(nameof(headerName));
 
             #endregion
 
@@ -944,16 +784,12 @@ namespace Leaf.Net
             _headers.Clear();
             //_rawCookies.Clear();
 
-            if (_request.Cookies != null && !_request.Cookies.IsLocked)
-                Cookies = _request.Cookies;
-            else
-                Cookies = new CookieStorage();
+            Cookies = _request.Cookies != null && !_request.Cookies.IsLocked 
+                ? _request.Cookies 
+                : new CookieStorage();
 
             if (_receiverHelper == null)
-            {
-                _receiverHelper = new ReceiverHelper(
-                    _request.TcpClient.ReceiveBufferSize);
-            }
+                _receiverHelper = new ReceiverHelper(_request.TcpClient.ReceiveBufferSize);
 
             _receiverHelper.Init(_request.ClientStream);
 
@@ -975,9 +811,7 @@ namespace Leaf.Net
                 HasError = true;
 
                 if (ex is IOException)
-                {
                     throw NewHttpException(Resources.HttpException_FailedReceiveResponse, ex);
-                }
 
                 throw;
             }
@@ -995,9 +829,7 @@ namespace Leaf.Net
             long responseSize = _receiverHelper.Position;
 
             if (ContentLength > 0)
-            {
                 responseSize += ContentLength;
-            }
 
             return responseSize;
         }
@@ -1017,182 +849,31 @@ namespace Leaf.Net
 
                 if (startingLine.Length == 0)
                 {
-                    HttpException exception =
-                        NewHttpException(Resources.HttpException_ReceivedEmptyResponse);
-
+                    var exception = NewHttpException(Resources.HttpException_ReceivedEmptyResponse);
                     exception.EmptyMessageBody = true;
 
                     throw exception;
                 }
-                else if (startingLine == Http.NewLine)
-                {
-                    continue;
-                }
-                else
-                {
+                if (startingLine != Http.NewLine)
                     break;
-                }
             }
 
             string version = startingLine.Substring("HTTP/", " ");
             string statusCode = startingLine.Substring(" ", " ");
 
+            // Если сервер не возвращает Reason Phrase
             if (statusCode.Length == 0)
-            {
-                // Если сервер не возвращает Reason Phrase
                 statusCode = startingLine.Substring(" ", Http.NewLine);
-            }
 
             if (version.Length == 0 || statusCode.Length == 0)
-            {
                 throw NewHttpException(Resources.HttpException_ReceivedEmptyResponse);
-            }
 
             ProtocolVersion = Version.Parse(version);
 
             StatusCode = (HttpStatusCode)Enum.Parse(
                 typeof(HttpStatusCode), statusCode);
         }
-
-        private string ParseCookieParam(string value, string name)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return null;
-
-            int index = value.IndexOf(name, StringComparison.OrdinalIgnoreCase);
-            if (index == -1)
-                return null;
-
-            index += name.Length;
-            int indexEnd = value.IndexOf(';', index);
-            if (indexEnd == -1)
-                indexEnd = value.Length - 1;
-
-            return value.Substring(index, indexEnd - index);                
-        }
-
-        /*
-        private void SetCookie(string value)
-        {
-            if (value.Length == 0)
-            {
-                return;
-            }
-
-            // Ищем позицию, где заканчивается куки и начинается описание его параметров.
-            int endCookiePos = value.IndexOf(';');
-
-            // Ищем позицию между именем и значением куки.
-            int separatorPos = value.IndexOf('=');
-
-            if (separatorPos == -1)
-            {
-                string message = string.Format(
-                    Resources.HttpException_WrongCookie, value, Address.Host);
-
-                throw NewHttpException(message);
-            }
-
-            string cookieValue;
-            string cookieName = value.Substring(0, separatorPos);
-            DateTime expires = default(DateTime);
-
-            if (endCookiePos == -1)
-            {
-                cookieValue = value.Substring(separatorPos + 1);
-            }
-            else
-            {
-                cookieValue = value.Substring(separatorPos + 1,
-                    (endCookiePos - separatorPos) - 1);
-
-                #region Получаем время, которое куки будет действителен
-
-                int expiresPos = value.IndexOf("expires=", StringComparison.OrdinalIgnoreCase);
-
-                if (expiresPos != -1)
-                {
-                    string expiresStr;
-                    int endExpiresPos = value.IndexOf(';', expiresPos);
-
-                    expiresPos += 8;
-
-                    if (endExpiresPos == -1)
-                    {
-                        expiresStr = value.Substring(expiresPos);
-                    }
-                    else
-                    {
-                        expiresStr = value.Substring(expiresPos, endExpiresPos - expiresPos);
-                    }                    
-
-                    // Если время куки вышло, то удаляем её.
-                    if (DateTime.TryParse(expiresStr, out expires) &&
-                        expires < DateTime.Now)
-                    {
-                        Cookies.Remove(cookieName);
-                    }
-                }
-
-                #endregion
-            }
-
-            string domain = ParseCookieParam(value, "Domain=");
-            if (string.IsNullOrEmpty(domain))
-                domain = Address.Host;
-
-            string path = ParseCookieParam(value, "Path=");
-            bool secure = value.Contains("Secure");
-
-            var c = new Cookie
-            {
-                Name = cookieName,
-                Domain = domain
-            };
-            var cRaw = new Cookie
-            {
-                Name = cookieName,
-                Domain = domain
-            };
-
-            if (expires != default(DateTime))
-            {
-                c.Expires = expires;
-                cRaw.Expires = expires;
-            }
-
-            if (!string.IsNullOrEmpty(path))
-            {
-                c.Path = path;
-                cRaw.Path = path;
-            }
-            if (secure)
-            {
-                c.Secure = true;
-                cRaw.Secure = true;
-            }
-            
-            c.Value = cookieValue;
-            cRaw.Value = value;
-
-            // Если куки нужно удалить.
-            if (cookieValue.Length == 0 ||
-                cookieValue.Equals("deleted", StringComparison.OrdinalIgnoreCase))
-            {
-                Cookies.Remove(cookieName);
-            }
-            else
-            {
-                //var c = new Cookie(cookieName, cookieValue);
-                // Парсим домен для куки
-               
-
-               Cookies[cookieName] = c;
-            }
-
-            _rawCookies[cookieName] = cRaw;
-        }*/
-
+        
         private void ReceiveHeaders()
         {
             while (true)
@@ -1218,13 +899,9 @@ namespace Leaf.Net
                 string headerValue = header.Substring(separatorPos + 1).Trim(' ', '\t', '\r', '\n');
 
                 if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase))
-                {
                     Cookies.Set(_request.Address, headerValue);
-                }
                 else
-                {
                     _headers[headerName] = headerValue;
-                }
             }
         }
 
@@ -1235,7 +912,8 @@ namespace Leaf.Net
         private IEnumerable<BytesWraper> GetMessageBodySource()
         {
             if (_headers.ContainsKey("Content-Encoding") &&
-                !string.Equals(_headers["Content-Encoding"], "utf-8", StringComparison.OrdinalIgnoreCase)) // Yandex oauth
+                !string.Equals(_headers["Content-Encoding"], 
+                "utf-8", StringComparison.OrdinalIgnoreCase)) // Yandex oauth
             {
                 return GetMessageBodySourceZip();
             }
@@ -1246,31 +924,19 @@ namespace Leaf.Net
         // Загрузка обычных данных.
         private IEnumerable<BytesWraper> GetMessageBodySourceStd()
         {
-            if (_headers.ContainsKey("Transfer-Encoding"))
-            {
-                return ReceiveMessageBodyChunked();
-            }
-
-            if (ContentLength != -1)
-            {
-                return ReceiveMessageBody(ContentLength);
-            }
-
-            return ReceiveMessageBody(_request.ClientStream);
+            return _headers.ContainsKey("Transfer-Encoding")
+                ? ReceiveMessageBodyChunked()
+                : (ContentLength != -1 ? ReceiveMessageBody(ContentLength) : ReceiveMessageBody(_request.ClientStream));
         }
 
         // Загрузка сжатых данных.
         private IEnumerable<BytesWraper> GetMessageBodySourceZip()
         {
             if (_headers.ContainsKey("Transfer-Encoding"))
-            {
                 return ReceiveMessageBodyChunkedZip();
-            }
 
             if (ContentLength != -1)
-            {
                 return ReceiveMessageBodyZip(ContentLength);
-            }
 
             var streamWrapper = new ZipWraperStream(
                 _request.ClientStream, _receiverHelper);
@@ -1284,7 +950,7 @@ namespace Leaf.Net
             var bytesWraper = new BytesWraper();
 
             int bufferSize = _request.TcpClient.ReceiveBufferSize;
-            byte[] buffer = new byte[bufferSize];
+            var buffer = new byte[bufferSize];
 
             bytesWraper.Value = buffer;
 
@@ -1292,20 +958,14 @@ namespace Leaf.Net
 
             // Считываем начальные данные из тела сообщения.
             if (stream is GZipStream || stream is DeflateStream)
-            {
                 begBytesRead = stream.Read(buffer, 0, bufferSize);
-            }
             else
             {
                 if (_receiverHelper.HasData)
-                {
                     begBytesRead = _receiverHelper.Read(buffer, 0, bufferSize);
-                }
 
                 if (begBytesRead < bufferSize)
-                {
                     begBytesRead += stream.Read(buffer, begBytesRead, bufferSize - begBytesRead);
-                }
             }
 
             // Возвращаем начальные данные.
@@ -1314,17 +974,15 @@ namespace Leaf.Net
 
             // Проверяем, есть ли открывающий тег '<html'.
             // Если есть, то считываем данные то тех пор, пока не встретим закрывающий тек '</html>'.
-            bool isHtml = FindSignature(buffer, begBytesRead, _openHtmlSignature);
+            bool isHtml = FindSignature(buffer, begBytesRead, OpenHtmlSignature);
 
             if (isHtml)
             {
-                bool found = FindSignature(buffer, begBytesRead, _closeHtmlSignature);
+                bool found = FindSignature(buffer, begBytesRead, CloseHtmlSignature);
 
                 // Проверяем, есть ли в начальных данных закрывающий тег.
                 if (found)
-                {
                     yield break;
-                }
             }
 
             while (true)
@@ -1337,11 +995,10 @@ namespace Leaf.Net
                     if (bytesRead == 0)
                     {
                         WaitData();
-
                         continue;
                     }
 
-                    bool found = FindSignature(buffer, bytesRead, _closeHtmlSignature);
+                    bool found = FindSignature(buffer, bytesRead, CloseHtmlSignature);
 
                     if (found)
                     {
@@ -1352,9 +1009,7 @@ namespace Leaf.Net
                     }
                 }
                 else if (bytesRead == 0)
-                {
                     yield break;
-                }
 
                 bytesWraper.Length = bytesRead;
                 yield return bytesWraper;
@@ -1364,11 +1019,11 @@ namespace Leaf.Net
         // Загрузка тела сообщения известной длины.
         private IEnumerable<BytesWraper> ReceiveMessageBody(int contentLength)
         {
-            Stream stream = _request.ClientStream;
+            var stream = _request.ClientStream;
             var bytesWraper = new BytesWraper();
 
             int bufferSize = _request.TcpClient.ReceiveBufferSize;
-            byte[] buffer = new byte[bufferSize];
+            var buffer = new byte[bufferSize];
 
             bytesWraper.Value = buffer;
 
@@ -1376,21 +1031,10 @@ namespace Leaf.Net
 
             while (totalBytesRead != contentLength)
             {
-                int bytesRead;
-
-                if (_receiverHelper.HasData)
-                {
-                    bytesRead = _receiverHelper.Read(buffer, 0, bufferSize);
-                }
-                else
-                {
-                    bytesRead = stream.Read(buffer, 0, bufferSize);
-                }
+                var bytesRead = _receiverHelper.HasData ? _receiverHelper.Read(buffer, 0, bufferSize) : stream.Read(buffer, 0, bufferSize);
 
                 if (bytesRead == 0)
-                {
                     WaitData();
-                }
                 else
                 {
                     totalBytesRead += bytesRead;
@@ -1404,11 +1048,11 @@ namespace Leaf.Net
         // Загрузка тела сообщения частями.
         private IEnumerable<BytesWraper> ReceiveMessageBodyChunked()
         {
-            Stream stream = _request.ClientStream;
+            var stream = _request.ClientStream;
             var bytesWraper = new BytesWraper();
 
             int bufferSize = _request.TcpClient.ReceiveBufferSize;
-            byte[] buffer = new byte[bufferSize];
+            var buffer = new byte[bufferSize];
 
             bytesWraper.Value = buffer;
 
@@ -1457,25 +1101,14 @@ namespace Leaf.Net
                     int length = blockLength - totalBytesRead;
 
                     if (length > bufferSize)
-                    {
                         length = bufferSize;
-                    }
 
-                    int bytesRead;
-
-                    if (_receiverHelper.HasData)
-                    {
-                        bytesRead = _receiverHelper.Read(buffer, 0, length);
-                    }
-                    else
-                    {
-                        bytesRead = stream.Read(buffer, 0, length);
-                    }
+                    var bytesRead = _receiverHelper.HasData 
+                        ? _receiverHelper.Read(buffer, 0, length) 
+                        : stream.Read(buffer, 0, length);
 
                     if (bytesRead == 0)
-                    {
                         WaitData();
-                    }
                     else
                     {
                         totalBytesRead += bytesRead;
@@ -1493,10 +1126,10 @@ namespace Leaf.Net
             var streamWrapper = new ZipWraperStream(
                 _request.ClientStream, _receiverHelper);
 
-            using (Stream stream = GetZipStream(streamWrapper))
+            using (var stream = GetZipStream(streamWrapper))
             {
                 int bufferSize = _request.TcpClient.ReceiveBufferSize;
-                byte[] buffer = new byte[bufferSize];
+                var buffer = new byte[bufferSize];
 
                 bytesWraper.Value = buffer;
 
@@ -1507,15 +1140,11 @@ namespace Leaf.Net
                     if (bytesRead == 0)
                     {
                         if (streamWrapper.TotalBytesRead == contentLength)
-                        {
                             yield break;
-                        }
-                        else
-                        {
-                            WaitData();
 
-                            continue;
-                        }
+                        WaitData();
+
+                        continue;
                     }
 
                     bytesWraper.Length = bytesRead;
@@ -1530,10 +1159,10 @@ namespace Leaf.Net
             var streamWrapper = new ZipWraperStream
                 (_request.ClientStream, _receiverHelper);
 
-            using (Stream stream = GetZipStream(streamWrapper))
+            using (var stream = GetZipStream(streamWrapper))
             {
                 int bufferSize = _request.TcpClient.ReceiveBufferSize;
-                byte[] buffer = new byte[bufferSize];
+                var buffer = new byte[bufferSize];
 
                 bytesWraper.Value = buffer;
 
@@ -1586,15 +1215,11 @@ namespace Leaf.Net
                         if (bytesRead == 0)
                         {
                             if (streamWrapper.TotalBytesRead == blockLength)
-                            {
                                 break;
-                            }
-                            else
-                            {
-                                WaitData();
 
-                                continue;
-                            }
+                            WaitData();
+
+                            continue;
                         }
 
                         bytesWraper.Length = bytesRead;
@@ -1610,19 +1235,10 @@ namespace Leaf.Net
 
         private bool ConnectionClosed()
         {
-            if (_headers.ContainsKey("Connection") &&
-                _headers["Connection"].Equals("close", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (_headers.ContainsKey("Proxy-Connection") &&
-                _headers["Proxy-Connection"].Equals("close", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return false;
+            return _headers.ContainsKey("Connection") &&
+                   _headers["Connection"].Equals("close", StringComparison.OrdinalIgnoreCase) ||
+                   _headers.ContainsKey("Proxy-Connection") &&
+                   _headers["Proxy-Connection"].Equals("close", StringComparison.OrdinalIgnoreCase);
         }
 
         private int? GetKeepAliveTimeout()
@@ -1631,7 +1247,7 @@ namespace Leaf.Net
                 return null;
 
             var header = _headers["Keep-Alive"];
-            var match = _keepAliveTimeoutRegex.Match(header);
+            var match = KeepAliveTimeoutRegex.Match(header);
 
             if (match.Success)
                 return int.Parse(match.Groups["value"].Value) * 1000; // В миллисекундах.
@@ -1645,7 +1261,7 @@ namespace Leaf.Net
                 return null;
 
             var header = _headers["Keep-Alive"];
-            var match = _keepAliveMaxRegex.Match(header);
+            var match = KeepAliveMaxRegex.Match(header);
 
             if (match.Success)
                 return int.Parse(match.Groups["value"].Value);
@@ -1676,7 +1292,7 @@ namespace Leaf.Net
                 return _request.CharacterSet ?? Encoding.Default;
 
             var header = _headers["Content-Type"];
-            var match = _contentCharsetRegex.Match(header);
+            var match = ContentCharsetRegex.Match(header);
 
             if (!match.Success)
                 return _request.CharacterSet ?? Encoding.Default;
@@ -1695,31 +1311,33 @@ namespace Leaf.Net
 
         private int GetContentLength()
         {
-            if (_headers.ContainsKey("Content-Length"))
-            {
-                int contentLength;
-                int.TryParse(_headers["Content-Length"], out contentLength);
-                return contentLength;
-            }
+            string contentLengthHeader = Http.Headers[HttpHeader.ContentLength];
 
-            return -1;
+            if (!_headers.ContainsKey(contentLengthHeader))
+                return -1;
+
+            int contentLength;
+            if (!int.TryParse(_headers[contentLengthHeader], out contentLength))
+                throw new FormatException($"Invalid response header \"{contentLengthHeader}\" value");
+
+            return contentLength;
         }
 
         private string GetContentType()
         {
-            if (_headers.ContainsKey("Content-Type"))
-            {
-                string contentType = _headers["Content-Type"];
+            string contentLengthHeader = Http.Headers[HttpHeader.ContentLength];
 
-                // Ищем позицию, где заканчивается описание типа контента и начинается описание его параметров.
-                int endTypePos = contentType.IndexOf(';');
-                if (endTypePos != -1)
-                    contentType = contentType.Substring(0, endTypePos);
+            if (!_headers.ContainsKey(contentLengthHeader))
+                return string.Empty;
+
+            string contentType = _headers[contentLengthHeader];
+
+            // Ищем позицию, где заканчивается описание типа контента и начинается описание его параметров.
+            int endTypePos = contentType.IndexOf(';');
+            if (endTypePos != -1)
+                contentType = contentType.Substring(0, endTypePos);
   
-                return contentType;
-            }
-
-            return string.Empty;
+            return contentType;
         }
 
         #endregion
@@ -1733,9 +1351,7 @@ namespace Leaf.Net
             while (!_request.ClientNetworkStream.DataAvailable)
             {
                 if (sleepTime >= delay)
-                {
                     throw NewHttpException(Resources.HttpException_WaitDataTimeout);
-                }
 
                 sleepTime += 10;
                 Thread.Sleep(10);
@@ -1744,7 +1360,7 @@ namespace Leaf.Net
 
         private Stream GetZipStream(Stream stream)
         {
-            string contentEncoding = _headers["Content-Encoding"].ToLower();
+            string contentEncoding = _headers[Http.Headers[HttpHeader.ContentLength]].ToLower();
 
             switch (contentEncoding)
             {
@@ -1760,32 +1376,27 @@ namespace Leaf.Net
             }
         }
 
-        private bool FindSignature(byte[] source, int sourceLength, byte[] signature)
+        private static bool FindSignature(IReadOnlyList<byte> source, int sourceLength, IReadOnlyList<byte> signature)
         {
-            int length = (sourceLength - signature.Length) + 1;
+            int length = (sourceLength - signature.Count) + 1;
 
             for (int sourceIndex = 0; sourceIndex < length; ++sourceIndex)
             {
-                for (int signatureIndex = 0; signatureIndex < signature.Length; ++signatureIndex)
+                for (int signatureIndex = 0; signatureIndex < signature.Count; ++signatureIndex)
                 {
                     byte sourceByte = source[signatureIndex + sourceIndex];
                     char sourceChar = (char)sourceByte;
 
                     if (char.IsLetter(sourceChar))
-                    {
                         sourceChar = char.ToLower(sourceChar);
-                    }
 
                     sourceByte = (byte)sourceChar;
 
                     if (sourceByte != signature[signatureIndex])
-                    {
                         break;
-                    }
-                    else if (signatureIndex == (signature.Length - 1))
-                    {
+
+                    if (signatureIndex == (signature.Count - 1))
                         return true;
-                    }
                 }
             }
 
