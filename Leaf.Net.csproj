@@ -58,6 +58,8 @@
     <Compile Include="Services\Cloudflare\ChallengeSolver.cs" />
     <Compile Include="Services\Cloudflare\CloudflareBypass.cs" />
     <Compile Include="Services\Cloudflare\CloudflareException.cs" />
+    <Compile Include="Services\StormWall\StormWallException.cs" />
+    <Compile Include="Services\StormWall\StormWallBypass.cs" />
     <Compile Include="~Extensions\HttpExtensions.cs" />
     <Compile Include="~Http\CookieStorage.cs" />
     <Compile Include="~Http\HttpExceptionStatus.cs" />
