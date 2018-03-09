@@ -60,6 +60,7 @@
     <Compile Include="Services\Cloudflare\CloudflareException.cs" />
     <Compile Include="Services\StormWall\StormWallException.cs" />
     <Compile Include="Services\StormWall\StormWallBypass.cs" />
+    <Compile Include="Services\StormWall\StormWallSolver.cs" />
     <Compile Include="~Extensions\HttpExtensions.cs" />
     <Compile Include="~Http\CookieStorage.cs" />
     <Compile Include="~Http\HttpExceptionStatus.cs" />
