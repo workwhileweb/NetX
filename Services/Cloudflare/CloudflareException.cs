@@ -8,6 +8,8 @@ namespace Leaf.Net.Services.Cloudflare
     [Serializable]
     public class CloudflareException : Exception
     {
+        public CloudflareException(string message) : base(message) { }
+
         public CloudflareException(int attempts) : this(attempts, $"Clearance failed after {attempts} attempt(s).") { }
 
         public CloudflareException(int attempts, string message) : base(message)
