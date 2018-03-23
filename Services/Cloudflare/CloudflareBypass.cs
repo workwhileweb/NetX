@@ -105,8 +105,8 @@ namespace Leaf.Net.Services.Cloudflare
                 }
 
                 // TODO: while for captcha solving
-                //if (reCaptchaSolver == null)
-                  //  throw new CloudflareException("Cloudflare требует решение ReCaptcha, но делегат для её решения не был предоставлен");
+                if (reCaptchaSolver == null)
+                    throw new CloudflareException("Cloudflare требует решение ReCaptcha, но делегат для её решения не был предоставлен");
 
                 string siteKey = strResponse.Substring(siteKeyPattern, "\"");
                 if (siteKey == string.Empty)
