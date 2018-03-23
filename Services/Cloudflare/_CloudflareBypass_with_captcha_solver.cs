@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define USE_CAPTCHA_SOLVER
+
+using System;
 using System.Threading;
 
 namespace Leaf.Net.Services.Cloudflare
@@ -49,6 +51,9 @@ namespace Leaf.Net.Services.Cloudflare
         /// <returns>Returns original HttpResponse</returns>
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, string url,
             DLog log = null,
+            #if USE_CAPTCHA_SOLVER
+            DSolveRecaptcha reCaptchaSolver = null,
+            #endif
             CancellationToken cancellationToken = default(CancellationToken))
         {
             // User-Agent is required
@@ -57,52 +62,121 @@ namespace Leaf.Net.Services.Cloudflare
 
             log?.Invoke("Проверяем наличие CloudFlare по адресу: " + url);
 
+            HttpResponse response = null;
+
             for (int i = 0; i < MaxRetries; i++)
             {
                 string retry = $". Попытка {i + 1} из {MaxRetries}.";
-                log?.Invoke("Обхожу CloudFlare" + retry);
 
-                var response = ManualGet(request, url);
+                #region Try catch disabled
+                /*try
+                {*/
+                #endregion
+
+                response = ManualGet(request, url);
                 if (!response.IsCloudflared())
                 {
                     log?.Invoke("УСПЕХ: Cloudflare не обнаружен, работаем дальше: " + url);
                     return response;
                 }
 
+                log?.Invoke("Обхожу CloudFlare" + retry);
+
                 if (cancellationToken != default(CancellationToken))
                     cancellationToken.ThrowIfCancellationRequested();
 
                 response = PassClearance(request, response, url, log, cancellationToken);
 
-                // ReSharper disable once SwitchStatementMissingSomeCases
-                switch (response.StatusCode) {
-                    case HttpStatusCode.ServiceUnavailable:
-                    case HttpStatusCode.Forbidden:
-                        continue;
-                    case HttpStatusCode.Found:
-                        // Т.к. ранее использовался ручной режим - нужно обработать редирект, если он есть, чтобы вернуть отфильтрованное тело запроса    
-                        if (response.HasRedirect)
-                        {
-                            // Не используем manual т.к. могут быть переадресации
-                            bool ignoreProtocolErrors = request.IgnoreProtocolErrors;
+                // JS Challange passed
+                if (response.StatusCode == HttpStatusCode.Found)
+                {
+                    // Т.к. ранее использовался ручной режим - нужно обработать редирект, если он есть, чтобы вернуть отфильтрованное тело запроса
 
-                            // Отключаем обработку HTTP ошибок
-                            request.IgnoreProtocolErrors = true;
-                            response = request.Get(response.RedirectAddress.AbsoluteUri);
-                            request.IgnoreProtocolErrors = ignoreProtocolErrors;
+                    // TODO: иногда бывает 403 forbidden из-за cloudflare, в чем проблема?
+                    if (response.HasRedirect)
+                        response = request.Get(response.RedirectAddress);
 
-                            if (IsCloudflared(response))
-                                continue;
-                        }
-
-                        log?.Invoke("CloudFlare успешно пройден: " + url);
-                        return response;
+                    break;
                 }
 
-                log?.Invoke($"CloudFlare не смог пройти JS Challange, причина не ясна. Статус код: {response.StatusCode}" + retry);
+                #if USE_CAPTCHA_SOLVER
+                if (response.StatusCode == HttpStatusCode.Forbidden && reCaptchaSolver == null)
+                    continue;
+                #else
+                if (response.StatusCode == HttpStatusCode.Forbidden) // && reCaptchaSolver == null)
+                    continue;
+                #endif
+
+                // Not implemented status code
+                if (response.StatusCode != HttpStatusCode.Forbidden)
+                {
+                    log?.Invoke(
+                        $"CloudFlare не смог пройти JS Challange, причина не ясна. Статус код: {response.StatusCode}" +
+                        retry);
+
+                    #if USE_CAPTCHA_SOLVER
+                    continue;
+                    #endif
+                }
+
+                #region Captcha solver
+                #if USE_CAPTCHA_SOLVER
+                // IF Forbidden and has recaptcha
+                //
+
+                // ReCaptcha solve required
+                string strResponse = response.ToString();
+                // TODO: while for captcha solving
+                const string siteKeyPattern = "data-sitekey=\"";
+                if (!strResponse.Contains(siteKeyPattern))
+                {
+                    string error =
+                        "CloudFlare не смог пройти т.к. возращен код Forbidden, но ключ сайта для рекаптчи не найден" +
+                        retry;
+
+                    log?.Invoke(error);
+                    throw new CloudflareException(error);
+                }
+
+                if (reCaptchaSolver == null)
+                    throw new CloudflareException("Cloudflare требует решение ReCaptcha, но делегат для её решения не был предоставлен");
+    
+                string siteKey = strResponse.Substring(siteKeyPattern, "\"");
+                if (siteKey == string.Empty)
+                    throw new CloudflareException("Cloudflare требует решение ReCaptcha, но ключ сайта не был найден в HTML коде");
+    
+                string submitRelativeUrl = strResponse.Substring("id=\"challenge-form\" action=\"", "\"");
+                if (submitRelativeUrl == string.Empty)
+                    throw new CloudflareException("Cloudflare требует решение ReCaptcha, но адрес публикации формы с каптчей не найден в HTML коде");
+    
+                // Build uri Form GET action
+                var address = response.Address;
+                var submitUri = new Uri($"{address.Scheme}://{address.Host}:{address.Port}{submitRelativeUrl}");
+    
+                log?.Invoke("CloudFlare выдал рекаптчу, решаю...");
+    
+                // Решаем рекаптчу и отправляем форму
+                var rp = new RequestParams { ["g-recaptcha-response"] = reCaptchaSolver(siteKey) };
+                response = request.Get(submitUri, rp);
+    
+                // После отправки формы кидает на главную, поэтому идем по адресу какой требуется согласно функции
+                if (response.Address.AbsoluteUri != url)
+                    response = request.Get(url);
+
+                #endif
+                
+                #endregion
             }
 
-            throw new CloudflareException(MaxRetries, "Превышен лимит попыток обхода Cloudflare");
+            if (response == null)
+                throw new Exception("Ответ null");
+
+            // Clearance failed.
+            if (response.IsCloudflared())
+                throw new CloudflareException(MaxRetries, "Превышен лимит попыток обхода Cloudflare");
+
+            log?.Invoke("CloudFlare успешно пройден");
+            return response;
         }
 
         /// <inheritdoc />

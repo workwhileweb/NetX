@@ -56,6 +56,7 @@
     <Compile Include="Services\Captcha\Rucaptcha.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolution.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolver.cs" />
+    <None Include="Services\Cloudflare\_CloudflareBypass_with_captcha_solver.cs" />
     <Compile Include="Services\Cloudflare\CloudflareBypass.cs" />
     <Compile Include="Services\Cloudflare\CloudflareException.cs" />
     <Compile Include="Services\StormWall\StormWallException.cs" />
