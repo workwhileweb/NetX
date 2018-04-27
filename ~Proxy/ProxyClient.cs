@@ -235,7 +235,7 @@ namespace Leaf.Net
         /// <summary>
         /// Служит для преобразования строковых прокси к объекту ProxyClient.
         /// </summary>
-        private static readonly Dictionary<string, ProxyType> ProxyProtocol = new Dictionary<string, ProxyType> {
+        public static readonly Dictionary<string, ProxyType> ProxyProtocol = new Dictionary<string, ProxyType> {
             { "http", ProxyType.HTTP },
             { "https", ProxyType.HTTP },
             { "socks4", ProxyType.Socks4 },

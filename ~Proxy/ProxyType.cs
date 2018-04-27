@@ -9,6 +9,6 @@
         Socks4,
         Socks4A,
         Socks5,
-        Chain
+        Chain,
     }
 }
