@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Leaf.Net.Services.Cloudflare
 {
     /// <summary>
     /// Holds the information, which is required to pass the CloudFlare clearance.
     /// </summary>
-    internal struct ChallengeSolution : IEquatable<ChallengeSolution>
+    public struct ChallengeSolution : IEquatable<ChallengeSolution>
     {
-        public ChallengeSolution(string clearancePage, string verificationCode, string pass, int answer)
+        public ChallengeSolution(string clearancePage, string verificationCode, string pass, double answer, bool containsIntegerTag)
         {
             ClearancePage = clearancePage;
             VerificationCode = verificationCode;
             Pass = pass;
             Answer = answer;
+            ContainsIntegerTag = containsIntegerTag;
         }
 
         public string ClearancePage { get; }
@@ -21,9 +23,11 @@ namespace Leaf.Net.Services.Cloudflare
 
         public string Pass { get; }
 
-        public int Answer { get; }
+        public double Answer { get; }
 
-        public string ClearanceQuery => $"{ClearancePage}?jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer}";
+        public bool ContainsIntegerTag { get; }
+
+        public string ClearanceQuery => $"{ClearancePage}?jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer.ToString("R", CultureInfo.InvariantCulture)}";
 
         public static bool operator ==(ChallengeSolution solutionA, ChallengeSolution solutionB)
         {

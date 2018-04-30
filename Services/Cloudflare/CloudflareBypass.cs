@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 
 namespace Leaf.Net.Services.Cloudflare
@@ -40,6 +41,15 @@ namespace Leaf.Net.Services.Cloudflare
             return serviceUnavailable && cloudflareServer;
         }
 
+        private static void AddCloudflareHeaders(this HttpRequest request, string refererUrl)
+        {
+            request.AddHeader(HttpHeader.Referer, refererUrl);
+            request.AddHeader(HttpHeader.Accept,
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+            request.AddHeader("Upgrade-Insecure-Requests", "1");
+            request.AddHeader(HttpHeader.AcceptLanguage, "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7");
+        }
+
         /// <summary>
         /// GET request with bypassing Cloudflare JavaScript challenge.
         /// </summary>
@@ -62,11 +72,23 @@ namespace Leaf.Net.Services.Cloudflare
                 string retry = $". Попытка {i + 1} из {MaxRetries}.";
                 log?.Invoke("Обхожу CloudFlare" + retry);
 
+                
                 var response = ManualGet(request, url);
                 if (!response.IsCloudflared())
                 {
                     log?.Invoke("УСПЕХ: Cloudflare не обнаружен, работаем дальше: " + url);
                     return response;
+                }
+
+                // Remove expired clearance if present
+                var cookies = request.Cookies.GetCookies(url);
+                foreach (Cookie cookie in cookies)
+                {
+                    if (cookie.Name != "cf_clearance") 
+                        continue;
+
+                    cookie.Expired = true;
+                    break;
                 }
 
                 if (cancellationToken != default(CancellationToken))
@@ -83,19 +105,28 @@ namespace Leaf.Net.Services.Cloudflare
                         // Т.к. ранее использовался ручной режим - нужно обработать редирект, если он есть, чтобы вернуть отфильтрованное тело запроса    
                         if (response.HasRedirect)
                         {
+                            if (!response.ContainsCookie(url, "cf_clearance"))
+                                continue;
+
+                            log?.Invoke($"CloudFlare этап пройден, получаю оригинальную страницу: {url}...");
+
                             // Не используем manual т.к. могут быть переадресации
                             bool ignoreProtocolErrors = request.IgnoreProtocolErrors;
-
                             // Отключаем обработку HTTP ошибок
                             request.IgnoreProtocolErrors = true;
+
+                            request.AddCloudflareHeaders(url); // заголовки важны для прохождения cloudflare
                             response = request.Get(response.RedirectAddress.AbsoluteUri);
                             request.IgnoreProtocolErrors = ignoreProtocolErrors;
 
                             if (IsCloudflared(response))
+                            {
+                                log?.Invoke($"Ошибка CloudFlare: этап пройден, но оригинальная страница не получена: {url}");
                                 continue;
+                            }
                         }
 
-                        log?.Invoke("CloudFlare успешно пройден: " + url);
+                        log?.Invoke($"CloudFlare: успех, оригинальная страница получена: {url}");
                         return response;
                 }
 
@@ -105,7 +136,7 @@ namespace Leaf.Net.Services.Cloudflare
             throw new CloudflareException(MaxRetries, "Превышен лимит попыток обхода Cloudflare");
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="GetThroughCloudflare()"/>
         /// <param name="uri">Uri Address</param>
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, Uri uri,
             DLog log = null,
@@ -132,10 +163,11 @@ namespace Leaf.Net.Services.Cloudflare
             return new Uri($"{scheme}://{host}:{port}{solution.ClearanceQuery}");
         }
 
-        private static HttpResponse ManualGet(HttpRequest request, string url)
+        private static HttpResponse ManualGet(HttpRequest request, string url, string refererUrl = null)
         {
             request.ManualMode = true;
 
+            request.AddCloudflareHeaders(refererUrl ?? url);
             var response = request.Get(url);
 
             request.ManualMode = false;
@@ -160,82 +192,7 @@ namespace Leaf.Net.Services.Cloudflare
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
-            // Publish form with challenge solution
-            request.AddHeader(HttpHeader.Referer, refererUrl);
-            return ManualGet(request, uri.AbsoluteUri);
+            return ManualGet(request, uri.AbsoluteUri, refererUrl);
         }
-
-#region Disabled code
-        /*
-/// <summary>
-/// Async GET request with bypassing Cloudflare JavaScript challenge.
-/// </summary>
-/// <param name="uri">Address</param>
-/// <param name="cancellationToken">Cancel protection</param>
-/// <returns>Returns original HttpResponse</returns>
-public static async Task<HttpResponse> GetAsyncThroughCloudflare(this HttpRequest request, Uri uri,
-    CancellationToken cancellationToken = default(CancellationToken))
-{
-    // User-Agent is required
-    if (string.IsNullOrEmpty(request.UserAgent))
-        request.UserAgent = Http.ChromeUserAgent();
-
-    var response = await ManualGetAsync(request, uri);
-
-    // (Re)try clearance if required.
-    int retries = 0;
-    while (response.IsCloudflared() && (MaxRetries < 0 || retries <= MaxRetries))
-    {
-        if (cancellationToken != default(CancellationToken))
-            cancellationToken.ThrowIfCancellationRequested();
-
-        await PassClearanceAsync(request, response, cancellationToken);
-        response = await ManualGetAsync(request, uri); // await GetAsyncThroughCloudflare(request, uri, cancellationToken);
-
-        retries++;
-    }
-
-    // Clearance failed.
-    if (response.IsCloudflared())
-        throw new CloudflareException(retries);
-
-    // Т.к. ранее использовался ручной режим - нужно обработать редирект, чтобы вернуть нужное тело запроса
-    if (response.HasRedirect)
-        response = request.Get(response.RedirectAddress);
-
-    return response;
-}
-
-/// <inheritdoc />
-/// <param name="url">Url</param>
-public static async Task<HttpResponse> GetAsyncThroughCloudflare(this HttpRequest request, string url,
-    CancellationToken cancellationToken = default(CancellationToken))
-{
-    return await GetAsyncThroughCloudflare(request, new Uri(url), cancellationToken);
-}
-*/
-
-        /*
-private static async Task<HttpResponse> ManualGetAsync(HttpRequest request, string url)
-{
-    request.ManualMode = true;
-    var response = await request.GetAsync(url);
-    request.ManualMode = false;
-
-    return response;
-}*/
-
-        /*
-        private static async Task PassClearanceAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
-        {
-            // Using Uri for correct port resolving
-            var uri = GetSolutionUri(response);
-
-            await Task.Delay(Delay, cancellationToken);
-
-            // Publish form with challenge solution
-            (await ManualGetAsync(request, uri.AbsoluteUri)).None();
-        }*/
-#endregion
     }
 }

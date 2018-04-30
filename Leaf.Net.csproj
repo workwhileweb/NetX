@@ -39,6 +39,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CloudFlareUtilities">
+      <HintPath>C:\Users\PC\Desktop\CloudFlareUtilities-master\CloudFlareUtilities\bin\Release\net462\CloudFlareUtilities.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
