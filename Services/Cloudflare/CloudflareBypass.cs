@@ -14,7 +14,9 @@ namespace Leaf.Net.Services.Cloudflare
     {
         public delegate void DLog(string message);
 
-        public delegate string DSolveRecaptcha(string siteKey);
+        //public delegate string DSolveRecaptcha(string siteKey);
+
+        public const string CfClearanceCookie = "cf_clearance";
 
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace Leaf.Net.Services.Cloudflare
                 var cookies = request.Cookies.GetCookies(url);
                 foreach (Cookie cookie in cookies)
                 {
-                    if (cookie.Name != "cf_clearance") 
+                    if (cookie.Name != CfClearanceCookie) 
                         continue;
 
                     cookie.Expired = true;
@@ -105,7 +107,7 @@ namespace Leaf.Net.Services.Cloudflare
                         // Т.к. ранее использовался ручной режим - нужно обработать редирект, если он есть, чтобы вернуть отфильтрованное тело запроса    
                         if (response.HasRedirect)
                         {
-                            if (!response.ContainsCookie(url, "cf_clearance"))
+                            if (!response.ContainsCookie(url, CfClearanceCookie))
                                 continue;
 
                             log?.Invoke($"CloudFlare этап пройден, получаю оригинальную страницу: {url}...");
@@ -136,7 +138,7 @@ namespace Leaf.Net.Services.Cloudflare
             throw new CloudflareException(MaxRetries, "Превышен лимит попыток обхода Cloudflare");
         }
 
-        /// <inheritdoc cref="GetThroughCloudflare()"/>
+        /// <inheritdoc cref="GetThroughCloudflare"/>
         /// <param name="uri">Uri Address</param>
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, Uri uri,
             DLog log = null,
