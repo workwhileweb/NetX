@@ -226,8 +226,9 @@ namespace Leaf.Net
             if (statusLine.Length == 0)
                 throw NewProxyException(Resources.ProxyException_ReceivedWrongResponse);
 
-            var statusCode = (HttpStatusCode)Enum.Parse(typeof(HttpStatusCode), statusLine);
-            return statusCode;
+            return Enum.TryParse(statusLine, out HttpStatusCode statusCode) 
+                ? statusCode
+                : HttpStatusCode.InvalidStatusCode;
         }
 
         private void WaitData(NetworkStream nStream)

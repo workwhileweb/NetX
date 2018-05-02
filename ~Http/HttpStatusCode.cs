@@ -64,5 +64,7 @@ namespace Leaf.Net
         GatewayTimeout = 504,
         HttpVersionNotSupported = 505,
         NetworkAuthenticationRequired = 511,
+
+        InvalidStatusCode = 555,
     }
 }
