@@ -626,5 +626,14 @@ namespace Leaf.Net {
                 return ResourceManager.GetString("Socks5_CommandReplyTTLExpired", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неверно задан начальный индекс поиска подстрок.
+        /// </summary>
+        internal static string StringExtensions_Substrings_Invalid_Index {
+            get {
+                return ResourceManager.GetString("StringExtensions_Substrings_Invalid_Index", resourceCulture);
+            }
+        }
     }
 }

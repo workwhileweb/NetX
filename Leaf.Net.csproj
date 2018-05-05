@@ -59,6 +59,7 @@
     <None Include="Services\StormWall\StormWallException.cs" />
     <None Include="Services\StormWall\StormWallBypass.cs" />
     <None Include="Services\StormWall\StormWallSolver.cs" />
+    <None Include="_HtmlOld.cs" />
     <Compile Include="~Http\CookieStorage.cs" />
     <Compile Include="~Http\HttpExceptionStatus.cs" />
     <Compile Include="~Http\~Content\BytesContent.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="~Http\HttpHeader.cs" />
     <Compile Include="~Http\~Misc\UploadProgressChangedEventArgs.cs" />
     <Compile Include="~Internal\ExceptionHelper.cs" />
-    <Compile Include="Html.cs" />
+    <Compile Include="~Extensions\StringExtensions.cs" />
     <Compile Include="NetException.cs" />
     <Compile Include="~Http\HttpMethod.cs" />
     <Compile Include="~Proxy\HttpProxyClient.cs" />
@@ -101,6 +102,7 @@
   <ItemGroup>
     <None Include="Services\Cloudflare\CREDITS.md" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -306,4 +306,7 @@
   <data name="CookieStorage_SaveToFile_FileAlreadyExists" xml:space="preserve">
     <value>Файл с куками '${0}' уже существует</value>
   </data>
+  <data name="StringExtensions_Substrings_Invalid_Index" xml:space="preserve">
+    <value>Неверно задан начальный индекс поиска подстрок</value>
+  </data>
 </root>
