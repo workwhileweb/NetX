@@ -18,7 +18,7 @@ namespace Leaf.Net
 
         protected internal const byte VersionNumber = 4;
         protected internal const byte CommandConnect = 0x01;
-        protected internal const byte CommandBind = 0x02;
+        //protected internal const byte CommandBind = 0x02;
         protected internal const byte CommandReplyRequestGranted = 0x5a;
         protected internal const byte CommandReplyRequestRejectedOrFailed = 0x5b;
         protected internal const byte CommandReplyRequestRejectedCannotConnectToIdentd = 0x5c;
@@ -33,6 +33,7 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.Socks4ProxyClient" />.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public Socks4ProxyClient()
             : this(null) { }
 
@@ -76,6 +77,7 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="proxyAddress"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="proxyAddress"/> является пустой строкой.</exception>
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
+        // ReSharper disable once UnusedMember.Global
         public static Socks4ProxyClient Parse(string proxyAddress)
         {
             return ProxyClient.Parse(ProxyType.Socks4, proxyAddress) as Socks4ProxyClient;
@@ -87,6 +89,7 @@ namespace Leaf.Net
         /// <param name="proxyAddress">Строка вида - хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
         /// <param name="result">Если преобразование выполнено успешно, то содержит экземпляр класса <see cref="Socks4ProxyClient"/>, иначе <see langword="null"/>.</param>
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="proxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public static bool TryParse(string proxyAddress, out Socks4ProxyClient result)
         {
             if (!ProxyClient.TryParse(ProxyType.Socks4, proxyAddress, out ProxyClient proxy))

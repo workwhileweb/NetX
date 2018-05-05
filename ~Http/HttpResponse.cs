@@ -261,8 +261,6 @@ namespace Leaf.Net
 
         private string _loadedMessageBody;
         //private MemoryStream _loadedMessageBody;
-        //private readonly CookieStorage _rawCookies = new CookieStorage();
-
         #endregion
 
 
@@ -281,6 +279,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает значение, указывающие, успешно ли выполнен запрос (код ответа = 200 OK). 
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public bool IsOK => StatusCode == HttpStatusCode.OK;
 
         /// <summary>
@@ -356,13 +355,14 @@ namespace Leaf.Net
         /// Возвращает значение HTTP-заголовка 'Location'.
         /// </summary>
         /// <returns>Значение заголовка, если такой заголок задан, иначе пустая строка.</returns>
+        // ReSharper disable once UnusedMember.Global
         public string Location => this["Location"];
 
         /// <summary>
         /// Возвращает куки, образовавшиеся в результате запроса, или установленные в <see cref="HttpRequest"/>.
         /// </summary>
         /// <remarks>Если куки были установлены в <see cref="HttpRequest"/> и значение свойства <see cref="CookieStorage.IsLocked"/> равно <see langword="true"/>, то будут созданы новые куки.</remarks>
-        public CookieStorage Cookies { get; private set; }        
+        public CookieStorage Cookies { get; private set; }
 
         /// <summary>
         /// Возвращает время простаивания постоянного соединения в миллисекундах.
@@ -438,6 +438,7 @@ namespace Leaf.Net
         /// <returns>Если тело сообщения отсутствует, или оно уже было загружено, то будет возвращён пустой массив байтов.</returns>
         /// <exception cref="System.InvalidOperationException">Вызов метода из ошибочного ответа.</exception>
         /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public byte[] ToBytes()
         {
             #region Проверка состояния
@@ -552,6 +553,7 @@ namespace Leaf.Net
         /// Вызывающий оператор не имеет необходимого разрешения.
         /// </exception>
         /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public void ToFile(string path)
         {
             #region Проверка состояния
@@ -618,6 +620,7 @@ namespace Leaf.Net
         /// <returns>Если тело сообщения отсутствует, или оно уже было загружено, то будет возвращено значение <see langword="null"/>.</returns>
         /// <exception cref="System.InvalidOperationException">Вызов метода из ошибочного ответа.</exception>
         /// <exception cref="HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public MemoryStream ToMemoryStream()
         {
             #region Проверка состояния
@@ -749,6 +752,7 @@ namespace Leaf.Net
         /// </summary>
         /// <param name="header">HTTP-заголовок.</param>
         /// <returns>Значение <see langword="true"/>, если указанный HTTP-заголовок содержится, иначе значение <see langword="false"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public bool ContainsHeader(HttpHeader header)
         {
             return ContainsHeader(Http.Headers[header]);
@@ -758,6 +762,7 @@ namespace Leaf.Net
         /// Возвращает перечисляемую коллекцию HTTP-заголовков.
         /// </summary>
         /// <returns>Коллекция HTTP-заголовков.</returns>
+        // ReSharper disable once UnusedMember.Global
         public Dictionary<string, string>.Enumerator EnumerateHeaders()
         {
             return _headers.GetEnumerator();
@@ -780,12 +785,13 @@ namespace Leaf.Net
             MaximumKeepAliveRequests = null;
 
             _headers.Clear();
-            //_rawCookies.Clear();
 
-            // TODO: cookieless requests
-            Cookies = _request.Cookies != null && !_request.Cookies.IsLocked 
-                ? _request.Cookies 
-                : new CookieStorage();
+            if (!_request.DontTrackCookies)
+            {
+                Cookies = _request.Cookies != null && !_request.Cookies.IsLocked
+                    ? _request.Cookies
+                    : new CookieStorage();
+            }
 
             if (_receiverHelper == null)
                 _receiverHelper = new ReceiverHelper(_request.TcpClient.ReceiveBufferSize);

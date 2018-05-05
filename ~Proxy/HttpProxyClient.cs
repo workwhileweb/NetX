@@ -26,6 +26,7 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpProxyClient" />.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public HttpProxyClient()
             : this(null) { }
 
@@ -73,6 +74,7 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="proxyAddress"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="proxyAddress"/> является пустой строкой.</exception>
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
+        // ReSharper disable once UnusedMember.Global
         public static HttpProxyClient Parse(string proxyAddress)
         {
             return ProxyClient.Parse(ProxyType.HTTP, proxyAddress) as HttpProxyClient;
@@ -84,6 +86,7 @@ namespace Leaf.Net
         /// <param name="proxyAddress">Строка вида - хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
         /// <param name="result">Если преобразование выполнено успешно, то содержит экземпляр класса <see cref="HttpProxyClient"/>, иначе <see langword="null"/>.</param>
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="proxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public static bool TryParse(string proxyAddress, out HttpProxyClient result)
         {
             if (!ProxyClient.TryParse(ProxyType.HTTP, proxyAddress, out ProxyClient proxy))

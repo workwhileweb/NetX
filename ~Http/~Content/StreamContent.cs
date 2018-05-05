@@ -56,6 +56,7 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="StreamContent"/>.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         protected StreamContent() { }
 
 

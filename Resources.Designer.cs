@@ -340,15 +340,6 @@ namespace Leaf.Net {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Do not set any proxy for the chain..
-        /// </summary>
-        internal static string InvalidOperationException_ChainProxyClient_NotProxies {
-            get {
-                return ResourceManager.GetString("InvalidOperationException_ChainProxyClient_NotProxies", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Unable to perform the method, because an error occurred while receiving a response..
         /// </summary>
         internal static string InvalidOperationException_HttpResponse_HasError {

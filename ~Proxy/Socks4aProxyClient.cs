@@ -15,6 +15,7 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.Socks4AProxyClient" />.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public Socks4AProxyClient()
             : this(null) { }
 
@@ -61,6 +62,7 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="proxyAddress"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="proxyAddress"/> является пустой строкой.</exception>
         /// <exception cref="System.FormatException">Формат порта является неправильным.</exception>
+        // ReSharper disable once UnusedMember.Global
         public static Socks4AProxyClient Parse(string proxyAddress)
         {
             return ProxyClient.Parse(ProxyType.Socks4A, proxyAddress) as Socks4AProxyClient;
@@ -72,6 +74,7 @@ namespace Leaf.Net
         /// <param name="proxyAddress">Строка вида - хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
         /// <param name="result">Если преобразование выполнено успешно, то содержит экземпляр класса <see cref="Socks4AProxyClient"/>, иначе <see langword="null"/>.</param>
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="proxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public static bool TryParse(string proxyAddress, out Socks4AProxyClient result)
         {
             if (!ProxyClient.TryParse(ProxyType.Socks4A, proxyAddress, out ProxyClient proxy))

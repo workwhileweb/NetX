@@ -25,9 +25,6 @@ namespace Leaf.Net
                     return port == 0 ?
                         new Socks5ProxyClient(host) : new Socks5ProxyClient(host, port, username, password);
 
-                case ProxyType.Chain:
-                    throw new InvalidOperationException("Unable to create chain proxy via ProxyHelper");
-
                 default:
                     throw new InvalidOperationException();
             }

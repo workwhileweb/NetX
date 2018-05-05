@@ -12,9 +12,11 @@ namespace Leaf.Net
     {
         #region Конструкторы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="NetException"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.NetException" />.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public NetException() : this(Resources.NetException_Default) { }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Leaf.Net
     {
         #region Static Fields (private)
 
-        private static readonly Dictionary<string, string> HtmlMnemonics = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> HtmlMnemonics = new Dictionary<string, string>
         {
             { "apos", "'" },
             { "quot", "\"" },

@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable UnusedMember.Global
 
 namespace Leaf.Net.Services.Cloudflare
 {
@@ -7,6 +8,7 @@ namespace Leaf.Net.Services.Cloudflare
     /// The exception that is thrown if Cloudflare clearance failed after the declared number of attempts.
     /// </summary>
     [Serializable]
+    
     public class CloudflareException : Exception
     {
         public CloudflareException(string message) : base(message) { }

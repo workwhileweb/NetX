@@ -8,13 +8,16 @@ namespace Leaf.Net
 {
     internal delegate void ProgressDelegate(long bytes, long totalBytes, long totalBytesExpected);
 
+    // ReSharper disable once UnusedMember.Global
     internal class ProgressStreamContent : System.Net.Http.StreamContent
     {
+        // ReSharper disable once UnusedMember.Global
         public ProgressStreamContent(Stream stream, CancellationToken token)
             : this(new ProgressStream(stream, token))
         {
         }
 
+        // ReSharper disable once UnusedMember.Global
         public ProgressStreamContent(Stream stream, int bufferSize)
             : this(new ProgressStream(stream, CancellationToken.None), bufferSize)
         {

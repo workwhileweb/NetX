@@ -149,8 +149,9 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает или задаёт время ожидания в миллисекундах при подключении к прокси-серверу.
         /// </summary>
-        /// <value>Значение по умолчанию - 60.000, что равняется одной минуте.</value>
+        /// <value>Значение по умолчанию - 9 000 мс, что равняется 9 секундам.</value>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 0.</exception>
+        // ReSharper disable once UnusedMember.Global
         public virtual int ConnectTimeout
         {
             get => _connectTimeout;
@@ -169,7 +170,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает или задает время ожидания в миллисекундах при записи в поток или при чтении из него.
         /// </summary>
-        /// <value>Значение по умолчанию - 60.000, что равняется одной минуте.</value>
+        /// <value>Значение по умолчанию - 30 000 мс, что равняется 30 секундам.</value>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 0.</exception>
         public virtual int ReadWriteTimeout
         {
@@ -195,6 +196,7 @@ namespace Leaf.Net
         /// Инициализирует новый экземпляр класса <see cref="ProxyClient"/>.
         /// </summary>
         /// <param name="proxyType">Тип прокси-сервера.</param>
+        // ReSharper disable once UnusedMember.Global
         protected internal ProxyClient(ProxyType proxyType)
         {
             _type = proxyType;
@@ -206,6 +208,7 @@ namespace Leaf.Net
         /// <param name="proxyType">Тип прокси-сервера.</param>
         /// <param name="address">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
+        // ReSharper disable once UnusedMember.Global
         protected internal ProxyClient(ProxyType proxyType, string address, int port)
         {
             _type = proxyType;
@@ -317,6 +320,7 @@ namespace Leaf.Net
         /// <inheritdoc cref="Parse(Leaf.Net.ProxyType,string)"/>
         /// <param name="protoProxyAddress">Строка вида - протокол://хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
         /// <returns>Экземпляр класса прокси-клиента, унаследованный от <see cref="ProxyClient"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public static ProxyClient Parse(string protoProxyAddress)
         {
             var proxy = protoProxyAddress.Split(new[] {"://"}, StringSplitOptions.RemoveEmptyEntries);
@@ -384,6 +388,7 @@ namespace Leaf.Net
         /// <inheritdoc cref="TryParse(Leaf.Net.ProxyType,string,out Leaf.Net.ProxyClient)"/>
         /// <param name="protoProxyAddress">Строка вида - протокол://хост:порт:имя_пользователя:пароль. Три последних параметра являются необязательными.</param>
         /// <returns>Значение <see langword="true"/>, если параметр <paramref name="protoProxyAddress"/> преобразован успешно, иначе <see langword="false"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public static bool TryParse(string protoProxyAddress, out ProxyClient result)
         {
             var proxy = protoProxyAddress.Split(new[] {"://"}, StringSplitOptions.RemoveEmptyEntries);
@@ -436,6 +441,7 @@ namespace Leaf.Net
         /// Формирует строку вида - хост:порт:имя_пользователя:пароль. Последние два параметра добавляются, если они заданы.
         /// </summary>
         /// <returns>Строка вида - хост:порт:имя_пользователя:пароль.</returns>
+        // ReSharper disable once UnusedMember.Global
         public virtual string ToExtendedString()
         {
             var strBuilder = new StringBuilder();

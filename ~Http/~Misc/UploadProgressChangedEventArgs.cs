@@ -23,7 +23,8 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает процент отправленных байтов.
         /// </summary>
-        public double ProgressPercentage => ((double)BytesSent / TotalBytesToSend) * 100.0;
+        // ReSharper disable once UnusedMember.Global
+        public double ProgressPercentage => (double)BytesSent / TotalBytesToSend * 100.0;
 
         #endregion
 

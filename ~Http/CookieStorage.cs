@@ -39,6 +39,7 @@ namespace Leaf.Net
 
         /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
         /// <param name="cookie">Кука</param>
+        // ReSharper disable once UnusedMember.Global
         public void Set(Cookie cookie)
         {
             Container.Add(cookie);
@@ -49,6 +50,7 @@ namespace Leaf.Net
         /// <param name="value">Значение куки</param>
         /// <param name="domain">Домен (без протокола)</param>
         /// <param name="path">Путь</param>
+        // ReSharper disable once UnusedMember.Global
         public void Set(string name, string value, string domain, string path = "/")
         {
             Container.Add(new Cookie(name, value, path, domain));
@@ -57,6 +59,7 @@ namespace Leaf.Net
         /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
         /// <param name="url">Url куки</param>
         /// <param name="rawCookie">Сырой формат записи в виде строки</param>
+        // ReSharper disable once UnusedMember.Global
         public void Set(string url, string rawCookie)
         {
             Container.SetCookies(new Uri(url), rawCookie);
@@ -73,6 +76,7 @@ namespace Leaf.Net
         /// <summary>
         /// Очистить <see cref="CookieContainer"/>.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void Clear()
         {
             Container = new CookieContainer();
@@ -130,6 +134,7 @@ namespace Leaf.Net
 
         /// <inheritdoc cref="GetCookieHeader(System.Uri)"/>
         /// <param name="url">URL адрес ресурса</param>
+        // ReSharper disable once UnusedMember.Global
         public string GetCookieHeader(string url)
         {
             return GetCookieHeader(new Uri(url));
@@ -179,6 +184,7 @@ namespace Leaf.Net
         /// </summary>
         /// <param name="filePath">Пусть для сохранения файла</param>
         /// <param name="overwrite">Перезаписать файл если он уже существует</param>
+        // ReSharper disable once UnusedMember.Global
         public void SaveToFile(string filePath, bool overwrite = true)
         {
             if (!overwrite && File.Exists(filePath))
@@ -193,6 +199,7 @@ namespace Leaf.Net
         /// </summary>
         /// <param name="filePath">Путь к файлу с куками</param>
         /// <returns>Вернет <see cref="CookieStorage"/>, который задается в свойстве <see cref="HttpRequest"/> Cookies.</returns>
+        // ReSharper disable once UnusedMember.Global
         public static CookieStorage LoadFromFile(string filePath)
         {
             if (!File.Exists(filePath))

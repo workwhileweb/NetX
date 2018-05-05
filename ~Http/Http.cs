@@ -79,78 +79,9 @@ namespace Leaf.Net
 
         #endregion
 
-
-        #region Статические поля (закрытые)
-
-        [ThreadStatic] private static Random _rand;
-        private static Random Rand => _rand ?? (_rand = new Random());
-
-        #endregion
-
-
         static Http() => AcceptAllCertificationsCallback = AcceptAllCertifications;
 
         #region Статические методы (открытые)
-
-        /// <summary>
-        /// Кодирует строку для надёжной передачи HTTP-серверу.
-        /// </summary>
-        /// <param name="str">Строка, которая будет закодирована.</param>
-        /// <param name="encoding">Кодировка, применяемая для преобразования данных в последовательность байтов. Если значение параметра равно <see langword="null"/>, то будет использовано значение <see cref="System.Text.Encoding.UTF8"/>.</param>
-        /// <returns>Закодированная строка.</returns>
-        public static string UrlEncode(string str, Encoding encoding = null)
-        {
-            if (string.IsNullOrEmpty(str))
-                return string.Empty;
-
-            encoding = encoding ?? Encoding.UTF8;
-
-            var bytes = encoding.GetBytes(str);
-
-            int spaceCount = 0;
-            int otherCharCount = 0;
-
-            #region Подсчёт символов
-
-            // ReSharper disable once ForCanBeConvertedToForeach
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                char c = (char)bytes[i];
-
-                if (c == ' ')
-                    ++spaceCount;
-                else if (!IsUrlSafeChar(c))
-                    ++otherCharCount;
-            }
-
-            #endregion
-
-            // Если в строке не присутствуют символы, которые нужно закодировать.
-            if (spaceCount == 0 && otherCharCount == 0)
-                return str;
-
-            int bufferIndex = 0;
-            var buffer = new byte[bytes.Length + otherCharCount * 2];
-
-            // ReSharper disable once ForCanBeConvertedToForeach
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                char c = (char)bytes[i];
-
-                if (IsUrlSafeChar(c))
-                    buffer[bufferIndex++] = bytes[i];
-                else if (c == ' ')
-                    buffer[bufferIndex++] = (byte) '+';
-                else
-                {
-                    buffer[bufferIndex++] = (byte) '%';
-                    buffer[bufferIndex++] = (byte) IntToHex((bytes[i] >> 4) & 15);
-                    buffer[bufferIndex++] = (byte) IntToHex(bytes[i] & 15);
-                }
-            }
-
-            return Encoding.ASCII.GetString(buffer);
-        }
 
         /// <summary>
         /// Преобразует параметры в строку запроса.
@@ -159,6 +90,7 @@ namespace Leaf.Net
         /// <param name="dontEscape">Указывает, нужно ли кодировать значения параметров.</param>
         /// <returns>Строка запроса.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="parameters"/> равно <see langword="null"/>.</exception>
+        // ReSharper disable once UnusedMember.Global
         public static string ToQueryString(IEnumerable<KeyValuePair<string, string>> parameters, bool dontEscape)
         {
             #region Проверка параметров
@@ -217,7 +149,7 @@ namespace Leaf.Net
                 queryBuilder.Append(param.Key);
                 queryBuilder.Append('=');
 
-                queryBuilder.Append(dontEscape ? param.Value : UrlEncode(param.Value ?? string.Empty, encoding));
+                queryBuilder.Append(dontEscape ? param.Value : Uri.EscapeDataString(param.Value ?? string.Empty));
 
                 queryBuilder.Append('&');
             }
@@ -293,7 +225,7 @@ namespace Leaf.Net
             }
             else
             {
-                switch (Rand.Next(3))
+                switch (Randomizer.Instance.Next(3))
                 {
                     case 0:
                         version = "10.0";
@@ -334,7 +266,7 @@ namespace Leaf.Net
 
             #region Генерация случайной версии
 
-            switch (Rand.Next(4))
+            switch (Randomizer.Instance.Next(4))
             {
                 case 0:
                     version = "12.16";
@@ -368,9 +300,9 @@ namespace Leaf.Net
         /// <returns>Случайный User-Agent от браузера Chrome.</returns>
         public static string ChromeUserAgent()
         {
-            int major = Rand.Next(41, 64);
-            int build = Rand.Next(2100, 3200);
-            int branchBuild = Rand.Next(170);
+            int major = Randomizer.Instance.Next(41, 64);
+            int build = Randomizer.Instance.Next(2100, 3200);
+            int branchBuild = Randomizer.Instance.Next(170);
 
             return $"Mozilla/5.0 ({RandomWindowsVersion()}) AppleWebKit/537.36 (KHTML, like Gecko) " +
                    $"Chrome/{major}.0.{build}.{branchBuild} Safari/537.36";
@@ -385,7 +317,7 @@ namespace Leaf.Net
         /// <returns>Случайный User-Agent от браузера Firefox.</returns>
         public static string FirefoxUserAgent()
         {
-            var version = FirefoxVersions[Rand.Next(FirefoxVersions.Length - 1)];
+            var version = FirefoxVersions[Randomizer.Instance.Next(FirefoxVersions.Length - 1)];
 
             return $"Mozilla/5.0 ({RandomWindowsVersion()}; rv:{version}.0) Gecko/20100101 Firefox/{version}.0";
         }
@@ -403,7 +335,7 @@ namespace Leaf.Net
 
             #region Генерация случайной версии
 
-            switch (Rand.Next(3))
+            switch (Randomizer.Instance.Next(3))
             {
                 case 0:
                     os = "iOS";
@@ -434,7 +366,7 @@ namespace Leaf.Net
 
         public static string RandomUserAgent()
         {
-            int rand = Rand.Next(99) + 1;
+            int rand = Randomizer.Instance.Next(99) + 1;
 
             // TODO: edge, yandex browser, safari
 
@@ -470,38 +402,12 @@ namespace Leaf.Net
             System.Security.Cryptography.X509Certificates.X509Chain chain,
             SslPolicyErrors sslPolicyErrors) => true;
 
-        private static bool IsUrlSafeChar(char c)
-        {
-            if (c >= 'a' && c <= 'z' ||
-                c >= 'A' && c <= 'Z' ||
-                c >= '0' && c <= '9')
-            {
-                return true;
-            }
-
-            switch (c)
-            {
-                case '(':
-                case ')':
-                case '*':
-                case '-':
-                case '.':
-                case '_':
-                case '!':
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        private static char IntToHex(int i) => i <= 9 ? (char) (i + 48) : (char) (i - 10 + 65);
-
         private static string RandomWindowsVersion()
         {
             string windowsVersion = "Windows NT ";
             const string windowsVersionXp64Bit = "5.2";
 
-            int random = Rand.Next(99) + 1;
+            int random = Randomizer.Instance.Next(99) + 1;
 
             // Windows 10 = 40% popularity
             if (random >= 1 && random <= 40)
@@ -528,8 +434,8 @@ namespace Leaf.Net
                 windowsVersion += windowsVersionXp64Bit;            
 
             // Append WOW64 for X64 system
-            if (Rand.NextDouble() <= 0.5 || windowsVersion == windowsVersionXp64Bit)
-                windowsVersion += Rand.NextDouble() <= 0.5 ? "; WOW64" : "; Win64; x64";
+            if (Randomizer.Instance.NextDouble() <= 0.5 || windowsVersion == windowsVersionXp64Bit)
+                windowsVersion += Randomizer.Instance.NextDouble() <= 0.5 ? "; WOW64" : "; Win64; x64";
 
             return windowsVersion;
         }

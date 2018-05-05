@@ -10,7 +10,6 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Leaf.Net
 {
@@ -129,23 +128,6 @@ namespace Leaf.Net
         /// </summary>
         public static Version ProtocolVersion = new Version(1, 1);
 
-
-        #region Статические поля (закрытые)
-
-        // Заголовки, которые можно задать только с помощью специального свойства/метода.
-        /*private static readonly List<string> ClosedHeaders = new List<string>()
-        {
-            //"Accept-Encoding",
-            //"Content-Length",
-            //"Content-Type",
-            //"Connection",
-            //"Proxy-Connection",
-            //"Host"
-        };*/
-
-        #endregion
-
-
         #region Статические свойства (открытые)
 
         /// <summary>
@@ -171,7 +153,7 @@ namespace Leaf.Net
         private int _maximumAutomaticRedirections = 5;
 
         private int _connectTimeout = 9 * 1000; // 9 Seconds
-        private int _readWriteTimeout = 24 * 1000; // 24 Seconds
+        private int _readWriteTimeout = 30 * 1000; // 30 Seconds
 
         private DateTime _whenConnectionIdle;
         private int _keepAliveTimeout = 30 * 1000;
@@ -191,8 +173,6 @@ namespace Leaf.Net
 
         // Временные данные, которые задаются через специальные методы.
         // Удаляются после первого запроса.
-        private RequestParams _temporaryParams;
-        private RequestParams _temporaryUrlParams;
         private Dictionary<string, string> _temporaryHeaders;
         private MultipartContent _temporaryMultipartContent;
 
@@ -221,7 +201,8 @@ namespace Leaf.Net
         public event EventHandler<UploadProgressChangedEventArgs> UploadProgressChanged
         {
             add => _uploadProgressChangedHandler += value;
-            remove => _uploadProgressChangedHandler -= value; // TODO: delegate sub
+            // ReSharper disable once DelegateSubtraction
+            remove => _uploadProgressChangedHandler -= value;
         }
 
         /// <summary>
@@ -230,7 +211,8 @@ namespace Leaf.Net
         public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged
         {
             add => _downloadProgressChangedHandler += value;
-            remove => _downloadProgressChangedHandler -= value; // TODO: delegate sub
+            // ReSharper disable once DelegateSubtraction
+            remove => _downloadProgressChangedHandler -= value;
         }
 
         #endregion
@@ -304,6 +286,7 @@ namespace Leaf.Net
         /// </summary>
         /// <value>Значение по умолчанию - 5.</value>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 1.</exception>
+        // ReSharper disable once UnusedMember.Global
         public int MaximumAutomaticRedirections
         {
             get => _maximumAutomaticRedirections;
@@ -323,7 +306,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает или задаёт время ожидания в миллисекундах при подключении к HTTP-серверу.
         /// </summary>
-        /// <value>Значение по умолчанию - 60.000, что равняется одной минуте.</value>
+        /// <value>Значение по умолчанию - 9 000 мс, что равняется 9 секундам.</value>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 0.</exception>
         public int ConnectTimeout
         {
@@ -344,7 +327,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает или задает время ожидания в миллисекундах при записи в поток или при чтении из него.
         /// </summary>
-        /// <value>Значение по умолчанию - 60.000, что равняется одной минуте.</value>
+        /// <value>Значение по умолчанию - 30 000 мс, что равняется 30 секундам.</value>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 0.</exception>
         public int ReadWriteTimeout
         {
@@ -431,6 +414,7 @@ namespace Leaf.Net
         /// </summary>
         /// <value>Значение по умолчанию - 3.</value>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 1.</exception>
+        // ReSharper disable once UnusedMember.Global
         public int ReconnectLimit
         {
             get => _reconnectLimit;
@@ -452,6 +436,7 @@ namespace Leaf.Net
         /// </summary>
         /// <value>Значение по умолчанию - 100 миллисекунд.</value>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра меньше 0.</exception>
+        // ReSharper disable once UnusedMember.Global
         public int ReconnectDelay
         {
             get => _reconnectDelay;
@@ -521,6 +506,7 @@ namespace Leaf.Net
         /// Изменяет User-Agent на случайный (Chrome, Firefox, Opera, Internet Explorer).
         /// Шансы выпадения соответствуют популярности браузеров.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void UserAgentRandomize()
         {
             UserAgent = Http.RandomUserAgent();
@@ -530,6 +516,7 @@ namespace Leaf.Net
         /// Возвращает или задает значение HTTP-заголовка 'Referer'.
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="null"/>.</value>
+        // ReSharper disable once UnusedMember.Global
         public string Referer
         {
             get => this["Referer"];
@@ -540,6 +527,7 @@ namespace Leaf.Net
         /// Возвращает или задает значение HTTP-заголовка 'Authorization'.
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="null"/>.</value>
+        // ReSharper disable once UnusedMember.Global
         public string Authorization
         {
             get => this["Authorization"];
@@ -552,6 +540,13 @@ namespace Leaf.Net
         /// <value>Значение по умолчанию — <see langword="null"/>.</value>
         /// <remarks>Куки могут изменяться ответом от HTTP-сервера. Чтобы не допустить этого, нужно установить свойство <see cref="Leaf.Net.CookieStorage.IsLocked"/> равным <see langword="true"/>.</remarks>
         public CookieStorage Cookies { get; set; }
+
+        /// <summary>
+        /// Позволяет отключить автоматическое создание <see cref="CookieStorage"/> в свойстве Cookies когда получены куки от сервера.
+        /// Запрос не будет отправлять заголовок с куками. Ответ не будет обрабатовать заголовки Set-Cookie. 
+        /// </summary>
+        /// <value>Значение по умолчанию — <see langword="false"/>.</value>
+        public bool DontTrackCookies { get; set; } 
 
         #endregion
 
@@ -567,10 +562,6 @@ namespace Leaf.Net
         internal NetworkStream ClientNetworkStream { get; private set; }
 
         #endregion
-
-
-        private MultipartContent AddedMultipartData 
-            => _temporaryMultipartContent ?? (_temporaryMultipartContent = new MultipartContent());
 
 
         #region Индексаторы (открытые)
@@ -637,13 +628,6 @@ namespace Leaf.Net
                 if (headerName.Length == 0)
                     throw ExceptionHelper.EmptyString(nameof(headerName));
 
-                /*
-                if (IsClosedHeader(headerName))
-                {
-                    throw new ArgumentException(string.Format(
-                        Resources.ArgumentException_HttpRequest_SetNotAvailableHeader, headerName), "headerName");
-                }*/
-
                 #endregion
 
                 if (string.IsNullOrEmpty(value))
@@ -695,6 +679,7 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="HttpRequest"/>.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public HttpRequest()
         {
             Init();
@@ -711,6 +696,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="baseAddress"/> не является абсолютным URI.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="baseAddress"/> не является абсолютным URI.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpRequest(string baseAddress)
         {
             #region Проверка параметров
@@ -742,6 +728,7 @@ namespace Leaf.Net
         /// <param name="baseAddress">Адрес интернет-ресурса, который используется, если в запросе указан относительный адрес.</param>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="baseAddress"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="baseAddress"/> не является абсолютным URI.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpRequest(Uri baseAddress)
         {
             #region Проверка параметров
@@ -777,9 +764,6 @@ namespace Leaf.Net
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Get(string address, RequestParams urlParams = null)
         {
-            if (urlParams != null)
-                _temporaryUrlParams = urlParams;
-
             return Raw(HttpMethod.GET, address);
         }
 
@@ -791,39 +775,12 @@ namespace Leaf.Net
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Get(Uri address, RequestParams urlParams = null)
         {
-            if (urlParams != null)
-                _temporaryUrlParams = urlParams;
-
             return Raw(HttpMethod.GET, address);
         }
 
-		/// <summary>
-        /// Асинхронно отправляет GET-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> GetAsync(string address, RequestParams urlParams = null)
-        {
-            return await Task.Run(() => Get(address, urlParams));
-        }
-		
-		/// <summary>
-        /// Асинхронно отправляет GET-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> GetAsync(Uri address, RequestParams urlParams = null)
-        {
-            return await Task.Run(() => Get(address, urlParams));
-        }
         #endregion
 
         #region Post
@@ -836,22 +793,10 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(string address)
         {
             return Raw(HttpMethod.POST, address);
-        }
-
-        /// <summary>
-        /// Асинхонно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(string address)
-        {
-           return await Task.Run(() => Post(address));
         }
 
         /// <summary>
@@ -861,21 +806,10 @@ namespace Leaf.Net
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(Uri address)
         {
             return Raw(HttpMethod.POST, address);
-        }
-		
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(Uri address)
-        {
-            return await Task.Run(() => Post(address));
         }
 
         /// <summary>
@@ -892,6 +826,7 @@ namespace Leaf.Net
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(string address, RequestParams reqParams, bool dontEscape = false)
         {
             #region Проверка параметров
@@ -904,25 +839,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, dontEscape, CharacterSet));
         }
 
-		
-        /// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
-        /// <param name="dontEscape">Указывает, нужно ли кодировать параметры запроса.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(string address, RequestParams reqParams, bool dontEscape = false)
-        {
-            return await Task.Run(() => Post(address, reqParams, dontEscape));
-        }
 
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
@@ -937,6 +853,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(Uri address, RequestParams reqParams, bool dontEscape = false)
         {
             #region Проверка параметров
@@ -947,24 +864,6 @@ namespace Leaf.Net
             #endregion
 
             return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, dontEscape, CharacterSet));
-        }
-		
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
-        /// <param name="dontEscape">Указывает, нужно ли кодировать параметры запроса.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(Uri address, RequestParams reqParams, bool dontEscape = false)
-        {
-            return await Task.Run(() => Post(address, reqParams, dontEscape));
         }
 
         /// <summary>
@@ -989,6 +888,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(string address, string str, string contentType)
         {
             #region Проверка параметров
@@ -1014,33 +914,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, content);
         }
 		
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
-        /// <param name="contentType">Тип отправляемых данных.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Значение параметра <paramref name="address"/> является пустой строкой.
-        /// -или-
-        /// Значение параметра <paramref name="str"/> является пустой строкой.
-        /// -или
-        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
-        /// </exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(string address, string str, string contentType)
-        {
-            return await Task.Run(() => Post(address, str, contentType));
-        }
-
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1061,6 +934,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(Uri address, string str, string contentType)
         {
             #region Проверка параметров
@@ -1086,31 +960,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
-        /// <param name="contentType">Тип отправляемых данных.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Значение параметра <paramref name="str"/> является пустой строкой.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
-        /// </exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(Uri address, string str, string contentType)
-        {
-            return await Task.Run(() => Post(address, str, contentType));
-        }
-
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1131,6 +980,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(string address, byte[] bytes, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1154,31 +1004,6 @@ namespace Leaf.Net
         }
 		
         /// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
-        /// <param name="contentType">Тип отправляемых данных.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Значение параметра <paramref name="address"/> является пустой строкой.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
-        /// </exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(string address, byte[] bytes, string contentType = "application/octet-stream")
-        {
-            return await Task.Run(() => Post(address, bytes, contentType));
-        }
-
-        /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
         /// <param name="address">Адрес интернет-ресурса.</param>
@@ -1194,6 +1019,7 @@ namespace Leaf.Net
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(Uri address, byte[] bytes, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1212,28 +1038,6 @@ namespace Leaf.Net
             };
 
             return Raw(HttpMethod.POST, address, content);
-        }
-
-		
-        /// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
-        /// <param name="contentType">Тип отправляемых данных.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(Uri address, byte[] bytes, string contentType = "application/octet-stream")
-        {
-            return await Task.Run(() => Post(address, bytes, contentType));
         }
 
         /// <summary>
@@ -1256,6 +1060,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="contentType"/> является пустой строкой.
         /// </exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(string address, Stream stream, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1278,31 +1083,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
-        /// <param name="contentType">Тип отправляемых данных.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Значение параметра <paramref name="address"/> является пустой строкой.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
-        /// </exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(string address, Stream stream, string contentType = "application/octet-stream")
-        {
-            return await Task.Run(() => Post(address, stream, contentType));
-        }
-
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1319,6 +1099,7 @@ namespace Leaf.Net
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(Uri address, Stream stream, string contentType = "application/octet-stream")
         {
             #region Проверка параметров
@@ -1341,27 +1122,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
-        /// <param name="contentType">Тип отправляемых данных.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(Uri address, Stream stream, string contentType = "application/octet-stream")
-        {
-            return await Task.Run(() => Post(address, stream, contentType));
-        }
-
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1379,6 +1139,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="path"/> является пустой строкой.
         /// </exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(string address, string path)
         {
             #region Проверка параметров
@@ -1394,28 +1155,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, new FileContent(path));
         }
 
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Значение параметра <paramref name="address"/> является пустой строкой.
-        /// -или-
-        /// Значение параметра <paramref name="path"/> является пустой строкой.
-        /// </exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(string address, string path)
-        {
-            return await Task.Run(() => Post(address, path));
-        }
-
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1429,6 +1168,7 @@ namespace Leaf.Net
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(Uri address, string path)
         {
             #region Проверка параметров
@@ -1444,24 +1184,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, new FileContent(path));
         }
 
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(Uri address, string path)
-        {
-            return await Task.Run(() => Post(address, path));
-        }
-
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1475,6 +1197,7 @@ namespace Leaf.Net
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(string address, HttpContent content)
         {
             #region Проверка параметров
@@ -1487,24 +1210,6 @@ namespace Leaf.Net
             return Raw(HttpMethod.POST, address, content);
         }
 
-		/// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(string address, HttpContent content)
-        {
-            return await Task.Run(() => Post(address, content));
-        }
-
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1517,6 +1222,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Post(Uri address, HttpContent content)
         {
             #region Проверка параметров
@@ -1527,24 +1233,6 @@ namespace Leaf.Net
             #endregion
 
             return Raw(HttpMethod.POST, address, content);
-        }
-
-		
-        /// <summary>
-        /// Асинхронно отправляет POST-запрос HTTP-серверу.
-        /// </summary>
-        /// <param name="address">Адрес интернет-ресурса.</param>
-        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
-        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
-        public async Task<HttpResponse> PostAsync(Uri address, HttpContent content)
-        {        
-            return await Task.Run(() => Post(address, content)); 
         }
 
         #endregion
@@ -1561,6 +1249,7 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.Net.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
         public HttpResponse Raw(HttpMethod method, string address, HttpContent content = null)
         {
             #region Проверка параметров
@@ -1575,11 +1264,6 @@ namespace Leaf.Net
 
             var uri = new Uri(address, UriKind.RelativeOrAbsolute);
             return Raw(method, uri, content);
-        }
-
-        public Task<HttpResponse> RawAsync(HttpMethod method, string address, HttpContent content = null)
-        {
-            return Task.Run(() => Raw(method, address));
         }
 
         /// <summary>
@@ -1603,20 +1287,9 @@ namespace Leaf.Net
             if (!address.IsAbsoluteUri)
                 address = GetRequestAddress(BaseAddress, address);
 
-            if (_temporaryUrlParams != null)
-            {
-                var uriBuilder = new UriBuilder(address) {
-                    Query = Http.ToQueryString(_temporaryUrlParams, true)
-                };
-
-                address = uriBuilder.Uri;
-            }
-
             if (content == null)
             {
-                if (_temporaryParams != null)
-                    content = new FormUrlEncodedContent(_temporaryParams, false, CharacterSet);
-                else if (_temporaryMultipartContent != null)
+                if (_temporaryMultipartContent != null)
                     content = _temporaryMultipartContent;
             }
 
@@ -1635,348 +1308,6 @@ namespace Leaf.Net
         #endregion
 
         #region Добавление временных данных запроса
-
-        /// <summary>
-        /// Добавляет временный параметр URL-адреса.
-        /// </summary>
-        /// <param name="name">Имя параметра.</param>
-        /// <param name="value">Значение параметра, или значение <see langword="null"/>.</param>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="name"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный параметр будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddUrlParam(string name, object value = null)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            #endregion
-
-            if (_temporaryUrlParams == null)
-                _temporaryUrlParams = new RequestParams();
-
-            _temporaryUrlParams[name] = value;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный параметр запроса.
-        /// </summary>
-        /// <param name="name">Имя параметра.</param>
-        /// <param name="value">Значение параметра, или значение <see langword="null"/>.</param>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="name"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный параметр будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddParam(string name, object value = null)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            #endregion
-
-            if (_temporaryParams == null)
-                _temporaryParams = new RequestParams();
-
-            _temporaryParams[name] = value;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="value">Значение элемента, или значение <see langword="null"/>.</param>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="name"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddField(string name, object value = null)
-        {
-            return AddField(name, value, CharacterSet ?? Encoding.UTF8);
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="value">Значение элемента, или значение <see langword="null"/>.</param>
-        /// <param name="encoding">Кодировка, применяемая для преобразования значения в последовательность байтов.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="encoding"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddField(string name, object value, Encoding encoding)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            if (encoding == null)
-                throw new ArgumentNullException(nameof(encoding));
-
-            #endregion
-
-            string contentValue = value?.ToString() ?? string.Empty;
-
-            AddedMultipartData.Add(new StringContent(contentValue, encoding), name);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="value">Значение элемента.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="value"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddField(string name, byte[] value)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            #endregion
-
-            AddedMultipartData.Add(new BytesContent(value), name);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных, представляющий файл.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="fileName">Имя передаваемого файла.</param>
-        /// <param name="value">Данные файла.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="fileName"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="value"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddFile(string name, string fileName, byte[] value)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            if (fileName == null)
-                throw new ArgumentNullException(nameof(fileName));
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            #endregion
-
-            AddedMultipartData.Add(new BytesContent(value), name, fileName);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных, представляющий файл.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="fileName">Имя передаваемого файла.</param>
-        /// <param name="contentType">MIME-тип контента.</param>
-        /// <param name="value">Данные файла.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="fileName"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="value"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddFile(string name, string fileName, string contentType, byte[] value)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            if (fileName == null)
-                throw new ArgumentNullException(nameof(fileName));
-
-            if (contentType == null)
-                throw new ArgumentNullException(nameof(contentType));
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            #endregion
-
-            AddedMultipartData.Add(new BytesContent(value), name, fileName, contentType);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных, представляющий файл.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="fileName">Имя передаваемого файла.</param>
-        /// <param name="stream">Поток данных файла.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="fileName"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddFile(string name, string fileName, Stream stream)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            if (fileName == null)
-                throw new ArgumentNullException(nameof(fileName));
-
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-
-            #endregion
-
-            AddedMultipartData.Add(new StreamContent(stream), name, fileName);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных, представляющий файл.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="fileName">Имя передаваемого файла.</param>
-        /// <param name="path">Путь к загружаемому файлу.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="fileName"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Значение параметра <paramref name="name"/> является пустой строкой.
-        /// -или-
-        /// Значение параметра <paramref name="path"/> является пустой строкой.
-        /// </exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddFile(string name, string fileName, string path)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            if (fileName == null)
-                throw new ArgumentNullException(nameof(fileName));
-
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
-            if (path.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(path));
-
-            #endregion
-
-            AddedMultipartData.Add(new FileContent(path), name, fileName);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Добавляет временный элемент Multipart/form данных, представляющий файл.
-        /// </summary>
-        /// <param name="name">Имя элемента.</param>
-        /// <param name="path">Путь к загружаемому файлу.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
-        /// -или-
-        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Значение параметра <paramref name="name"/> является пустой строкой.
-        /// -или-
-        /// Значение параметра <paramref name="path"/> является пустой строкой.
-        /// </exception>
-        /// <remarks>Данный элемент будет стёрт после первого запроса.</remarks>
-        public HttpRequest AddFile(string name, string path)
-        {
-            #region Проверка параметров
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(name));
-
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
-            if (path.Length == 0)
-                throw ExceptionHelper.EmptyString(nameof(path));
-
-            #endregion
-
-            AddedMultipartData.Add(new FileContent(path),
-                name, Path.GetFileName(path));
-
-            return this;
-        }
-
         /// <summary>
         /// Добавляет временный HTTP-заголовок запроса. Такой заголовок перекрывает заголовок установленный через индексатор.
         /// </summary>
@@ -2011,13 +1342,6 @@ namespace Leaf.Net
             if (value.Length == 0)
                 throw ExceptionHelper.EmptyString(nameof(value));
 
-            /*
-            if (IsClosedHeader(name))
-            {
-                throw new ArgumentException(string.Format(
-                    Resources.ArgumentException_HttpRequest_SetNotAvailableHeader, name), "name");
-            }*/
-
             #endregion
 
             if (_temporaryHeaders == null)
@@ -2035,6 +1359,7 @@ namespace Leaf.Net
         /// Применяется к AJAX запросам.
         /// </summary>
         /// <returns>Вернет тот же HttpRequest для цепочки вызовов (pipeline).</returns>
+        // ReSharper disable once UnusedMember.Global
         public HttpRequest AddXmlHttpRequestHeader()
         {
             return AddHeader("X-Requested-With", "XMLHttpRequest");
@@ -2065,6 +1390,7 @@ namespace Leaf.Net
         /// Закрывает соединение с HTTP-сервером.
         /// </summary>
         /// <remarks>Вызов данного метода равносилен вызову метода <see cref="Dispose"/>.</remarks>
+        // ReSharper disable once UnusedMember.Global
         public void Close()
         {
             Dispose();
@@ -2084,9 +1410,10 @@ namespace Leaf.Net
         /// </summary>
         /// <param name="name">Название куки.</param>
         /// <returns>Значение <see langword="true"/>, если указанные куки содержатся, иначе значение <see langword="false"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public bool ContainsCookie(string url, string name)
         {
-            return Cookies != null && Cookies.ContainsKey(url, name);
+            return !DontTrackCookies && Cookies != null && Cookies.ContainsKey(url, name);
         }
 
         #region Работа с заголовками
@@ -2118,6 +1445,7 @@ namespace Leaf.Net
         /// </summary>
         /// <param name="header">HTTP-заголовок.</param>
         /// <returns>Значение <see langword="true"/>, если указанный HTTP-заголовок содержится, иначе значение <see langword="false"/>.</returns>
+        // ReSharper disable once UnusedMember.Global
         public bool ContainsHeader(HttpHeader header)
         {
             return ContainsHeader(Http.Headers[header]);
@@ -2127,14 +1455,16 @@ namespace Leaf.Net
         /// Возвращает перечисляемую коллекцию HTTP-заголовков.
         /// </summary>
         /// <returns>Коллекция HTTP-заголовков.</returns>
+        // ReSharper disable once UnusedMember.Global
         public Dictionary<string, string>.Enumerator EnumerateHeaders()
         {
             return _permanentHeaders.GetEnumerator();
         }
 
         /// <summary>
-        /// Очищает все HTTP-заголовки.
+        /// Очищает все постоянные HTTP-заголовки.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void ClearAllHeaders() => _permanentHeaders.Clear();
 
         #endregion
@@ -2639,22 +1969,7 @@ namespace Leaf.Net
 
         #region Формирование данных запроса
 
-        private string GenerateStartingLine(HttpMethod method)
-        {
-            /*
-            var query = Address.PathAndQuery;
-            if (_currentProxy != null &&
-                (_currentProxy.Type == ProxyType.Http || _currentProxy.Type == ProxyType.Chain))
-            {
-                query = Address.AbsoluteUri;
-            }
-            else
-            {
-                query = Address.PathAndQuery;
-            }
-            */
-            return $"{method} {Address.PathAndQuery} HTTP/{ProtocolVersion}\r\n";
-        }
+        private string GenerateStartingLine(HttpMethod method) => $"{method} {Address.PathAndQuery} HTTP/{ProtocolVersion}\r\n";
 
         // Есть 3 типа заголовков, которые могут перекрываться другими. Вот порядок их установки:
         // - заголовки, которы задаются через специальные свойства, либо автоматически
@@ -2669,13 +1984,26 @@ namespace Leaf.Net
             if (_temporaryHeaders != null && _temporaryHeaders.Count > 0)
                 MergeHeaders(headers, _temporaryHeaders);
 
-            if (Cookies == null || Cookies.Count == 0 || headers.ContainsKey("Cookie"))
+            // Disabled cookies
+            if (!DontTrackCookies)
                 return ToHeadersString(headers);
 
-            //Cookies.RemoveExpired();
+            // Cookies isn't set now
+            if (Cookies == null)
+            {
+                Cookies = new CookieStorage();
+                return ToHeadersString(headers);
+            }
+
+            // No Cookies or cookies is set via direct header
+            if (Cookies.Count == 0 || headers.ContainsKey("Cookie"))
+                return ToHeadersString(headers);
+
+            // Cookies from storage
             string cookies = Cookies.GetCookieHeader(uri);
             if (!string.IsNullOrEmpty(cookies))
                 headers["Cookie"] = cookies;
+
             return ToHeadersString(headers);
         }
 
@@ -2691,8 +2019,6 @@ namespace Leaf.Net
 
             if (_currentProxy != null && _currentProxy.Type == ProxyType.HTTP)
                 httpProxy = _currentProxy as HttpProxyClient;
-            else if (_currentProxy != null && _currentProxy.Type == ProxyType.Chain)
-                httpProxy = FindHttpProxyInChain(_currentProxy as ChainProxyClient);
 
             if (httpProxy != null)
             {
@@ -2780,45 +2106,7 @@ namespace Leaf.Net
         }
 
         #endregion
-
-        private static HttpProxyClient FindHttpProxyInChain(ChainProxyClient chainProxy)
-        {
-            HttpProxyClient foundProxy = null;
-
-            // Ищем HTTP-прокси во всех цепочках прокси.
-            // В приоритете найти прокси, который требует авторизацию.
-            foreach (var proxy in chainProxy.Proxies)
-            {
-                // ReSharper disable once SwitchStatementMissingSomeCases
-                switch (proxy.Type) {
-                    case ProxyType.HTTP:
-                        foundProxy = proxy as HttpProxyClient;
-
-                        if (foundProxy != null &&
-                            (!string.IsNullOrEmpty(foundProxy.Username) ||
-                            !string.IsNullOrEmpty(foundProxy.Password)))
-                        {
-                            return foundProxy;
-                        }
-
-                        break;
-                    case ProxyType.Chain:
-                        var foundDeepProxy =
-                            FindHttpProxyInChain(proxy as ChainProxyClient);
-
-                        if (foundDeepProxy != null &&
-                            (!string.IsNullOrEmpty(foundDeepProxy.Username) ||
-                             !string.IsNullOrEmpty(foundDeepProxy.Password)))
-                        {
-                            return foundDeepProxy;
-                        }
-                        break;
-                }
-            }
-
-            return foundProxy;
-        }
-
+        
         private static string ToHeadersString(Dictionary<string, string> headers)
         {
             var headersBuilder = new StringBuilder();
@@ -2852,18 +2140,10 @@ namespace Leaf.Net
             }
         }
 
-        // Проверяет, можно ли задавать этот заголовок.
-        /*private bool IsClosedHeader(string name)
-        {
-            return ClosedHeaders.Contains(name, StringComparer.OrdinalIgnoreCase);
-        }*/
-
         private void ClearRequestData()
         {
             _content = null;
 
-            _temporaryUrlParams = null;
-            _temporaryParams = null;
             _temporaryMultipartContent = null;
             _temporaryHeaders = null;
         }

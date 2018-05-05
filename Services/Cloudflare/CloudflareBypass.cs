@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 
 namespace Leaf.Net.Services.Cloudflare
@@ -63,6 +64,9 @@ namespace Leaf.Net.Services.Cloudflare
             DLog log = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (request.DontTrackCookies)
+                throw new HttpRequestException("В свойствах HTTP запроса отключена обработка Cookies через свойство DontTrackCookies. Для CloudFlare куки обязательны.");
+
             // User-Agent is required
             if (string.IsNullOrEmpty(request.UserAgent))
                 request.UserAgent = Http.ChromeUserAgent();
@@ -140,6 +144,7 @@ namespace Leaf.Net.Services.Cloudflare
 
         /// <inheritdoc cref="GetThroughCloudflare"/>
         /// <param name="uri">Uri Address</param>
+        // ReSharper disable once UnusedMember.Global
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, Uri uri,
             DLog log = null,
             #if USE_CAPTCHA_SOLVER

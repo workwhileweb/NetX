@@ -31,9 +31,11 @@ namespace Leaf.Net
 
         #region Конструкторы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="HttpException"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpException" />.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public HttpException() : this(Resources.HttpException_Default) { }
 
         /// <summary>
@@ -44,12 +46,13 @@ namespace Leaf.Net
         public HttpException(string message, Exception innerException = null)
             : base(message, innerException) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="HttpException"/> заданным сообщением об ошибке и кодом состояния ответа.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpException" /> заданным сообщением об ошибке и кодом состояния ответа.
         /// </summary>
         /// <param name="message">Сообщение об ошибке с объяснением причины исключения.</param>
         /// <param name="statusCode">Код состояния ответа от HTTP-сервера.</param>
-        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null"/>.</param>
+        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null" />.</param>
         public HttpException(string message, HttpExceptionStatus status,
             HttpStatusCode httpStatusCode = HttpStatusCode.None, Exception innerException = null)
             : base(message, innerException)

@@ -294,9 +294,6 @@
   <data name="HttpException_WrongChunkedBlockLength" xml:space="preserve">
     <value>Received invalid data block size when using Chunked: {0}</value>
   </data>
-  <data name="InvalidOperationException_ChainProxyClient_NotProxies" xml:space="preserve">
-    <value>Do not set any proxy for the chain.</value>
-  </data>
   <data name="ArgumentOutOfRangeException_CanNotBeGreater" xml:space="preserve">
     <value>The value can not be more than {0}.</value>
   </data>

@@ -83,6 +83,7 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="BytesContent"/>.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         protected BytesContent() { }
 
 

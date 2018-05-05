@@ -41,15 +41,6 @@ namespace Leaf.Net
 
         #endregion
 
-
-        #region Статические поля (закрытые)
-
-        [ThreadStatic] private static Random _rand;
-        private static Random Rand => _rand ?? (_rand = new Random());
-
-        #endregion
-
-
         #region Поля (закрытые)
 
         private readonly string _boundary;
@@ -64,6 +55,7 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.MultipartContent" />.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public MultipartContent()
             : this("----------------" + GetRandomString(16)) { }
 
@@ -111,6 +103,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="name"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
+        // ReSharper disable once UnusedMember.Global
         public void Add(HttpContent content, string name)
         {
             #region Проверка параметров
@@ -126,7 +119,7 @@ namespace Leaf.Net
 
             #endregion
 
-            var element = new Element()
+            var element = new Element
             {
                 Name = name,
                 Content = content
@@ -150,6 +143,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="fileName"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
+        // ReSharper disable once UnusedMember.Global
         public void Add(HttpContent content, string name, string fileName)
         {
             #region Проверка параметров
@@ -199,6 +193,7 @@ namespace Leaf.Net
         /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="name"/> является пустой строкой.</exception>
+        // ReSharper disable once UnusedMember.Global
         public void Add(HttpContent content, string name, string fileName, string contentType)
         {
             #region Проверка параметров
@@ -222,7 +217,7 @@ namespace Leaf.Net
 
             content.ContentType = contentType;
 
-            var element = new Element()
+            var element = new Element
             {
                 Name = name,
                 FileName = fileName,
@@ -232,11 +227,12 @@ namespace Leaf.Net
             _elements.Add(element);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Подсчитывает и возвращает длину тела запроса в байтах.
         /// </summary>
         /// <returns>Длина тела запроса в байтах.</returns>
-        /// <exception cref="System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
         public override long CalculateContentLength()
         {
             ThrowIfDisposed();
@@ -270,12 +266,13 @@ namespace Leaf.Net
             return length;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Записывает данные тела запроса в поток.
         /// </summary>
         /// <param name="stream">Поток, куда будут записаны данные тела запроса.</param>
-        /// <exception cref="System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="stream"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="stream" /> равно <see langword="null" />.</exception>
         public override void WriteTo(Stream stream)
         {
             ThrowIfDisposed();
@@ -315,11 +312,12 @@ namespace Leaf.Net
             stream.Write(boundaryBytes, 0, boundaryBytes.Length);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Возвращает перечеслитель элементов составного содержимого.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
         public IEnumerator<HttpContent> GetEnumerator()
         {
             ThrowIfDisposed();
@@ -363,18 +361,18 @@ namespace Leaf.Net
 
             for (int i = 0; i < length; ++i)
             {
-                switch (Rand.Next(3))
+                switch (Randomizer.Instance.Next(3))
                 {
                     case 0:
-                        strBuilder.Append((char)Rand.Next(48, 58));
+                        strBuilder.Append((char)Randomizer.Instance.Next(48, 58));
                         break;
 
                     case 1:
-                        strBuilder.Append((char)Rand.Next(97, 123));
+                        strBuilder.Append((char)Randomizer.Instance.Next(97, 123));
                         break;
 
                     default:
-                        strBuilder.Append((char)Rand.Next(65, 91));
+                        strBuilder.Append((char)Randomizer.Instance.Next(65, 91));
                         break;
                 }
             }

@@ -22,22 +22,25 @@ namespace Leaf.Net
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.ProxyException" />.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public ProxyException() : this(Resources.ProxyException_Default) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="ProxyException"/> заданным сообщением об ошибке.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.ProxyException" /> заданным сообщением об ошибке.
         /// </summary>
         /// <param name="message">Сообщение об ошибке с объяснением причины исключения.</param>
-        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null"/>.</param>
+        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null" />.</param>
         public ProxyException(string message, Exception innerException = null)
             : base(message, innerException) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Leaf.Net.Net.ProxyException"/> заданным сообщением об ошибке и прокси-клиентом.
+        /// Инициализирует новый экземпляр класса <see cref="!:Leaf.Net.Net.ProxyException" /> заданным сообщением об ошибке и прокси-клиентом.
         /// </summary>
         /// <param name="message">Сообщение об ошибке с объяснением причины исключения.</param>
         /// <param name="proxyClient">Прокси-клиент, в котором произошла ошибка.</param>
-        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null"/>.</param>
+        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null" />.</param>
         public ProxyException(string message, ProxyClient proxyClient, Exception innerException = null)
             : base(message, innerException)
         {

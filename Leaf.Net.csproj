@@ -41,28 +41,24 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProxyHandler.cs" />
+    <Compile Include="Randomizer.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RequestParams.cs" />
-    <Compile Include="Services\Captcha\CaptchaException.cs" />
-    <Compile Include="Services\Captcha\Rucaptcha.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolution.cs" />
     <Compile Include="Services\Cloudflare\ChallengeSolver.cs" />
     <None Include="Services\Cloudflare\_CloudflareBypass_with_captcha_solver.cs" />
     <Compile Include="Services\Cloudflare\CloudflareBypass.cs" />
     <Compile Include="Services\Cloudflare\CloudflareException.cs" />
-    <Compile Include="Services\StormWall\StormWallException.cs" />
-    <Compile Include="Services\StormWall\StormWallBypass.cs" />
-    <Compile Include="Services\StormWall\StormWallSolver.cs" />
-    <Compile Include="~Extensions\HttpExtensions.cs" />
+    <None Include="Services\StormWall\StormWallException.cs" />
+    <None Include="Services\StormWall\StormWallBypass.cs" />
+    <None Include="Services\StormWall\StormWallSolver.cs" />
     <Compile Include="~Http\CookieStorage.cs" />
     <Compile Include="~Http\HttpExceptionStatus.cs" />
     <Compile Include="~Http\~Content\BytesContent.cs" />
@@ -74,7 +70,6 @@
     <Compile Include="~Http\~Content\StreamContent.cs" />
     <Compile Include="~Http\~Content\StringContent.cs" />
     <Compile Include="~Internal\ProgressStreamContent.cs" />
-    <Compile Include="~Proxy\ChainProxyClient.cs" />
     <Compile Include="~Http\~Misc\DownloadProgressChangedEventArgs.cs" />
     <Compile Include="~Http\HttpHeader.cs" />
     <Compile Include="~Http\~Misc\UploadProgressChangedEventArgs.cs" />
@@ -100,6 +95,7 @@
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
