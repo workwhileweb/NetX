@@ -19,7 +19,7 @@ namespace Leaf.Net {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -156,6 +156,15 @@ namespace Leaf.Net {
         internal static string ArgumentOutOfRangeException_StringLengthCanNotBeMore {
             get {
                 return ResourceManager.GetString("ArgumentOutOfRangeException_StringLengthCanNotBeMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл с куками &apos;${0}&apos; уже существует.
+        /// </summary>
+        internal static string CookieStorage_SaveToFile_FileAlreadyExists {
+            get {
+                return ResourceManager.GetString("CookieStorage_SaveToFile_FileAlreadyExists", resourceCulture);
             }
         }
         
