@@ -782,6 +782,7 @@ namespace Leaf.Net
             _headers.Clear();
             //_rawCookies.Clear();
 
+            // TODO: cookieless requests
             Cookies = _request.Cookies != null && !_request.Cookies.IsLocked 
                 ? _request.Cookies 
                 : new CookieStorage();

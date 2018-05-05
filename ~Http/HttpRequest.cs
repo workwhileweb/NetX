@@ -518,6 +518,15 @@ namespace Leaf.Net
         }
 
         /// <summary>
+        /// Изменяет User-Agent на случайный (Chrome, Firefox, Opera, Internet Explorer).
+        /// Шансы выпадения соответствуют популярности браузеров.
+        /// </summary>
+        public void UserAgentRandomize()
+        {
+            UserAgent = Http.RandomUserAgent();
+        }
+
+        /// <summary>
         /// Возвращает или задает значение HTTP-заголовка 'Referer'.
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="null"/>.</value>
@@ -2061,8 +2070,9 @@ namespace Leaf.Net
             Dispose();
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Освобождает все ресурсы, используемые текущим экземпляром класса <see cref="HttpRequest"/>.
+        /// Освобождает все ресурсы, используемые текущим экземпляром класса <see cref="T:Leaf.Net.HttpRequest" />.
         /// </summary>
         public void Dispose()
         {

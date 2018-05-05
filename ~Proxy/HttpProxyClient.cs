@@ -101,26 +101,27 @@ namespace Leaf.Net
 
         #region Методы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
         /// Создаёт соединение с сервером через прокси-сервер.
         /// </summary>
         /// <param name="destinationHost">Хост сервера, с которым нужно связаться через прокси-сервер.</param>
         /// <param name="destinationPort">Порт сервера, с которым нужно связаться через прокси-сервер.</param>
-        /// <param name="tcpClient">Соединение, через которое нужно работать, или значение <see langword="null"/>.</param>
+        /// <param name="tcpClient">Соединение, через которое нужно работать, или значение <see langword="null" />.</param>
         /// <returns>Соединение с сервером через прокси-сервер.</returns>
-        /// <exception cref="System.InvalidOperationException">
-        /// Значение свойства <see cref="Host"/> равно <see langword="null"/> или имеет нулевую длину.
+        /// <exception cref="T:System.InvalidOperationException">
+        /// Значение свойства <see cref="!:Host" /> равно <see langword="null" /> или имеет нулевую длину.
         /// -или-
-        /// Значение свойства <see cref="Port"/> меньше 1 или больше 65535.
+        /// Значение свойства <see cref="!:Port" /> меньше 1 или больше 65535.
         /// -или-
-        /// Значение свойства <see cref="Username"/> имеет длину более 255 символов.
+        /// Значение свойства <see cref="!:Username" /> имеет длину более 255 символов.
         /// -или-
-        /// Значение свойства <see cref="Password"/> имеет длину более 255 символов.
+        /// Значение свойства <see cref="!:Password" /> имеет длину более 255 символов.
         /// </exception>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="destinationHost"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="destinationHost"/> является пустой строкой.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра <paramref name="destinationPort"/> меньше 1 или больше 65535.</exception>
-        /// <exception cref="Leaf.Net.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="destinationHost" /> равно <see langword="null" />.</exception>
+        /// <exception cref="T:System.ArgumentException">Значение параметра <paramref name="destinationHost" /> является пустой строкой.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="destinationPort" /> меньше 1 или больше 65535.</exception>
+        /// <exception cref="!:Leaf.Net.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
         /// <remarks>Если порт сервера неравен 80, то для подключения используется метод 'CONNECT'.</remarks>
         public override TcpClient CreateConnection(string destinationHost, int destinationPort, TcpClient tcpClient = null)
         {

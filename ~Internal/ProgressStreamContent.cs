@@ -78,7 +78,7 @@ namespace Leaf.Net
 
         private class ProgressStream : Stream
         {
-            private CancellationToken _token;
+            private readonly CancellationToken _token;
 
             public ProgressStream(Stream stream, CancellationToken token)
             {

@@ -24,7 +24,7 @@ namespace Leaf.Net
         /// <summary>
         /// Возвращает процент полученных байтов.
         /// </summary>
-        public double ProgressPercentage => ((double)BytesReceived / TotalBytesToReceive) * 100.0;
+        public double ProgressPercentage => (double)BytesReceived / TotalBytesToReceive * 100.0;
 
         #endregion
 

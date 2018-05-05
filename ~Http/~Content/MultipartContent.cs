@@ -330,10 +330,11 @@ namespace Leaf.Net
         #endregion
 
 
+        /// <inheritdoc />
         /// <summary>
-        /// Освобождает неуправляемые (а при необходимости и управляемые) ресурсы, используемые объектом <see cref="HttpContent"/>.
+        /// Освобождает неуправляемые (а при необходимости и управляемые) ресурсы, используемые объектом <see cref="T:Leaf.Net.HttpContent" />.
         /// </summary>
-        /// <param name="disposing">Значение <see langword="true"/> позволяет освободить управляемые и неуправляемые ресурсы; значение <see langword="false"/> позволяет освободить только неуправляемые ресурсы.</param>
+        /// <param name="disposing">Значение <see langword="true" /> позволяет освободить управляемые и неуправляемые ресурсы; значение <see langword="false" /> позволяет освободить только неуправляемые ресурсы.</param>
         protected override void Dispose(bool disposing)
         {
             if (!disposing || _elements == null)

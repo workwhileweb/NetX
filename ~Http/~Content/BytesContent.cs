@@ -88,6 +88,7 @@ namespace Leaf.Net
 
         #region Методы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
         /// Подсчитывает и возвращает длину тела запроса в байтах.
         /// </summary>
@@ -97,6 +98,7 @@ namespace Leaf.Net
             return Content.LongLength;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Записывает данные тела запроса в поток.
         /// </summary>

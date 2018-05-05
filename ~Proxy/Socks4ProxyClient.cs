@@ -164,7 +164,7 @@ namespace Leaf.Net
 
         protected internal virtual void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
         {
-            var dstPort = GetIPAddressBytes(destinationHost);
+            var dstPort = GetIpAddressBytes(destinationHost);
             var dstIp = GetPortBytes(destinationPort);
 
             var userId = string.IsNullOrEmpty(_username) ?
@@ -200,9 +200,9 @@ namespace Leaf.Net
                 HandleCommandError(reply);
         }
 
-        protected internal byte[] GetIPAddressBytes(string destinationHost)
+        protected internal byte[] GetIpAddressBytes(string destinationHost)
         {
-            if (IPAddress.TryParse(destinationHost, out IPAddress ipAddr))
+            if (IPAddress.TryParse(destinationHost, out var ipAddr))
                 return ipAddr.GetAddressBytes();
 
             try

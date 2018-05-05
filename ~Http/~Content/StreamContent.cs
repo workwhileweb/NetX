@@ -61,11 +61,12 @@ namespace Leaf.Net
 
         #region Методы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
         /// Подсчитывает и возвращает длину тела запроса в байтах.
         /// </summary>
         /// <returns>Длина контента в байтах.</returns>
-        /// <exception cref="System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
         public override long CalculateContentLength()
         {
             ThrowIfDisposed();
@@ -73,12 +74,13 @@ namespace Leaf.Net
             return ContentStream.Length;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Записывает данные тела запроса в поток.
         /// </summary>
         /// <param name="stream">Поток, куда будут записаны данные тела запроса.</param>
-        /// <exception cref="System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="stream"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="stream" /> равно <see langword="null" />.</exception>
         public override void WriteTo(Stream stream)
         {
             ThrowIfDisposed();

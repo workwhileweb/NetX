@@ -36,7 +36,7 @@ namespace Leaf.Net
         protected int _connectTimeout = 9 * 1000; // 9 Seconds
 
         /// <summary>Время ожидания в миллисекундах при записи в поток или при чтении из него.</summary>
-        protected int _readWriteTimeout = 24 * 1000; // 20 Seconds
+        protected int _readWriteTimeout = 30 * 1000; // 30 Seconds
 
         #endregion
 
