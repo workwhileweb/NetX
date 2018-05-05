@@ -2022,6 +2022,16 @@ namespace Leaf.Net
         }
 
         /// <summary>
+        /// Добавляет заголовок "X-Requested-With" со значением "XMLHttpRequest".
+        /// Применяется к AJAX запросам.
+        /// </summary>
+        /// <returns>Вернет тот же HttpRequest для цепочки вызовов (pipeline).</returns>
+        public HttpRequest AddXmlHttpRequestHeader()
+        {
+            return AddHeader("X-Requested-With", "XMLHttpRequest");
+        }
+
+        /// <summary>
         /// Добавляет временный HTTP-заголовок запроса. Такой заголовок перекрывает заголовок установленный через индексатор.
         /// </summary>
         /// <param name="header">HTTP-заголовок.</param>
