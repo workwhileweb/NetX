@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Security;
 using System.Text;
 using System.Threading;
+
 // ReSharper disable InconsistentNaming
 
 namespace Leaf.Net
@@ -21,15 +22,19 @@ namespace Leaf.Net
 
         /// <summary>Хост прокси-сервера.</summary>
         protected readonly string _host;
+
         /// <summary>Порт прокси-сервера.</summary>
         protected readonly int _port = 1;
+
         /// <summary>Имя пользователя для авторизации на прокси-сервере.</summary>
         protected string _username;
+
         /// <summary>Пароль для авторизации на прокси-сервере.</summary>
         protected string _password;
 
         /// <summary>Время ожидания в миллисекундах при подключении к прокси-серверу.</summary>
         protected int _connectTimeout = 9 * 1000; // 9 Seconds
+
         /// <summary>Время ожидания в миллисекундах при записи в поток или при чтении из него.</summary>
         protected int _readWriteTimeout = 24 * 1000; // 20 Seconds
 
@@ -103,8 +108,7 @@ namespace Leaf.Net
         public virtual string Username
         {
             get => _username;
-            set
-            {   
+            set {
                 #region Проверка параметра
 
                 if (value != null && value.Length > 255)
@@ -127,8 +131,7 @@ namespace Leaf.Net
         public virtual string Password
         {
             get => _password;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value != null && value.Length > 255)
@@ -151,8 +154,7 @@ namespace Leaf.Net
         public virtual int ConnectTimeout
         {
             get => _connectTimeout;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 0)
@@ -172,8 +174,7 @@ namespace Leaf.Net
         public virtual int ReadWriteTimeout
         {
             get => _readWriteTimeout;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 0)
@@ -233,16 +234,17 @@ namespace Leaf.Net
 
 
         #region Статические методы
+
         /// <summary>
         /// Служит для преобразования строковых прокси к объекту ProxyClient.
         /// </summary>
         public static readonly Dictionary<string, ProxyType> ProxyProtocol = new Dictionary<string, ProxyType> {
-            { "http", ProxyType.HTTP },
-            { "https", ProxyType.HTTP },
-            { "socks4", ProxyType.Socks4 },
-            { "socks4a", ProxyType.Socks4A },
-            { "socks5", ProxyType.Socks5 },
-            { "socks", ProxyType.Socks5 }
+            {"http", ProxyType.HTTP},
+            {"https", ProxyType.HTTP},
+            {"socks4", ProxyType.Socks4},
+            {"socks4a", ProxyType.Socks4A},
+            {"socks5", ProxyType.Socks5},
+            {"socks", ProxyType.Socks5}
         };
 
         /// <summary>
@@ -317,7 +319,7 @@ namespace Leaf.Net
         /// <returns>Экземпляр класса прокси-клиента, унаследованный от <see cref="ProxyClient"/>.</returns>
         public static ProxyClient Parse(string protoProxyAddress)
         {
-            var proxy = protoProxyAddress.Split(new[] { "://" }, StringSplitOptions.RemoveEmptyEntries);
+            var proxy = protoProxyAddress.Split(new[] {"://"}, StringSplitOptions.RemoveEmptyEntries);
             if (proxy.Length < 2)
                 return null;
 
@@ -418,7 +420,8 @@ namespace Leaf.Net
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="destinationHost"/> является пустой строкой.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра <paramref name="destinationPort"/> меньше 1 или больше 65535.</exception>
         /// <exception cref="Leaf.Net.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
-        public abstract TcpClient CreateConnection(string destinationHost, int destinationPort, TcpClient tcpClient = null);
+        public abstract TcpClient CreateConnection(string destinationHost, int destinationPort,
+            TcpClient tcpClient = null);
 
 
         #region Методы (открытые)
@@ -462,6 +465,7 @@ namespace Leaf.Net
             return _host.GetHashCode() ^ _port;
         }
 
+        /// <inheritdoc/>
         /// <summary>
         /// Определяет, равны ли два прокси-клиента.
         /// </summary>
@@ -518,6 +522,7 @@ namespace Leaf.Net
                     connectDoneEvent.Set();
                 }, tcpClient);
             }
+
             #region Catch's
 
             catch (Exception ex)
