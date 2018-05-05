@@ -19,6 +19,7 @@ namespace Leaf.Net
 
             var httpRequest   = request.ToHttpRequest(CookieContainer);
             httpRequest.Proxy = _proxyClient;
+            httpRequest.SslCertificateValidatorCallback += (sender, certificate, chain, errors) => true;
 
             cancellationToken.ThrowIfCancellationRequested();
 

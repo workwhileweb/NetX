@@ -2578,16 +2578,7 @@ namespace Leaf.Net
                         ? new SslStream(ClientNetworkStream, false, Http.AcceptAllCertificationsCallback) 
                         : new SslStream(ClientNetworkStream, false, SslCertificateValidatorCallback);
 
-                    var supportedProtocols = SslProtocols.Tls | SslProtocols.Ssl3;
-
-                    // TLS support by https://github.com/avQse. Thank you.
-                    // TLS 1.1 support
-                    if (Enum.IsDefined(typeof(SecurityProtocolType), 768))
-                        supportedProtocols |= (SslProtocols)768;
-
-                    // TLS 1.2 support
-                    if (Enum.IsDefined(typeof(SecurityProtocolType), 3072))
-                        supportedProtocols |= (SslProtocols)3072; 
+                    const SslProtocols supportedProtocols = SslProtocols.Tls | SslProtocols.Tls12  | SslProtocols.Tls11 | SslProtocols.Ssl3;
                     
                     sslStream.AuthenticateAsClient(address.Host, new X509CertificateCollection(), supportedProtocols, false);
                     ClientStream = sslStream;
