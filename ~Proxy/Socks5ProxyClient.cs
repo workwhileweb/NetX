@@ -185,7 +185,7 @@ namespace Leaf.Net
 
         #region Методы (закрытые)
 
-        private void InitialNegotiation(NetworkStream nStream)
+        private void InitialNegotiation(Stream nStream)
         {
             var authMethod = !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)
                 ? AuthMethodUsernamePassword
