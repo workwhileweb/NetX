@@ -6,6 +6,7 @@ using System.Threading;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет клиент для HTTP прокси-сервера.
     /// </summary>
@@ -21,29 +22,33 @@ namespace Leaf.Net
 
         #region Конструкторы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="HttpProxyClient"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpProxyClient" />.
         /// </summary>
         public HttpProxyClient()
             : this(null) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="HttpProxyClient"/> заданным хостом прокси-сервера, и устанавливает порт равным - 8080.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpProxyClient" /> заданным хостом прокси-сервера, и устанавливает порт равным - 8080.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         public HttpProxyClient(string host)
             : this(host, DefaultPort) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="HttpProxyClient"/> заданными данными о прокси-сервере.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
         public HttpProxyClient(string host, int port)
             : this(host, port, string.Empty, string.Empty) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="HttpProxyClient"/> заданными данными о прокси-сервере.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>

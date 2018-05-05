@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace Leaf.Net.Services.Cloudflare
 {
+    /// <inheritdoc cref="IEquatable<ChallengeSolution>"/>
     /// <summary>
     /// Holds the information, which is required to pass the CloudFlare clearance.
     /// </summary>
@@ -41,8 +42,7 @@ namespace Leaf.Net.Services.Cloudflare
 
         public override bool Equals(object obj)
         {
-            var other = obj as ChallengeSolution?;
-            return other.HasValue && Equals(other.Value);
+            return obj is ChallengeSolution other && Equals(other);
         }
 
         public override int GetHashCode()

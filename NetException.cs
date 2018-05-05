@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Исключение, которое выбрасывается, в случае возникновения ошибки при работе с сетью.
     /// </summary>
@@ -27,11 +28,12 @@ namespace Leaf.Net
         #endregion
 
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="NetException"/> заданными экземплярами <see cref="SerializationInfo"/> и <see cref="StreamingContext"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.NetException" /> заданными экземплярами <see cref="T:System.Runtime.Serialization.SerializationInfo" /> и <see cref="T:System.Runtime.Serialization.StreamingContext" />.
         /// </summary>
-        /// <param name="serializationInfo">Экземпляр класса <see cref="SerializationInfo"/>, который содержит сведения, требуемые для сериализации нового экземпляра класса <see cref="NetException"/>.</param>
-        /// <param name="streamingContext">Экземпляр класса <see cref="StreamingContext"/>, содержащий источник сериализованного потока, связанного с новым экземпляром класса <see cref="NetException"/>.</param>
+        /// <param name="serializationInfo">Экземпляр класса <see cref="T:System.Runtime.Serialization.SerializationInfo" />, который содержит сведения, требуемые для сериализации нового экземпляра класса <see cref="T:Leaf.Net.NetException" />.</param>
+        /// <param name="streamingContext">Экземпляр класса <see cref="T:System.Runtime.Serialization.StreamingContext" />, содержащий источник сериализованного потока, связанного с новым экземпляром класса <see cref="T:Leaf.Net.NetException" />.</param>
         protected NetException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext) { }
     }

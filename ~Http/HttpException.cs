@@ -4,6 +4,7 @@ using System.Security.Permissions;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Исключение, которое выбрасывается, в случае возникновения ошибки при работе с HTTP-протоколом.
     /// </summary>
@@ -60,11 +61,12 @@ namespace Leaf.Net
         #endregion
 
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="HttpException"/> заданными экземплярами <see cref="SerializationInfo"/> и <see cref="StreamingContext"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.HttpException" /> заданными экземплярами <see cref="T:System.Runtime.Serialization.SerializationInfo" /> и <see cref="T:System.Runtime.Serialization.StreamingContext" />.
         /// </summary>
-        /// <param name="serializationInfo">Экземпляр класса <see cref="SerializationInfo"/>, который содержит сведения, требуемые для сериализации нового экземпляра класса <see cref="HttpException"/>.</param>
-        /// <param name="streamingContext">Экземпляр класса <see cref="StreamingContext"/>, содержащий источник сериализованного потока, связанного с новым экземпляром класса <see cref="HttpException"/>.</param>
+        /// <param name="serializationInfo">Экземпляр класса <see cref="T:System.Runtime.Serialization.SerializationInfo" />, который содержит сведения, требуемые для сериализации нового экземпляра класса <see cref="T:Leaf.Net.HttpException" />.</param>
+        /// <param name="streamingContext">Экземпляр класса <see cref="T:System.Runtime.Serialization.StreamingContext" />, содержащий источник сериализованного потока, связанного с новым экземпляром класса <see cref="T:Leaf.Net.HttpException" />.</param>
         protected HttpException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {
@@ -76,11 +78,12 @@ namespace Leaf.Net
         }
 
 
+        /// <inheritdoc />
         /// <summary>
-        /// Заполняет экземпляр <see cref="SerializationInfo"/> данными, необходимыми для сериализации исключения <see cref="HttpException"/>.
+        /// Заполняет экземпляр <see cref="T:System.Runtime.Serialization.SerializationInfo" /> данными, необходимыми для сериализации исключения <see cref="T:Leaf.Net.HttpException" />.
         /// </summary>
-        /// <param name="serializationInfo">Данные о сериализации, <see cref="SerializationInfo"/>, которые должны использоваться.</param>
-        /// <param name="streamingContext">Данные о сериализации, <see cref="StreamingContext"/>, которые должны использоваться.</param>
+        /// <param name="serializationInfo">Данные о сериализации, <see cref="T:System.Runtime.Serialization.SerializationInfo" />, которые должны использоваться.</param>
+        /// <param name="streamingContext">Данные о сериализации, <see cref="T:System.Runtime.Serialization.StreamingContext" />, которые должны использоваться.</param>
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
         public override void GetObjectData(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {

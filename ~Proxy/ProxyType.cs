@@ -5,6 +5,7 @@
     /// </summary>
     public enum ProxyType
     {
+        // ReSharper disable once InconsistentNaming
         HTTP,
         Socks4,
         Socks4A,

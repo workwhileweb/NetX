@@ -2,6 +2,7 @@
 
 namespace Leaf.Net.Services.Cloudflare
 {
+    /// <inheritdoc />
     /// <summary>
     /// The exception that is thrown if Cloudflare clearance failed after the declared number of attempts.
     /// </summary>

@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет тело запроса в виде строки.
     /// </summary>
@@ -10,24 +11,26 @@ namespace Leaf.Net
     {
         #region Конструкторы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="StringContent"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.StringContent" />.
         /// </summary>
         /// <param name="content">Содержимое контента.</param>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="content"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="content" /> равно <see langword="null" />.</exception>
         /// <remarks>По умолчанию используется тип контента - 'text/plain'.</remarks>
         public StringContent(string content)
             : this(content, Encoding.UTF8) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="StringContent"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.StringContent" />.
         /// </summary>
         /// <param name="content">Содержимое контента.</param>
         /// <param name="encoding">Кодировка, применяемая для преобразования данных в последовательность байтов.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// <exception cref="T:System.ArgumentNullException">
+        /// Значение параметра <paramref name="content" /> равно <see langword="null" />.
         /// -или-
-        /// Значение параметра <paramref name="encoding"/> равно <see langword="null"/>.
+        /// Значение параметра <paramref name="encoding" /> равно <see langword="null" />.
         /// </exception>
         /// <remarks>По умолчанию используется тип контента - 'text/plain'.</remarks>
         public StringContent(string content, Encoding encoding)

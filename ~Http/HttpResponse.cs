@@ -404,9 +404,7 @@ namespace Leaf.Net
 
                 #endregion
 
-                string value;
-
-                if (!_headers.TryGetValue(headerName, out value))
+                if (!_headers.TryGetValue(headerName, out string value))
                     value = string.Empty;
 
                 return value;
@@ -1271,17 +1269,14 @@ namespace Leaf.Net
 
         private Uri GetLocation()
         {
-            string location;
-
-            if (!_headers.TryGetValue("Location", out location))
+            if (!_headers.TryGetValue("Location", out var location))
                 _headers.TryGetValue("Redirect-Location", out location);
 
             if (string.IsNullOrEmpty(location))
                 return null;
 
-            Uri redirectAddress;
             var baseAddress = _request.Address;
-            Uri.TryCreate(baseAddress, location, out redirectAddress);
+            Uri.TryCreate(baseAddress, location, out var redirectAddress);
 
             return redirectAddress;
         }
@@ -1316,8 +1311,7 @@ namespace Leaf.Net
             if (!_headers.ContainsKey(contentLengthHeader))
                 return -1;
 
-            int contentLength;
-            if (!int.TryParse(_headers[contentLengthHeader], out contentLength))
+            if (!int.TryParse(_headers[contentLengthHeader], out var contentLength))
                 throw new FormatException($"Invalid response header \"{contentLengthHeader}\" value");
 
             return contentLength;

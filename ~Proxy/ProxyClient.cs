@@ -8,6 +8,7 @@ using System.Threading;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет базовую реализацию класса для работы с прокси-сервером.
     /// </summary>
@@ -479,12 +480,7 @@ namespace Leaf.Net
         /// </summary>
         /// <param name="obj">Прокси-клиент для сравнения с данным экземпляром.</param>
         /// <returns>Значение <see langword="true"/>, если два прокси-клиента равны, иначе значение <see langword="false"/>.</returns>
-        public override bool Equals(object obj)
-        {
-            var proxy = obj as ProxyClient;
-
-            return proxy != null && Equals(proxy);
-        }
+        public override bool Equals(object obj) => obj is ProxyClient proxy && Equals(proxy);
 
         #endregion
 

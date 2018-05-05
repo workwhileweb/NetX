@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет клиент для Socks5 прокси-сервера.
     /// </summary>
@@ -46,29 +47,33 @@ namespace Leaf.Net
 
         #region Конструкторы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks5ProxyClient"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.Socks5ProxyClient" />.
         /// </summary>
         public Socks5ProxyClient()
             : this(null) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks5ProxyClient"/> заданным хостом прокси-сервера, и устанавливает порт равным - 1080.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.Socks5ProxyClient" /> заданным хостом прокси-сервера, и устанавливает порт равным - 1080.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         public Socks5ProxyClient(string host)
             : this(host, DefaultPort) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks5ProxyClient"/> заданными данными о прокси-сервере.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.Socks5ProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
         public Socks5ProxyClient(string host, int port)
             : this(host, port, string.Empty, string.Empty) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="Socks5ProxyClient"/> заданными данными о прокси-сервере.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.Socks5ProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
@@ -117,26 +122,27 @@ namespace Leaf.Net
         #endregion
 
 
+        /// <inheritdoc />
         /// <summary>
         /// Создаёт соединение с сервером через прокси-сервер.
         /// </summary>
         /// <param name="destinationHost">Хост сервера, с которым нужно связаться через прокси-сервер.</param>
         /// <param name="destinationPort">Порт сервера, с которым нужно связаться через прокси-сервер.</param>
-        /// <param name="tcpClient">Соединение, через которое нужно работать, или значение <see langword="null"/>.</param>
+        /// <param name="tcpClient">Соединение, через которое нужно работать, или значение <see langword="null" />.</param>
         /// <returns>Соединение с сервером через прокси-сервер.</returns>
-        /// <exception cref="System.InvalidOperationException">
-        /// Значение свойства <see cref="Host"/> равно <see langword="null"/> или имеет нулевую длину.
+        /// <exception cref="T:System.InvalidOperationException">
+        /// Значение свойства <see cref="!:Host" /> равно <see langword="null" /> или имеет нулевую длину.
         /// -или-
-        /// Значение свойства <see cref="Port"/> меньше 1 или больше 65535.
+        /// Значение свойства <see cref="!:Port" /> меньше 1 или больше 65535.
         /// -или-
-        /// Значение свойства <see cref="Username"/> имеет длину более 255 символов.
+        /// Значение свойства <see cref="!:Username" /> имеет длину более 255 символов.
         /// -или-
-        /// Значение свойства <see cref="Password"/> имеет длину более 255 символов.
+        /// Значение свойства <see cref="!:Password" /> имеет длину более 255 символов.
         /// </exception>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="destinationHost"/> равно <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="destinationHost"/> является пустой строкой.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра <paramref name="destinationPort"/> меньше 1 или больше 65535.</exception>
-        /// <exception cref="Leaf.Net.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="destinationHost" /> равно <see langword="null" />.</exception>
+        /// <exception cref="T:System.ArgumentException">Значение параметра <paramref name="destinationHost" /> является пустой строкой.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="destinationPort" /> меньше 1 или больше 65535.</exception>
+        /// <exception cref="!:Leaf.Net.Net.ProxyException">Ошибка при работе с прокси-сервером.</exception>
         public override TcpClient CreateConnection(string destinationHost, int destinationPort, TcpClient tcpClient = null)
         {
             CheckState();

@@ -2,6 +2,7 @@
 
 namespace Leaf.Net.Services.StormWall
 {
+    /// <inheritdoc />
     /// <summary>
     /// The exception that is thrown if StormWall clearance failed.
     /// </summary>

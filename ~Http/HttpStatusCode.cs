@@ -11,6 +11,7 @@ namespace Leaf.Net
         Continue = 100,
         SwitchingProtocols = 101,
 
+        // ReSharper disable once InconsistentNaming
         OK = 200,
         Created = 201,
         Accepted = 202,

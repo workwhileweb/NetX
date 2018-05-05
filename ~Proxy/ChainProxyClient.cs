@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет цепочку из различных прокси-серверов.
     /// </summary>
@@ -100,8 +101,9 @@ namespace Leaf.Net
         #endregion
 
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="ChainProxyClient"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.ChainProxyClient" />.
         /// </summary>
         /// <param name="enableShuffle">Указывает, нужно ли перемешивать список цепочки прокси-серверов, перед созданием нового подключения.</param>
         public ChainProxyClient(bool enableShuffle = false)

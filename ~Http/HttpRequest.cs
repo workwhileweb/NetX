@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Class to send HTTP-server requests.
     /// </summary>

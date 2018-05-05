@@ -46,8 +46,7 @@ namespace Leaf.Net
             if (_totalBytesExpected == -1)
                 _totalBytesExpected = Headers.ContentLength ?? -1;
 
-            long computedLength;
-            if (_totalBytesExpected == -1 && TryComputeLength(out computedLength))
+            if (_totalBytesExpected == -1 && TryComputeLength(out long computedLength))
                 _totalBytesExpected = computedLength == 0 ? -1 : computedLength;
 
             // If less than zero still then change to -1

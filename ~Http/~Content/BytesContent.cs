@@ -3,6 +3,7 @@ using System.IO;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет тело запроса в виде байтов.
     /// </summary>
@@ -22,11 +23,12 @@ namespace Leaf.Net
 
         #region Конструкторы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="BytesContent"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.BytesContent" />.
         /// </summary>
         /// <param name="content">Содержимое тела запроса.</param>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="content"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="content" /> равно <see langword="null" />.</exception>
         /// <remarks>По умолчанию используется тип контента - 'application/octet-stream'.</remarks>
         public BytesContent(byte[] content)
             : this(content, 0, content.Length) { }

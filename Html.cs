@@ -46,9 +46,7 @@ namespace Leaf.Net
             {
                 if (match.Groups["text"].Success)
                 {
-                    string value;
-
-                    if (HtmlMnemonics.TryGetValue(match.Groups["text"].Value, out value))
+                    if (HtmlMnemonics.TryGetValue(match.Groups["text"].Value, out string value))
                         return value;
                 }
                 else if (match.Groups["code"].Success)

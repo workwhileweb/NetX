@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет коллекцию строк, представляющих параметры запроса.
     /// </summary>

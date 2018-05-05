@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Leaf.Net
 {
+    /// <inheritdoc cref="HttpContent" />
     /// <summary>
     /// Представляет тело запроса в виде состовного содержимого.
     /// </summary>
@@ -59,8 +60,9 @@ namespace Leaf.Net
 
         #region Конструкторы (открытые)
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="MultipartContent"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.MultipartContent" />.
         /// </summary>
         public MultipartContent()
             : this("----------------" + GetRandomString(16)) { }

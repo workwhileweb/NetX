@@ -2,6 +2,7 @@
 
 namespace Leaf.Net
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет данные для события, сообщающим о прогрессе загрузки данных.
     /// </summary>
@@ -28,8 +29,9 @@ namespace Leaf.Net
         #endregion
 
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="DownloadProgressChangedEventArgs"/>.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.Net.DownloadProgressChangedEventArgs" />.
         /// </summary>
         /// <param name="bytesReceived">Количество полученных байтов.</param>
         /// <param name="totalBytesToReceive">Общее количество получаемых байтов.</param>
