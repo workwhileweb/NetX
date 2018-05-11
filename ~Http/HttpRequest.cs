@@ -1990,7 +1990,7 @@ namespace Leaf.Net
                 MergeHeaders(headers, _temporaryHeaders);
 
             // Disabled cookies
-            if (!DontTrackCookies)
+            if (DontTrackCookies)
                 return ToHeadersString(headers);
 
             // Cookies isn't set now
