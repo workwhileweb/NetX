@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Leaf.Net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Leaf.Net.Tests
 {
@@ -99,7 +93,7 @@ namespace Leaf.Net.Tests
                 StringAssert.Contains(source, postValue);
             }
         }
-
+        /*
         [TestMethod]
         public void PostTest2()
         {
@@ -242,6 +236,6 @@ namespace Leaf.Net.Tests
         public void ClearAllHeadersTest()
         {
             Assert.Fail();
-        }
+        }*/
     }
 }
