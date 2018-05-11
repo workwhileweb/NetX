@@ -24,6 +24,7 @@ namespace Leaf.Net
         Pragma,
         Range,
         Referer,
+        Origin,
         Upgrade,
         UserAgent,
         Via,
