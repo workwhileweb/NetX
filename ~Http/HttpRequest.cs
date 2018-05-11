@@ -248,6 +248,11 @@ namespace Leaf.Net
         /// <value>Значение по умолчанию — <see langword="null"/>. Если установлено значение по умолчанию, то используется метод, который принимает все сертификаты SSL.</value>
         public RemoteCertificateValidationCallback SslCertificateValidatorCallback;
 
+        /// <summary>
+        /// Разрешает устанавлить пустые значения заголовкам.
+        /// </summary>
+        public bool AllowEmptyHeaderValues { get; set; } 
+
         #region Поведение
 
         /// <summary>
@@ -1339,7 +1344,7 @@ namespace Leaf.Net
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            if (value.Length == 0)
+            if (value.Length == 0 && !AllowEmptyHeaderValues)
                 throw ExceptionHelper.EmptyString(nameof(value));
 
             #endregion

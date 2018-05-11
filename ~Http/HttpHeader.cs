@@ -26,6 +26,7 @@ namespace Leaf.Net
         Referer,
         Origin,
         Upgrade,
+        UpgradeInsecureRequests,
         UserAgent,
         Via,
         Warning,
