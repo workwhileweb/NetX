@@ -2,6 +2,7 @@ version: 5.1.{build}
 branches:
   only:
   - master
+skip_tags: true
 image: Visual Studio 2017
 configuration: Release
 dotnet_csproj:
@@ -46,14 +47,6 @@ deploy:
   artifact: net462;netcoreapp2.0
   on:
     branch: master
-notifications:
-- provider: Email
-  to:
-  - mixtape774@gmail.com
-  subject: AppVeuor - Leaf.xNet Build
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: false
 only_commits:
   files:
     - appveyor.yml
