@@ -14,9 +14,9 @@ dotnet_csproj:
   informational_version: '{version}'
 environment:
   nuget_token:
-    secure: f/XPPzBiOEmc6sz+tLNtDeKR8Lu9xg+ekJuTasmT+iIaQT2xrgw9DnPEHT4/F4ccUIiVfMyg2eLDR6EyiyRdSgOLToUgOQAkXxD89InogY8=
+    secure: Waqd3aduAwq/s8kbhyyspiFx0F53lOt4J5B2TM/7BBHXnPcdCzeZ9KE2hSEKgyTu
   github_token:
-    secure: uVxlPx0d4HQdnxj4NhsrCCnQ0iqxmUDUPqPGRheiHt5Dp7pmOtXdGIYy52Y5rRQkLIl7He4wAH1W8nTOU+yahTec4+tbp0B8JTX/Mly8aVE=
+    secure: 2LiLyCv5qwnAClSid16P+Yiq+zIyBk+6/Xl1ZDOKz5g6ab2vXosiY3m93n52q1WX
 nuget:
   account_feed: true
   project_feed: true
