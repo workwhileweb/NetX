@@ -42,7 +42,7 @@ deploy:
 only_commits:
   files:
     - appveyor.yml
-    - *.sln
+    - Leaf.xNet.sln
     - Leaf.xNet/Leaf.xNet.csproj
     - Leaf.xNet/**/*.cs
     - Leaf.xNet/**/*.resx
