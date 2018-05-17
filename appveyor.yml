@@ -21,3 +21,29 @@ build:
   project: Leaf.xNet.sln
   publish_nuget: true
   verbosity: minimal
+artifacts:
+- path: Leaf.xNet\bin\Release\net462
+  name: net462
+- path: Leaf.xNet\bin\Release\netcoreapp2.0
+  name: netcoreapp2.0
+- path: Leaf.xNet\bin\Release\*.nupkg
+  name: nuget-package
+deploy:
+- provider: NuGet
+  skip_symbols: true
+  on:
+    branch: master
+- provider: GitHub
+  tag: v$(appveyor_build_version)
+  release: Leaf.xNet v$(appveyor_build_version)
+  artifact: net462;netcoreapp2.0;nuget-package
+  on:
+    branch: master
+only_commits:
+  files:
+    - appveyor.yml
+    - *.sln
+    - Leaf.xNet/Leaf.xNet.csproj
+    - Leaf.xNet/**/*.cs
+    - Leaf.xNet/**/*.resx
+
