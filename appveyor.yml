@@ -12,6 +12,11 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
+environment:
+  nuget_token:
+    secure: f/XPPzBiOEmc6sz+tLNtDeKR8Lu9xg+ekJuTasmT+iIaQT2xrgw9DnPEHT4/F4ccUIiVfMyg2eLDR6EyiyRdSgOLToUgOQAkXxD89InogY8=
+  github_token:
+    secure: uVxlPx0d4HQdnxj4NhsrCCnQ0iqxmUDUPqPGRheiHt5Dp7pmOtXdGIYy52Y5rRQkLIl7He4wAH1W8nTOU+yahTec4+tbp0B8JTX/Mly8aVE=
 nuget:
   account_feed: true
   project_feed: true
@@ -29,7 +34,7 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: f/XPPzBiOEmc6sz+tLNtDeKR8Lu9xg+ekJuTasmT+iIaQT2xrgw9DnPEHT4/F4ccUIiVfMyg2eLDR6EyiyRdSgOLToUgOQAkXxD89InogY8=
+    secure: LAP1RRHzZP5slfjtjZY7WQ==
   skip_symbols: true
   on:
     branch: master
@@ -37,7 +42,7 @@ deploy:
   tag: v$(appveyor_build_version)
   release: Leaf.xNet v$(appveyor_build_version)
   auth_token:
-    secure: uVxlPx0d4HQdnxj4NhsrCCnQ0iqxmUDUPqPGRheiHt5Dp7pmOtXdGIYy52Y5rRQkLIl7He4wAH1W8nTOU+yahTec4+tbp0B8JTX/Mly8aVE=
+    secure: NQtMOO3yB309cDK/pFWRiQ==
   artifact: net462;netcoreapp2.0
   on:
     branch: master
@@ -45,10 +50,10 @@ notifications:
 - provider: Email
   to:
   - mixtape774@gmail.com
-  subject: AppVeyor - Leaf.xNet Build
+  subject: AppVeuor - Leaf.xNet Build
   on_build_success: true
   on_build_failure: true
-  on_build_status_changed: false  
+  on_build_status_changed: false
 only_commits:
   files:
     - appveyor.yml
