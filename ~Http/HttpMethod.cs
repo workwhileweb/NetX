@@ -11,9 +11,10 @@ namespace Leaf.Net
         GET,
         HEAD,
         DELETE,
-        OPTION,        
+        OPTION,
         POST,
         PATCH,
         PUT,
+        PROPFIND, // webdav
     }
 }
