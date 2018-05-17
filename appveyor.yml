@@ -26,17 +26,6 @@ artifacts:
   name: net462
 - path: Leaf.xNet\bin\Release\netcoreapp2.0
   name: netcoreapp2.0
-deploy:
-- provider: NuGet
-  skip_symbols: true
-  on:
-    branch: master
-- provider: GitHub
-  tag: v$(appveyor_build_version)
-  release: Leaf.xNet v$(appveyor_build_version)
-  artifact: net462;netcoreapp2.0
-  on:
-    branch: master
 only_commits:
   files:
     - appveyor.yml
@@ -44,4 +33,3 @@ only_commits:
     - Leaf.xNet/Leaf.xNet.csproj
     - Leaf.xNet/**/*.cs
     - Leaf.xNet/**/*.resx
-
