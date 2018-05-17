@@ -45,8 +45,10 @@
     <RepositoryType>Git</RepositoryType>
     <PackageProjectUrl>https://github.com/csharp-leaf</PackageProjectUrl>
     <Copyright>© 2018 Developed by Grand Silence — Kelog Studio</Copyright>
-    <PackageTags>threading,patterns,strings,serialization</PackageTags>
+    <PackageTags>net,http,socks,proxy,cloudflare</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/csharp-leaf/Leaf.Core/master/Icons/icon-300.png</PackageIconUrl>
+    <NoWarn>1591</NoWarn>
+    <Description>Improved xNet library for .NET Framework &amp; .NET Core 2.0</Description> <!-- Ignore warinings abound undocumented code -->
   </PropertyGroup>
 
   <!-- :: // Generic configurations -->
@@ -60,6 +62,8 @@
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netcore'))">
     <DefineConstants>IS_NETCORE</DefineConstants>
   </PropertyGroup>
+
+
 
   <!-- :: // Platform specific configurations -->
   
