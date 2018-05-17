@@ -1,0 +1,38 @@
+version: 5.1.{build}
+branches:
+  only:
+  - master
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+nuget:
+  project_feed: true
+before_build:
+- cmd: nuget restore .\Leaf.xNet.sln
+build:
+  project: Leaf.xNet.sln
+  publish_nuget: true
+  verbosity: minimal
+notifications:
+- provider: Email
+  to:
+  - mixtape774@gmail.com
+  subject: AppVeuor - Leaf.xNet Success Build
+  message: Build success.
+  on_build_success: true
+  on_build_failure: false
+  on_build_status_changed: false
+- provider: Email
+  to:
+  - mixtape774@gmail.com
+  subject: AppVeuor - Leaf.xNet Failed Build
+  message: Build failed .
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: false
