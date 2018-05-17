@@ -11,6 +11,11 @@ namespace Leaf.xNet.Services.Cloudflare
     
     public class CloudflareException : Exception
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// Cloudflare solving exception.
+        /// </summary>
+        /// <param name="message">Message</param>
         public CloudflareException(string message) : base(message) { }
 
         public CloudflareException(int attempts) : this(attempts, $"Clearance failed after {attempts} attempt(s).") { }
