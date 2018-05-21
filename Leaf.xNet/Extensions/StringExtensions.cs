@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 // ReSharper disable UnusedMember.Global
 
-namespace Leaf.xNet
+namespace Leaf.xNet.Extensions
 {
     /// <summary>
     /// Static class for help working with HTML and other text data
