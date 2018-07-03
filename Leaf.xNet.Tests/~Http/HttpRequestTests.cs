@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Leaf.xNet.Tests
 {
@@ -93,7 +94,96 @@ namespace Leaf.xNet.Tests
                 StringAssert.Contains(source, postValue);
             }
         }
+
+        [TestMethod]
+        public void FilterCookies()
+        {
+            var list = new Dictionary<string, string> {
+                {
+                    "MS_LOGIN_COOKIE_10151=-1,R,L,null,; Expires=Sun, 30-Dec-18 16:57:13 GMT; Path=/RemovedPath",
+                    "MS_LOGIN_COOKIE_10151=-1,R,L,null%2C; Expires=Sun, 30-Dec-18 16:57:13 GMT; Path=/"
+                },
+                {
+                    "MS_LOGIN_COOKIE_10151=-1,R,L,null,; Expires=Sun, 30-Dec-18 16:57:13 GMT; Path=/",
+                    "MS_LOGIN_COOKIE_10151=-1,R,L,null%2C; Expires=Sun, 30-Dec-18 16:57:13 GMT; Path=/"
+                }
+            };
+
+            foreach (var item in list)
+            {
+                Assert.AreEqual(CookieFilters.Filter(item.Key), item.Value);
+            }
+        }
         /*
+        [TestMethod]
+        public void GetCookies()
+        {
+            using (var req = new HttpRequest())
+            {
+                
+              string getToken = req.Get("https://www.ourtesco.com/login/").ToString();
+
+                string token = Regex.Match(getToken, @"name=""user_info_nonce"" value=""(.+?)""").Groups[1].ToString();
+
+
+                req.Referer = "https://www.ourtesco.com/login/";
+                req.AddHeader("Accept-Encoding", "gzip, deflate, br");
+                req.AddHeader("Accept-Language", "ru,en;q=0.9");
+                req.AddHeader("Upgrade-Insecure-Requests", "1");
+                req.AddHeader("Origin", "https://www.ourtesco.com");
+                var postData = new RequestParams
+                {
+                    ["redirect_to"] = "https://www.ourtesco.com/login/",
+                    // TODO: edit
+                    ["log"] = "login",
+                    ["pwd"] = "pass",
+                    ["user_info_nonce"] = token,
+                    ["_wp_http_referer"] = "/login/",
+                    ["wplogin"] = "Sign in"
+                };
+
+                string postResponse = req.Post("https://www.ourtesco.com/login/", postData).ToString();
+                
+
+                // del
+
+                var pd = new RequestParams
+                {
+                    ["storeId"] = "10151",
+                    ["langId"] = "-24",
+                    ["catalogId"] = "10051",
+                    ["fromOrderId"] = "*",
+                    ["toOrderId"] = ".",
+                    ["deleteIfEmpty"] = "*",
+                    ["createIfEmpty"] = "1",
+                    ["calculationUsageId"] = "-1",
+                    ["updatePrices"] = "0",
+                    ["previousPage"] = "logon",
+                    ["forgotPasswordURL"] = "MSResForgotPassword",
+                    ["rememberMe"] = "false",
+                    ["resJSON"] = "true",
+                    ["reLogonURL"] = "MSResLogin",
+                    ["resetConfirmationViewName"] = "MSPwdEmailConfirmModalView",
+                    ["myAcctMain"] = "",
+                    ["challengeAnswer"] = "-",
+                    ["errorViewName"] = "MSResLogin",
+                    ["continueSignIn"] = "1",
+                    ["migrateUserErrorMsg"] = "MS_MIGRAT_HEADERERR_MSG",
+                    ["returnPage"] = "MSUserLoyaltyOptInView",
+                    ["URL"] = "/webapp/wcs/stores/servlet/MSSecureOrdercalculate?catalogId=10051&langId=-24&mergeStatus=&storeId=10151&URL=https://www.marksandspencer.com/&page=ACCOUNT_LOGIN",
+                    ["orderMove"] = "/webapp/wcs/stores/servlet/OrderItemMove?calculationUsageIdentifier=MSLoginModalDisplay_orderMove&catalogId=10051&langId=-24&mergeStatus=&storeId=10151&toOrderId=.**.&URL=OrderCalculate?URL=https://www.marksandspencer.com/",
+                    // todo: edit
+                    ["logonId"] = "", 
+                    ["logonPassword"] = ""
+                };
+
+                //req.Proxy = Socks5ProxyClient.Parse("127.0.0.1:8889");
+                string rs = req.Post("https://www.marksandspencer.com/MSLogon", pd).ToString();
+                //StringAssert.Contains(source, getArgument);
+                //StringAssert.Contains(source, getValue);
+            }
+        }
+
         [TestMethod]
         public void PostTest2()
         {

@@ -57,20 +57,21 @@ namespace Leaf.xNet
         }
 
         /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
+        /// <param name="uri">Uri куки</param>
+        /// <param name="rawCookie">Сырой формат записи в виде строки</param>
+        public void Set(Uri uri, string rawCookie)
+        {
+            string filteredCookie = CookieFilters.Filter(rawCookie);
+            Container.SetCookies(uri, filteredCookie);
+        }
+
+        /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
         /// <param name="url">Url куки</param>
         /// <param name="rawCookie">Сырой формат записи в виде строки</param>
         // ReSharper disable once UnusedMember.Global
         public void Set(string url, string rawCookie)
         {
-            Container.SetCookies(new Uri(url), rawCookie);
-        }
-
-        /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
-        /// <param name="uri">Uri куки</param>
-        /// <param name="rawCookie">Сырой формат записи в виде строки</param>
-        public void Set(Uri uri, string rawCookie)
-        {
-            Container.SetCookies(uri, rawCookie);
+            Set(new Uri(url), rawCookie);
         }
 
         /// <summary>
