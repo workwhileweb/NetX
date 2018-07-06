@@ -6,7 +6,7 @@ namespace Leaf.xNet.Tests
     [TestClass]
     public class HttpRequestTests
     {
-        private const string BaseUrl = "http://httpbin.org";
+        private const string BaseUrl = "https://nghttp2.org";
 
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace Leaf.xNet.Tests
                 if (scores < minScore)
                     Assert.Fail($"За {generateRetries} попыток не было сгенерировано минимальное число агентов (${minScore})");
 
-                string useragentJson = req.Get("/user-agent").ToString();
+                string useragentJson = req.Get("/httpbin/user-agent").ToString();
                 StringAssert.Contains(useragentJson, req.UserAgent);
             }
         }
@@ -47,7 +47,7 @@ namespace Leaf.xNet.Tests
 
             using (var req = new HttpRequest(BaseUrl))
             {
-                var response = req.Get("/get?{getArgument}={getValue}");
+                var response = req.Get("/httpbin/get?{getArgument}={getValue}");
                 var source = response.ToString();
 
                 StringAssert.Contains(source, getArgument);
@@ -67,7 +67,7 @@ namespace Leaf.xNet.Tests
                     [postArgument] = postValue
                 };
 
-                var response = req.Post("/post", rp);
+                var response = req.Post("/httpbin/post", rp);
                 var source = response.ToString();
 
                 StringAssert.Contains(source, postArgument);
@@ -87,7 +87,7 @@ namespace Leaf.xNet.Tests
                     { new StringContent(postValue), postArgument}
                 };
 
-                var response = req.Post("/post", rp);
+                var response = req.Post("/httpbin/post", rp);
                 var source = response.ToString();
 
                 StringAssert.Contains(source, postArgument);
