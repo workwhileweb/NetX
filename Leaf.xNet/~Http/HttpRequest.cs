@@ -1977,7 +1977,17 @@ namespace Leaf.xNet
 
         #region Формирование данных запроса
 
-        private string GenerateStartingLine(HttpMethod method) => $"{method} {Address.PathAndQuery} HTTP/{ProtocolVersion}\r\n";
+        private string GenerateStartingLine(HttpMethod method)
+        {
+            string query = _currentProxy != null && _currentProxy.Type == ProxyType.HTTP
+                ? Address.AbsoluteUri
+                : Address.PathAndQuery;
+
+            return $"{method} {query} HTTP/{ProtocolVersion}\r\n";
+        }
+
+
+        //private string GenerateStartingLine(HttpMethod method) => $"{method} {Address.PathAndQuery} HTTP/{ProtocolVersion}\r\n";
 
         // Есть 3 типа заголовков, которые могут перекрываться другими. Вот порядок их установки:
         // - заголовки, которы задаются через специальные свойства, либо автоматически
