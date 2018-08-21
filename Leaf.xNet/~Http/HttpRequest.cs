@@ -253,6 +253,12 @@ namespace Leaf.xNet
         /// </summary>
         public bool AllowEmptyHeaderValues { get; set; } 
 
+
+        /// <summary>
+        /// Включить отслеживание заголовков в промежуточных запросах (редиректы) и сохранять их в <see cref="HttpResponse.MiddleHeaders"/>.
+        /// </summary>
+        public bool EnableMiddleHeaders { get; set; }
+
         #region Поведение
 
         /// <summary>
@@ -1750,7 +1756,7 @@ namespace Leaf.xNet
             _canReportBytesReceived = false;
 
             _bytesReceived = 0;
-            _totalBytesReceived = Response.LoadResponse(method);
+            _totalBytesReceived = Response.LoadResponse(method, EnableMiddleHeaders);
 
             _canReportBytesReceived = true;
         }

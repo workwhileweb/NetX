@@ -259,6 +259,12 @@ namespace Leaf.xNet
         private readonly Dictionary<string, string> _headers =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+        // Lazy redirect headers
+        public Dictionary<string, string> MiddleHeaders => _middleHeaders ??
+            (_middleHeaders = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+
+        private Dictionary<string, string> _middleHeaders;
+
 
         private string _loadedMessageBody;
         //private MemoryStream _loadedMessageBody;
@@ -775,7 +781,7 @@ namespace Leaf.xNet
 
 
         // Загружает ответ и возвращает размер ответа в байтах.
-        internal long LoadResponse(HttpMethod method)
+        internal long LoadResponse(HttpMethod method, bool includeRedirectHeaders)
         {
             Method = method;
             Address = _request.Address;
@@ -785,6 +791,11 @@ namespace Leaf.xNet
             KeepAliveTimeout = null;
             MaximumKeepAliveRequests = null;
 
+            if (includeRedirectHeaders && _headers.Count > 0)
+            {
+                foreach (var key in _headers.Keys)
+                    MiddleHeaders[key] = _headers[key];
+            }
             _headers.Clear();
 
             if (!_request.DontTrackCookies)

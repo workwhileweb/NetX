@@ -23,3 +23,15 @@ dotnet add package Leaf.xNet
 ```
 paket add Leaf.xNet
 ```
+
+# Features
+## Middle response headers (when redirected)
+```csharp
+var req = new HttpRequest();
+// REQUIRED!
+req.EnableMiddleHeaders = true;
+
+// This requrest has a lot of redirects
+var resp = req.Get("https://account.sonyentertainmentnetwork.com/");
+var md = resp.MiddleHeaders;
+```
