@@ -1,4 +1,4 @@
-[![NuGet version](https://badge.fury.io/nu/Leaf.xNet.svg)](https://badge.fury.io/nu/Leaf.xNet) [![Build status](https://ci.appveyor.com/api/projects/status/em4aje36etb63kdt/branch/master?svg=true)](https://ci.appveyor.com/project/grandsilence/leaf-xnet/branch/master) [![Build status](https://ci.appveyor.com/api/projects/status/bqic689svvqv03cm/branch/master?svg=true)](https://ci.appveyor.com/project/grandsilence/leaf-core/branch/master)
+[![NuGet version](https://badge.fury.io/nu/Leaf.xNet.svg)](https://badge.fury.io/nu/Leaf.xNet) [![Build status](https://ci.appveyor.com/api/projects/status/em4aje36etb63kdt/branch/master?svg=true)](https://ci.appveyor.com/project/grandsilence/leaf-xnet/branch/master)
 
 # Leaf.xNet
 **Leaf.xNet** - provides HTTP/HTTPS, Socks 4A, Socks 4, Socks 5
@@ -23,6 +23,22 @@ dotnet add package Leaf.xNet
 ```
 paket add Leaf.xNet
 ```
+
+# Donate
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FZLZ5ED65HVCL)
+
+**Yandex** Money / **Debert Card**: [410011037924983](https://money.yandex.com/to/410011037924983)  
+Webmoney **WMR**: R246626749259  
+Webmoney **WMZ**: Z349403749504  
+Webmoney **WMU**: U313788999957  
+Webmoney **WME**: E894184114651  
+Webmoney **WMX**: X428336365219 / 138jva7sKAVat8s8XSyqkFBkbUc7dSyXj2  
+  
+Bitcoin **BTC**: 3AYA9xsGGZcbnX63i5bwfGkvXNDxC7r7Uo  
+Bitcoin Gold **BTG**: AaXkAfose8ArsZHoWuC2bYZhMfkdutNG8S  
+Bitcoin Cash **BCH**: 3N2wxyixecHtUrqJgRrdKs4pu7oPzMFtpm  
+LiteCoin **LTC**: MK5Dsyo6ek9z1CN19oNRhTrK2VrvNWq654  
+
 
 # Features
 ## Middle response headers (when redirected)
