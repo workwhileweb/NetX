@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -781,7 +782,7 @@ namespace Leaf.xNet
 
 
         // Загружает ответ и возвращает размер ответа в байтах.
-        internal long LoadResponse(HttpMethod method, bool includeRedirectHeaders)
+        internal long LoadResponse(HttpMethod method, bool trackMiddleHeaders)
         {
             Method = method;
             Address = _request.Address;
@@ -791,7 +792,7 @@ namespace Leaf.xNet
             KeepAliveTimeout = null;
             MaximumKeepAliveRequests = null;
 
-            if (includeRedirectHeaders && _headers.Count > 0)
+            if (trackMiddleHeaders && _headers.Count > 0)
             {
                 foreach (var key in _headers.Keys)
                     MiddleHeaders[key] = _headers[key];
@@ -916,7 +917,61 @@ namespace Leaf.xNet
                 string headerValue = header.Substring(separatorPos + 1).Trim(' ', '\t', '\r', '\n');
 
                 if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase))
-                    Cookies.Set(_request.Address, headerValue);
+                {
+                    if (_request.DontTrackCookies) 
+                        continue;
+
+                    // Отделяем Cross-domain cookie - если не делать, будет исключение.
+                    // Родной парсинг raw-cookie плохо работает.
+                    if (!headerValue.Contains("domain="))
+                        Cookies.Set(_request.Address, headerValue);
+                    else
+                    {
+                        // Разделяем все key=value
+                        var arguments = headerValue.Split(new [] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                        if (arguments.Length == 0)
+                            continue;
+
+                        // Получаем ключ и значение самой Cookie
+                        var keyValue = arguments[0].Split(new[] {'='}, 2);
+                        var cookie = new Cookie(keyValue[0], keyValue.Length < 2 ? string.Empty : keyValue[1]);
+
+                        // Обрабатываем дополнительные ключи Cookie
+                        for (int i = 1; i < arguments.Length; i++)
+                        {
+                            keyValue = arguments[i].Split(new[] {'='}, 2);
+
+                            // Обрабатываем ключи нерегистрозависимо
+                            string key = keyValue[0].Trim().ToLower();
+                            string value = keyValue.Length < 2 ? null : keyValue[1].Trim();
+
+                            switch (key)
+                            {
+                                case "expires":
+                                    if (!DateTime.TryParse(value, out var expires))
+                                        continue;
+
+                                    cookie.Expires = expires;
+                                    break;
+
+                                case "path":
+                                    cookie.Path = value;
+                                    break;
+                                case "domain":
+                                    cookie.Domain = value;
+                                    break;
+                                case "secure":
+                                    cookie.Secure = true;
+                                    break;
+                                case "httponly":
+                                    cookie.HttpOnly = true;
+                                    break;
+                            }
+                        }
+
+                        Cookies.Set(cookie);
+                    }
+                }
                 else
                     _headers[headerName] = headerValue;
             }
