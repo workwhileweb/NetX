@@ -315,6 +315,13 @@ namespace Leaf.xNet
         }
 
         /// <summary>
+        /// Возвращает или задаёт вариант генерации заголовков Cookie.
+        /// Если указано значение <value>true</value> - будет сгенерирован лишь один Cookie заголовок, а в нем прописаны все Cookies через разделитель.
+        /// Если указано значение <value>false</value> - каждая Cookie будет в новом заголовке (новый формат).
+        /// </summary>
+        public bool CookieSingleHeader { get; set; } = true;
+
+        /// <summary>
         /// Возвращает или задаёт время ожидания в миллисекундах при подключении к HTTP-серверу.
         /// </summary>
         /// <value>Значение по умолчанию - 9 000 мс, что равняется 9 секундам.</value>
@@ -2131,11 +2138,23 @@ namespace Leaf.xNet
 
         #endregion
         
-        private static string ToHeadersString(Dictionary<string, string> headers)
+        private string ToHeadersString(Dictionary<string, string> headers)
         {
             var headersBuilder = new StringBuilder();
             foreach (var header in headers)
-                headersBuilder.AppendFormat("{0}: {1}\r\n", header.Key, header.Value);
+            {
+                if (header.Key != "Cookie" || CookieSingleHeader)
+                {
+                    headersBuilder.AppendFormat("{0}: {1}\r\n", header.Key, header.Value);
+                    continue;
+                }
+
+                // Каждую Cookie в отдельный заголовок
+                var cookies = header.Value.Split(new[] {"; "}, StringSplitOptions.None);
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (int i = 0; i < cookies.Length; i++)
+                    headersBuilder.AppendFormat("Cookie: {0}\r\n", cookies[i]);
+            }
 
             headersBuilder.AppendLine();
             return headersBuilder.ToString();
