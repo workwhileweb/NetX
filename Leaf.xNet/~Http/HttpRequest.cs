@@ -1692,14 +1692,17 @@ namespace Leaf.xNet
             var proxyChanged = !Equals(_currentProxy, proxy);
 
             var addressChanged =
-                (previousAddress == null) ||
-                (previousAddress.Port != address.Port) ||
-                (previousAddress.Host != address.Host) ||
-                (previousAddress.Scheme != address.Scheme);
+                previousAddress == null ||
+                previousAddress.Port != address.Port ||
+                previousAddress.Host != address.Host ||
+                previousAddress.Scheme != address.Scheme;
+
+            // Fix by Igor Vacil'ev
+            bool connectionClosedByServer = Response.ContainsHeader("Connection") && Response["Connection"] == "close";
 
             // Если нужно создать новое подключение.
             if (hasConnection && !proxyChanged && !addressChanged && !Response.HasError &&
-                !KeepAliveLimitIsReached())
+                !KeepAliveLimitIsReached() && !connectionClosedByServer)
                 return false;
 
             _currentProxy = proxy;
@@ -1992,11 +1995,12 @@ namespace Leaf.xNet
 
         private string GenerateStartingLine(HttpMethod method)
         {
-            string query = _currentProxy != null && _currentProxy.Type == ProxyType.HTTP
+            // Fix by Igor Vacil'ev: sometimes proxies returns 404 when used full path.
+            /*string query = _currentProxy != null && _currentProxy.Type == ProxyType.HTTP
                 ? Address.AbsoluteUri
-                : Address.PathAndQuery;
+                : Address.PathAndQuery;*/
 
-            return $"{method} {query} HTTP/{ProtocolVersion}\r\n";
+            return $"{method} {Address.PathAndQuery} HTTP/{ProtocolVersion}\r\n";
         }
 
 
