@@ -259,6 +259,11 @@ namespace Leaf.xNet
         /// </summary>
         public bool EnableMiddleHeaders { get; set; }
 
+        /// <summary>
+        /// Заголовок AcceptEncoding. Стоит обратить внимание что не все сайты принимают версию с пробелом: "gzip, deflate".
+        /// </summary>
+        public string AcceptEncoding { get; set; } = "gzip,deflate";
+
         #region Поведение
 
         /// <summary>
@@ -2076,7 +2081,7 @@ namespace Leaf.xNet
             #region Content
 
             if (EnableEncodingContent)
-                headers["Accept-Encoding"] = "gzip, deflate";
+                headers["Accept-Encoding"] = AcceptEncoding;
 
             if (Culture != null)
                 headers["Accept-Language"] = GetLanguageHeader();
