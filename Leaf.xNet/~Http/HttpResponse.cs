@@ -923,7 +923,7 @@ namespace Leaf.xNet
 
                     // Отделяем Cross-domain cookie - если не делать, будет исключение.
                     // Родной парсинг raw-cookie плохо работает.
-                    if (!headerValue.Contains("domain="))
+                    if (!headerValue.ContainsIgnoreCase("domain="))
                         Cookies.Set(_request.Address, headerValue);
                     else
                     {
