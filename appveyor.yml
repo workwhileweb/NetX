@@ -28,6 +28,8 @@ build:
   publish_nuget: true
   verbosity: minimal
 artifacts:
+- path: Leaf.xNet\bin\Release\net452
+  name: net452
 - path: Leaf.xNet\bin\Release\net462
   name: net462
 - path: Leaf.xNet\bin\Release\net471
@@ -50,7 +52,7 @@ deploy:
   release: Leaf.xNet v$(appveyor_build_version)
   auth_token:
     secure: NQtMOO3yB309cDK/pFWRiQ==
-  artifact: net462;net471;net472;netcoreapp2.0;netcoreapp2.1
+  artifact: net452;net462;net471;net472;netcoreapp2.0;netcoreapp2.1
   on:
     branch: master
 only_commits:

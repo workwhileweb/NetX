@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Leaf.xNet</RootNamespace>
     <AssemblyName>Leaf.xNet</AssemblyName>
-    <TargetFrameworks>net462;net471;net472;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net452;net462;net471;net472;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
     <FileAlignment>512</FileAlignment>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Grand Silence</Authors>
@@ -48,7 +48,7 @@
     <PackageTags>net,http,socks,proxy,cloudflare</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/csharp-leaf/Leaf.Core/master/Icons/icon-300.png</PackageIconUrl>
     <NoWarn>1591</NoWarn>
-    <Description>Improved xNet library for .NET Framework 4.6.2 - 4.7.2 &amp; .NET Core 2.0-2.1</Description> <!-- Ignore warinings abound undocumented code -->
+    <Description>Improved xNet library for .NET Framework 4.5.2, 4.6.2, 4.7.1, 4.7.2 &amp; .NET Core 2.0-2.1</Description> <!-- Ignore warinings abound undocumented code -->
   </PropertyGroup>
 
   <!-- :: // Generic configurations -->
