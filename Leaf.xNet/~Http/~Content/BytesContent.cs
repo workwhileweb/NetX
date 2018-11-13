@@ -65,7 +65,7 @@ namespace Leaf.xNet
             if (count < 0)
                 throw ExceptionHelper.CanNotBeLess(nameof(count), 0);
 
-            if (count > (content.Length - offset))
+            if (count > content.Length - offset)
                 throw ExceptionHelper.CanNotBeGreater(nameof(count), content.Length - offset);
 
             #endregion

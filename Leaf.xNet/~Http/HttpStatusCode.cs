@@ -67,6 +67,6 @@ namespace Leaf.xNet
         HttpVersionNotSupported = 505,
         NetworkAuthenticationRequired = 511,
 
-        InvalidStatusCode = 555,
+        InvalidStatusCode = 555
     }
 }

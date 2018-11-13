@@ -15,6 +15,6 @@ namespace Leaf.xNet
         POST,
         PATCH,
         PUT,
-        PROPFIND, // webdav
+        PROPFIND // webdav
     }
 }

@@ -19,11 +19,12 @@ namespace Leaf.xNet
         // ReSharper disable once UnusedMember.Global
         public NetException() : this(Resources.NetException_Default) { }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="NetException"/> заданным сообщением об ошибке.
+        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.NetException" /> заданным сообщением об ошибке.
         /// </summary>
         /// <param name="message">Сообщение об ошибке с объяснением причины исключения.</param>
-        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null"/>.</param>
+        /// <param name="innerException">Исключение, вызвавшее текущие исключение, или значение <see langword="null" />.</param>
         public NetException(string message, Exception innerException = null)
             : base(message, innerException) { }
 

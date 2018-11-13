@@ -9,7 +9,7 @@ namespace Leaf.xNet
 {
     /// <inheritdoc cref="HttpContent" />
     /// <summary>
-    /// Представляет тело запроса в виде состовного содержимого.
+    /// Представляет тело запроса в виде составного содержимого.
     /// </summary>
     public class MultipartContent : HttpContent, IEnumerable<HttpContent>
     {
@@ -37,7 +37,9 @@ namespace Leaf.xNet
         private const int FieldTemplateSize = 43;
         private const int FieldFileTemplateSize = 72;
         private const string FieldTemplate = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n";
-        private const string FieldFileTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: {2}\r\n\r\n";
+
+        private const string FieldFileTemplate =
+            "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: {2}\r\n\r\n";
 
         #endregion
 
@@ -92,7 +94,7 @@ namespace Leaf.xNet
         #region Методы (открытые)
 
         /// <summary>
-        /// Добавляет новый элемент состовного содержимого тела запроса.
+        /// Добавляет новый элемент составного содержимого тела запроса.
         /// </summary>
         /// <param name="content">Значение элемента.</param>
         /// <param name="name">Имя элемента.</param>
@@ -119,8 +121,7 @@ namespace Leaf.xNet
 
             #endregion
 
-            var element = new Element
-            {
+            var element = new Element {
                 Name = name,
                 Content = content
             };
@@ -129,7 +130,7 @@ namespace Leaf.xNet
         }
 
         /// <summary>
-        /// Добавляет новый элемент состовного содержимого тела запроса.
+        /// Добавляет новый элемент составного содержимого тела запроса.
         /// </summary>
         /// <param name="content">Значение элемента.</param>
         /// <param name="name">Имя элемента.</param>
@@ -165,8 +166,7 @@ namespace Leaf.xNet
             content.ContentType = Http.DetermineMediaType(
                 Path.GetExtension(fileName));
 
-            var element = new Element
-            {
+            var element = new Element {
                 Name = name,
                 FileName = fileName,
                 Content = content
@@ -176,7 +176,7 @@ namespace Leaf.xNet
         }
 
         /// <summary>
-        /// Добавляет новый элемент состовного содержимого тела запроса.
+        /// Добавляет новый элемент составного содержимого тела запроса.
         /// </summary>
         /// <param name="content">Значение элемента.</param>
         /// <param name="name">Имя элемента.</param>
@@ -217,8 +217,7 @@ namespace Leaf.xNet
 
             content.ContentType = contentType;
 
-            var element = new Element
-            {
+            var element = new Element {
                 Name = name,
                 FileName = fileName,
                 Content = content
@@ -314,7 +313,7 @@ namespace Leaf.xNet
 
         /// <inheritdoc />
         /// <summary>
-        /// Возвращает перечеслитель элементов составного содержимого.
+        /// Возвращает перечислитель элементов составного содержимого.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="T:System.ObjectDisposedException">Текущий экземпляр уже был удалён.</exception>
@@ -364,15 +363,15 @@ namespace Leaf.xNet
                 switch (Randomizer.Instance.Next(3))
                 {
                     case 0:
-                        strBuilder.Append((char)Randomizer.Instance.Next(48, 58));
+                        strBuilder.Append((char) Randomizer.Instance.Next(48, 58));
                         break;
 
                     case 1:
-                        strBuilder.Append((char)Randomizer.Instance.Next(97, 123));
+                        strBuilder.Append((char) Randomizer.Instance.Next(97, 123));
                         break;
 
                     default:
-                        strBuilder.Append((char)Randomizer.Instance.Next(65, 91));
+                        strBuilder.Append((char) Randomizer.Instance.Next(65, 91));
                         break;
                 }
             }

@@ -15,7 +15,7 @@ namespace Leaf.xNet.Services.Cloudflare
         public string ClearancePage { get; }
 
         /// <summary>
-        /// Код варификации.
+        /// Код верификации.
         /// </summary>
         public string VerificationCode { get; }
 
@@ -25,7 +25,7 @@ namespace Leaf.xNet.Services.Cloudflare
         public string Pass { get; }
 
         /// <summary>
-        /// Ответ на JS Challange.
+        /// Ответ на JS Challenge.
         /// </summary>
         public double Answer { get; }
 
@@ -37,12 +37,14 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <summary>
         /// Результирующий URL запроса который необходимо исполнить для прохождения JS испытания.
         /// </summary>
-        public string ClearanceQuery => $"{ClearancePage}?jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer.ToString("R", CultureInfo.InvariantCulture)}";
+        public string ClearanceQuery =>
+            $"{ClearancePage}?jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer.ToString("R", CultureInfo.InvariantCulture)}";
 
         /// <summary>
         /// Содержит информацию которая необходима для прохождения испытания CloudFlare.
         /// </summary>
-        public ChallengeSolution(string clearancePage, string verificationCode, string pass, double answer, bool containsIntegerTag)
+        public ChallengeSolution(string clearancePage, string verificationCode, string pass, double answer,
+            bool containsIntegerTag)
         {
             ClearancePage = clearancePage;
             VerificationCode = verificationCode;

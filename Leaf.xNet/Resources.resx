@@ -151,10 +151,10 @@
     <value>Failed to get the host IP-address '{0}'.</value>
   </data>
   <data name="HttpException_FailedReceiveMessageBody" xml:space="preserve">
-    <value>Could not recieve the message body of the response HTTP-server '{0}'.</value>
+    <value>Could not receive the message body of the response HTTP-server '{0}'.</value>
   </data>
   <data name="HttpException_FailedReceiveResponse" xml:space="preserve">
-    <value>Failed to recieve the response from the HTTP-server '{0}'.</value>
+    <value>Failed to receive the response from the HTTP-server '{0}'.</value>
   </data>
   <data name="HttpException_FailedSendRequest" xml:space="preserve">
     <value>Failed to send HTTP-request to the server '{0}'.</value>
@@ -226,10 +226,10 @@
     <value>Failed to authenticate with the proxy server '{0}'.</value>
   </data>
   <data name="Socks4_CommandReplyRequestRejectedCannotConnectToIdentd" xml:space="preserve">
-    <value>The request failed, because things are not running identd (or not available from the server).</value>
+    <value>The request failed, because things are not running idents (or not available from the server).</value>
   </data>
   <data name="Socks4_CommandReplyRequestRejectedDifferentIdentd" xml:space="preserve">
-    <value>The request failed because client's identd could not confirm the user ID in the query.</value>
+    <value>The request failed because client's idents could not confirm the user ID in the query.</value>
   </data>
   <data name="Socks4_CommandReplyRequestRejectedOrFailed" xml:space="preserve">
     <value>Query rejected or erroneous.</value>
@@ -304,9 +304,9 @@
     <value>The path is an empty string, contains only white space, or contains invalid characters.</value>
   </data>
   <data name="CookieStorage_SaveToFile_FileAlreadyExists" xml:space="preserve">
-    <value>Файл с куками '${0}' уже существует</value>
+    <value>Cookies file '${0}' already exists.</value>
   </data>
   <data name="StringExtensions_Substrings_Invalid_Index" xml:space="preserve">
-    <value>Неверно задан начальный индекс поиска подстрок</value>
+    <value>Invalid start index for substrings.</value>
   </data>
 </root>

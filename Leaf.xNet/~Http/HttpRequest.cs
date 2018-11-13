@@ -20,7 +20,7 @@ namespace Leaf.xNet
     public class HttpRequest : IDisposable
     {
         // Используется для определения того, сколько байт было отправлено/считано.
-        private sealed class HttpWraperStream : Stream
+        private sealed class HttpWrapperStream : Stream
         {
             #region Поля (закрытые)
 
@@ -59,7 +59,7 @@ namespace Leaf.xNet
             #endregion
 
 
-            public HttpWraperStream(Stream baseStream, int sendBufferSize)
+            public HttpWrapperStream(Stream baseStream, int sendBufferSize)
             {
                 _baseStream = baseStream;
                 _sendBufferSize = sendBufferSize;
@@ -190,6 +190,7 @@ namespace Leaf.xNet
         // Переменные для хранения исходных свойств для переключателя ManualMode (ручной режим)
         private bool _tempAllowAutoRedirect;
         private bool _tempIgnoreProtocolErrors;
+
         #endregion
 
 
@@ -249,13 +250,13 @@ namespace Leaf.xNet
         public RemoteCertificateValidationCallback SslCertificateValidatorCallback;
 
         /// <summary>
-        /// Разрешает устанавлить пустые значения заголовкам.
+        /// Разрешает устанавливать пустые значения заголовкам.
         /// </summary>
-        public bool AllowEmptyHeaderValues { get; set; } 
+        public bool AllowEmptyHeaderValues { get; set; }
 
 
         /// <summary>
-        /// Включить отслеживание заголовков в промежуточных запросах (редиректы) и сохранять их в <see cref="HttpResponse.MiddleHeaders"/>.
+        /// Включить отслеживание заголовков в промежуточных запросах (переадресованные) и сохранять их в <see cref="HttpResponse.MiddleHeaders"/>.
         /// </summary>
         public bool EnableMiddleHeaders { get; set; }
 
@@ -273,8 +274,8 @@ namespace Leaf.xNet
         public bool AllowAutoRedirect { get; set; }
 
         /// <summary>
-        /// Пререводит работу запросами в ручной режим. Указав значение false - вернет исходные значения полей AllowAutoRedirect и IgnoreProtocolErrors.
-        /// 1. Отключаются проверка возвращаемых HTTP кодов, исключения не будет если код отличнен от 200 OK.
+        /// Переводит работу запросами в ручной режим. Указав значение false - вернет исходные значения полей AllowAutoRedirect и IgnoreProtocolErrors.
+        /// 1. Отключаются проверка возвращаемых HTTP кодов, исключения не будет если код отличен от 200 OK.
         /// 2. Отключается автоматическая переадресация. 
         /// </summary>
         public bool ManualMode
@@ -306,8 +307,7 @@ namespace Leaf.xNet
         public int MaximumAutomaticRedirections
         {
             get => _maximumAutomaticRedirections;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 1)
@@ -334,8 +334,7 @@ namespace Leaf.xNet
         public int ConnectTimeout
         {
             get => _connectTimeout;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 0)
@@ -355,8 +354,7 @@ namespace Leaf.xNet
         public int ReadWriteTimeout
         {
             get => _readWriteTimeout;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 0)
@@ -391,8 +389,7 @@ namespace Leaf.xNet
         public int KeepAliveTimeout
         {
             get => _keepAliveTimeout;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 0)
@@ -413,8 +410,7 @@ namespace Leaf.xNet
         public int MaximumKeepAliveRequests
         {
             get => _maximumKeepAliveRequests;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 1)
@@ -441,8 +437,7 @@ namespace Leaf.xNet
         public int ReconnectLimit
         {
             get => _reconnectLimit;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 1)
@@ -463,8 +458,7 @@ namespace Leaf.xNet
         public int ReconnectDelay
         {
             get => _reconnectDelay;
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (value < 0)
@@ -566,10 +560,10 @@ namespace Leaf.xNet
 
         /// <summary>
         /// Позволяет отключить автоматическое создание <see cref="CookieStorage"/> в свойстве Cookies когда получены куки от сервера.
-        /// Запрос не будет отправлять заголовок с куками. Ответ не будет обрабатовать заголовки Set-Cookie. 
+        /// Запрос не будет отправлять заголовок с куками. Ответ не будет обрабатывать заголовки Set-Cookie. 
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="false"/>.</value>
-        public bool DontTrackCookies { get; set; } 
+        public bool DontTrackCookies { get; set; }
 
         #endregion
 
@@ -624,8 +618,7 @@ namespace Leaf.xNet
         /// </remarks>
         public string this[string headerName]
         {
-            get
-            {
+            get {
                 #region Проверка параметра
 
                 if (headerName == null)
@@ -641,8 +634,7 @@ namespace Leaf.xNet
 
                 return value;
             }
-            set
-            {
+            set {
                 #region Проверка параметра
 
                 if (headerName == null)
@@ -936,7 +928,7 @@ namespace Leaf.xNet
 
             return Raw(HttpMethod.POST, address, content);
         }
-		
+
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1025,7 +1017,7 @@ namespace Leaf.xNet
 
             return Raw(HttpMethod.POST, address, content);
         }
-		
+
         /// <summary>
         /// Отправляет POST-запрос HTTP-серверу.
         /// </summary>
@@ -1331,6 +1323,7 @@ namespace Leaf.xNet
         #endregion
 
         #region Добавление временных данных запроса
+
         /// <summary>
         /// Добавляет временный HTTP-заголовок запроса. Такой заголовок перекрывает заголовок установленный через индексатор.
         /// </summary>
@@ -1608,14 +1601,16 @@ namespace Leaf.xNet
                 }
                 catch (SecurityException ex)
                 {
-                    throw NewHttpException(Resources.HttpException_FailedSendRequest, ex, HttpExceptionStatus.SendFailure);
+                    throw NewHttpException(Resources.HttpException_FailedSendRequest, ex,
+                        HttpExceptionStatus.SendFailure);
                 }
                 catch (IOException ex)
                 {
                     if (CanReconnect)
                         return ReconnectAfterFail();
 
-                    throw NewHttpException(Resources.HttpException_FailedSendRequest, ex, HttpExceptionStatus.SendFailure);
+                    throw NewHttpException(Resources.HttpException_FailedSendRequest, ex,
+                        HttpExceptionStatus.SendFailure);
                 }
 
                 #endregion
@@ -1634,7 +1629,7 @@ namespace Leaf.xNet
                     // Если сервер оборвал постоянное соединение вернув пустой ответ, то пробуем подключиться заново.
                     // Он мог оборвать соединение потому, что достигнуто максимально допустимое кол-во запросов или вышло время простоя.
                     if (KeepAlive && !_keepAliveReconnected && !createdNewConnection && ex.EmptyMessageBody)
-                        return KeepAliveReconect();
+                        return KeepAliveReconnect();
 
                     throw;
                 }
@@ -1722,7 +1717,7 @@ namespace Leaf.xNet
             if (!KeepAlive)
                 return false;
 
-            var maximumKeepAliveRequests = 
+            var maximumKeepAliveRequests =
                 Response.MaximumKeepAliveRequests ?? _maximumKeepAliveRequests;
 
             if (_keepAliveRequestCount >= maximumKeepAliveRequests)
@@ -1740,13 +1735,13 @@ namespace Leaf.xNet
             var contentLength = 0L;
             var contentType = string.Empty;
 
-            if (CanContainsRequestBody(method) && (_content != null))
+            if (CanContainsRequestBody(method) && _content != null)
             {
                 contentType = _content.ContentType;
                 contentLength = _content.CalculateContentLength();
             }
 
-            
+
             var startingLine = GenerateStartingLine(method);
             var headers = GenerateHeaders(uri, method, contentLength, contentType);
 
@@ -1759,7 +1754,7 @@ namespace Leaf.xNet
             ClientStream.Write(startingLineBytes, 0, startingLineBytes.Length);
             ClientStream.Write(headersBytes, 0, headersBytes.Length);
 
-            var hasRequestBody = (_content != null) && (contentLength > 0);
+            var hasRequestBody = _content != null && contentLength > 0;
 
             // Отправляем тело запроса, если оно не присутствует.
             if (hasRequestBody)
@@ -1787,7 +1782,7 @@ namespace Leaf.xNet
             return Request(_method, Address, _content);
         }
 
-        private HttpResponse KeepAliveReconect()
+        private HttpResponse KeepAliveReconnect()
         {
             Dispose();
             _keepAliveReconnected = true;
@@ -1796,19 +1791,19 @@ namespace Leaf.xNet
 
         private void CheckStatusCode(HttpStatusCode statusCode)
         {
-            var statusCodeNum = (int)statusCode;
+            var statusCodeNum = (int) statusCode;
 
-            if ((statusCodeNum >= 400) && (statusCodeNum < 500))
+            if (statusCodeNum >= 400 && statusCodeNum < 500)
             {
                 throw new HttpException(string.Format(
-                    Resources.HttpException_ClientError, statusCodeNum),
+                        Resources.HttpException_ClientError, statusCodeNum),
                     HttpExceptionStatus.ProtocolError, Response.StatusCode);
             }
 
             if (statusCodeNum >= 500)
             {
                 throw new HttpException(string.Format(
-                    Resources.HttpException_SeverError, statusCodeNum),
+                        Resources.HttpException_SeverError, statusCodeNum),
                     HttpExceptionStatus.ProtocolError, Response.StatusCode);
             }
         }
@@ -1881,6 +1876,7 @@ namespace Leaf.xNet
                         connectDoneEvent.Set();
                     }, tcpClient);
                 }
+
                 #region Catch's
 
                 catch (Exception ex)
@@ -1901,7 +1897,8 @@ namespace Leaf.xNet
                 if (!connectDoneEvent.Wait(_connectTimeout))
                 {
                     tcpClient.Close();
-                    throw NewHttpException(Resources.HttpException_ConnectTimeout, null, HttpExceptionStatus.ConnectFailure);
+                    throw NewHttpException(Resources.HttpException_ConnectTimeout, null,
+                        HttpExceptionStatus.ConnectFailure);
                 }
 
                 if (connectException != null)
@@ -1920,7 +1917,8 @@ namespace Leaf.xNet
                 if (!tcpClient.Connected)
                 {
                     tcpClient.Close();
-                    throw NewHttpException(Resources.HttpException_FailedConnect, null, HttpExceptionStatus.ConnectFailure);
+                    throw NewHttpException(Resources.HttpException_FailedConnect, null,
+                        HttpExceptionStatus.ConnectFailure);
                 }
 
                 #endregion
@@ -1936,7 +1934,8 @@ namespace Leaf.xNet
                 }
                 catch (ProxyException ex)
                 {
-                    throw NewHttpException(Resources.HttpException_FailedConnect, ex, HttpExceptionStatus.ConnectFailure);
+                    throw NewHttpException(Resources.HttpException_FailedConnect, ex,
+                        HttpExceptionStatus.ConnectFailure);
                 }
             }
 
@@ -1953,14 +1952,15 @@ namespace Leaf.xNet
             {
                 try
                 {
-                    var sslStream = SslCertificateValidatorCallback == null 
-                        ? new SslStream(ClientNetworkStream, false, Http.AcceptAllCertificationsCallback) 
+                    var sslStream = SslCertificateValidatorCallback == null
+                        ? new SslStream(ClientNetworkStream, false, Http.AcceptAllCertificationsCallback)
                         : new SslStream(ClientNetworkStream, false, SslCertificateValidatorCallback);
 
                     // SSL 2 и 3 удалены, поскольку устарели
-                    const SslProtocols supportedProtocols = SslProtocols.Tls | SslProtocols.Tls12  | SslProtocols.Tls11;
-                    
-                    sslStream.AuthenticateAsClient(address.Host, new X509CertificateCollection(), supportedProtocols, false);
+                    const SslProtocols supportedProtocols = SslProtocols.Tls | SslProtocols.Tls12 | SslProtocols.Tls11;
+
+                    sslStream.AuthenticateAsClient(address.Host, new X509CertificateCollection(), supportedProtocols,
+                        false);
                     ClientStream = sslStream;
                 }
                 catch (Exception ex)
@@ -1982,16 +1982,16 @@ namespace Leaf.xNet
             if (_uploadProgressChangedHandler == null && _downloadProgressChangedHandler == null)
                 return;
 
-            var httpWraperStream = new HttpWraperStream(
+            var httpWrapperStream = new HttpWrapperStream(
                 ClientStream, TcpClient.SendBufferSize);
 
             if (_uploadProgressChangedHandler != null)
-                httpWraperStream.BytesWriteCallback = ReportBytesSent;
+                httpWrapperStream.BytesWriteCallback = ReportBytesSent;
 
             if (_downloadProgressChangedHandler != null)
-                httpWraperStream.BytesReadCallback = ReportBytesReceived;
+                httpWrapperStream.BytesReadCallback = ReportBytesReceived;
 
-            ClientStream = httpWraperStream;
+            ClientStream = httpWrapperStream;
         }
 
         #endregion
@@ -2012,7 +2012,7 @@ namespace Leaf.xNet
         //private string GenerateStartingLine(HttpMethod method) => $"{method} {Address.PathAndQuery} HTTP/{ProtocolVersion}\r\n";
 
         // Есть 3 типа заголовков, которые могут перекрываться другими. Вот порядок их установки:
-        // - заголовки, которы задаются через специальные свойства, либо автоматически
+        // - заголовки, которые задаются через специальные свойства, либо автоматически
         // - заголовки, которые задаются через индексатор
         // - временные заголовки, которые задаются через метод AddHeader
         private string GenerateHeaders(Uri uri, HttpMethod method, long contentLength = 0, string contentType = null)
@@ -2047,12 +2047,13 @@ namespace Leaf.xNet
             return ToHeadersString(headers);
         }
 
-        private Dictionary<string, string> GenerateCommonHeaders(HttpMethod method, long contentLength = 0, string contentType = null)
+        private Dictionary<string, string> GenerateCommonHeaders(HttpMethod method, long contentLength = 0,
+            string contentType = null)
         {
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
                 ["Host"] = Address.IsDefaultPort ? Address.Host : $"{Address.Host}:{Address.Port}"
             };
-            
+
             #region Connection и Authorization
 
             HttpProxyClient httpProxy = null;
@@ -2124,8 +2125,8 @@ namespace Leaf.xNet
         {
             var cultureName = Culture?.Name ?? CultureInfo.CurrentCulture.Name;
 
-            return cultureName.StartsWith("en") 
-                ? cultureName 
+            return cultureName.StartsWith("en")
+                ? cultureName
                 : $"{cultureName},{cultureName.Substring(0, 2)};q=0.8,en-US;q=0.6,en;q=0.4";
         }
 
@@ -2146,7 +2147,7 @@ namespace Leaf.xNet
         }
 
         #endregion
-        
+
         private string ToHeadersString(Dictionary<string, string> headers)
         {
             var headersBuilder = new StringBuilder();

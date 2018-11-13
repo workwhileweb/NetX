@@ -205,15 +205,15 @@ namespace Leaf.xNet
 
         protected internal byte[] GetIpAddressBytes(string destinationHost)
         {
-            if (IPAddress.TryParse(destinationHost, out var ipAddr))
-                return ipAddr.GetAddressBytes();
+            if (IPAddress.TryParse(destinationHost, out var ipAddress))
+                return ipAddress.GetAddressBytes();
 
             try
             {
                 var ips = Dns.GetHostAddresses(destinationHost);
 
                 if (ips.Length > 0)
-                    ipAddr = ips[0];
+                    ipAddress = ips[0];
             }
             catch (Exception ex)
             {
@@ -226,7 +226,7 @@ namespace Leaf.xNet
                 throw;
             }
 
-            return ipAddr.GetAddressBytes();
+            return ipAddress.GetAddressBytes();
         }
 
         protected internal byte[] GetPortBytes(int port)

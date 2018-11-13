@@ -90,6 +90,7 @@ namespace Leaf.xNet
         #endregion
 
 
+        // ReSharper disable once UnusedMember.Global
         internal new void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
         {
             var dstPort = GetPortBytes(destinationPort);
@@ -98,13 +99,13 @@ namespace Leaf.xNet
             var userId = string.IsNullOrEmpty(_username) ?
                 new byte[0] : Encoding.ASCII.GetBytes(_username);
 
-            var dstAddr = Encoding.ASCII.GetBytes(destinationHost);
+            var dstAddress = Encoding.ASCII.GetBytes(destinationHost);
 
             // +----+----+----+----+----+----+----+----+----+----+....+----+----+----+....+----+
             // | VN | CD | DSTPORT |      DSTIP        | USERID       |NULL| DSTADDR      |NULL|
             // +----+----+----+----+----+----+----+----+----+----+....+----+----+----+....+----+
             //    1    1      2              4           variable       1    variable        1 
-            var request = new byte[10 + userId.Length + dstAddr.Length];
+            var request = new byte[10 + userId.Length + dstAddress.Length];
 
             request[0] = VersionNumber;
             request[1] = command;
@@ -112,8 +113,8 @@ namespace Leaf.xNet
             dstIp.CopyTo(request, 4);
             userId.CopyTo(request, 8);
             request[8 + userId.Length] = 0x00;
-            dstAddr.CopyTo(request, 9 + userId.Length);
-            request[9 + userId.Length + dstAddr.Length] = 0x00;
+            dstAddress.CopyTo(request, 9 + userId.Length);
+            request[9 + userId.Length + dstAddress.Length] = 0x00;
 
             nStream.Write(request, 0, request.Length);
 

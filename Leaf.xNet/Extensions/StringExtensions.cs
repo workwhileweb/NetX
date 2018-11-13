@@ -28,11 +28,11 @@ namespace Leaf.xNet.Extensions
         /// <param name="left">Начальная подстрока</param>
         /// <param name="right">Конечная подстрока</param>
         /// <param name="startIndex">Искать начиная с индекса</param>
-        /// <param name="comparsion">Метод сравнения строк</param>
+        /// <param name="comparison">Метод сравнения строк</param>
         /// <param name="limit">Максимальное число подстрок для поиска</param>
-        /// <returns>Возвращает массив подстрок которые попапают под шаблон</returns>
+        /// <returns>Возвращает массив подстрок которые попадают под шаблон</returns>
         public static string[] Substrings(this string str, string left, string right,
-            int startIndex = 0, StringComparison comparsion = StringComparison.Ordinal, int limit = 0)
+            int startIndex = 0, StringComparison comparison = StringComparison.Ordinal, int limit = 0)
         {
             #region Проверка параметров
             if (string.IsNullOrEmpty(str))
@@ -41,7 +41,7 @@ namespace Leaf.xNet.Extensions
             if (string.IsNullOrEmpty(left))
                 throw new ArgumentNullException(nameof(left));
 
-            if (string.IsNullOrEmpty(left))
+            if (string.IsNullOrEmpty(right))
                 throw new ArgumentNullException(nameof(right));
 
             if (startIndex < 0 || startIndex >= str.Length)
@@ -62,14 +62,14 @@ namespace Leaf.xNet.Extensions
                 }
 
                 // Ищем начало позиции левой подстроки.
-                int leftPosBegin = str.IndexOf(left, currentStartIndex, comparsion);
+                int leftPosBegin = str.IndexOf(left, currentStartIndex, comparison);
                 if (leftPosBegin == -1)
                     break;
 
                 // Вычисляем конец позиции левой подстроки.
                 int leftPosEnd = leftPosBegin + left.Length;
                 // Ищем начало позиции правой строки.
-                int rightPos = str.IndexOf(right, leftPosEnd, comparsion);
+                int rightPos = str.IndexOf(right, leftPosEnd, comparison);
                 if (rightPos == -1)
                     break;
 
@@ -91,25 +91,25 @@ namespace Leaf.xNet.Extensions
         /// <param name="left">Начальная подстрока</param>
         /// <param name="right">Конечная подстрока</param>
         /// <param name="startIndex">Искать начиная с индекса</param>
-        /// <param name="comparsion">Метод сравнения строк</param>
+        /// <param name="comparison">Метод сравнения строк</param>
         /// <param name="notFoundValue">Значение в случае если подстрока не найдена</param>
         /// <returns>Возвращает строку между двумя подстроками</returns>
         public static string Substring(this string str, string left, string right,
-            int startIndex = 0, StringComparison comparsion = StringComparison.Ordinal, string notFoundValue = "")
+            int startIndex = 0, StringComparison comparison = StringComparison.Ordinal, string notFoundValue = "")
         {
             if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(left) || string.IsNullOrEmpty(right) ||
                 startIndex < 0 || startIndex >= str.Length)
                 return notFoundValue;
 
             // Ищем начало позиции левой подстроки.
-            int leftPosBegin = str.IndexOf(left, startIndex, comparsion);
+            int leftPosBegin = str.IndexOf(left, startIndex, comparison);
             if (leftPosBegin == -1)
                 return notFoundValue;
 
             // Вычисляем конец позиции левой подстроки.
             int leftPosEnd = leftPosBegin + left.Length;
             // Ищем начало позиции правой строки.
-            int rightPos = str.IndexOf(right, leftPosEnd, comparsion);
+            int rightPos = str.IndexOf(right, leftPosEnd, comparison);
 
             return rightPos != -1 ? str.Substring(leftPosEnd, rightPos - leftPosEnd) : notFoundValue;
         }
@@ -125,12 +125,12 @@ namespace Leaf.xNet.Extensions
         /// <param name="left">Начальная подстрока</param>
         /// <param name="right">Конечная подстрока</param>
         /// <param name="startIndex">Искать начиная с индекса</param>
-        /// <param name="comparsion">Метод сравнения строк</param>
+        /// <param name="comparison">Метод сравнения строк</param>
         /// <returns>Возвращает строку между двумя подстроками. </returns>
         public static string SubstringNull(this string str, string left, string right,
-            int startIndex = 0, StringComparison comparsion = StringComparison.Ordinal)
+            int startIndex = 0, StringComparison comparison = StringComparison.Ordinal)
         {
-            return Substring(str, left, right, startIndex, comparsion, null);
+            return Substring(str, left, right, startIndex, comparison, null);
         }
         #endregion
 
@@ -144,11 +144,11 @@ namespace Leaf.xNet.Extensions
         /// <param name="startIndex">Искать начиная с индекса
         /// <remarks>Если указано значение -1, поиск ведется с самого конца строки</remarks>
         /// </param>
-        /// <param name="comparsion">Метод сравнения строк</param>
+        /// <param name="comparison">Метод сравнения строк</param>
         /// <param name="notFoundValue">Значение в случае если подстрока не найдена</param>
         /// <returns>Возвращает строку между двумя подстроками</returns>
         public static string LastSubstring(this string str, string right, string left,
-            int startIndex = -1, StringComparison comparsion = StringComparison.Ordinal,
+            int startIndex = -1, StringComparison comparison = StringComparison.Ordinal,
             string notFoundValue = "")
         {
             if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(right) || string.IsNullOrEmpty(left) ||
@@ -159,12 +159,12 @@ namespace Leaf.xNet.Extensions
                 startIndex = str.Length - 1;
 
             // Ищем начало позиции правой подстроки с конца строки
-            int rightPosBegin = str.LastIndexOf(right, startIndex, comparsion);
+            int rightPosBegin = str.LastIndexOf(right, startIndex, comparison);
             if (rightPosBegin == -1 || rightPosBegin == 0) // в обратном поиске имеет смысл проверять на 0
                 return notFoundValue;
 
             // Вычисляем начало позиции левой подстроки
-            int leftPosBegin = str.LastIndexOf(left, rightPosBegin - 1, comparsion);
+            int leftPosBegin = str.LastIndexOf(left, rightPosBegin - 1, comparison);
             // Если не найден левый конец или правая и левая подстрока склеены вместе - вернем пустую строку
             if (leftPosBegin == -1 || rightPosBegin - leftPosBegin == 1)
                 return notFoundValue;
@@ -187,12 +187,12 @@ namespace Leaf.xNet.Extensions
         /// <param name="startIndex">Искать начиная с индекса
         /// <remarks>Если указано значение -1, поиск ведется с самого конца строки</remarks>
         /// </param>
-        /// <param name="comparsion">Метод сравнения строк</param>
+        /// <param name="comparison">Метод сравнения строк</param>
         /// <returns>Возвращает строку между двумя подстроками</returns>
         public static string LastSubstringNull(this string str, string right, string left,
-            int startIndex = -1, StringComparison comparsion = StringComparison.Ordinal)
+            int startIndex = -1, StringComparison comparison = StringComparison.Ordinal)
         {
-            return LastSubstring(str, right, left, startIndex, comparsion, null);
+            return LastSubstring(str, right, left, startIndex, comparison, null);
         }
 
         #endregion

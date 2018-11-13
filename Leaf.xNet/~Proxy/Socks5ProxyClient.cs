@@ -226,10 +226,10 @@ namespace Leaf.xNet
 
         private void SendUsernameAndPassword(Stream nStream)
         {
-            var uname = string.IsNullOrEmpty(_username) ?
+            var username = string.IsNullOrEmpty(_username) ?
                 new byte[0] : Encoding.ASCII.GetBytes(_username);
 
-            var passwd = string.IsNullOrEmpty(_password) ?
+            var password = string.IsNullOrEmpty(_password) ?
                 new byte[0] : Encoding.ASCII.GetBytes(_password);
 
             // +----+------+----------+------+----------+
@@ -237,13 +237,13 @@ namespace Leaf.xNet
             // +----+------+----------+------+----------+
             // | 1  |  1   | 1 to 255 |  1   | 1 to 255 |
             // +----+------+----------+------+----------+
-            var request = new byte[uname.Length + passwd.Length + 3];
+            var request = new byte[username.Length + password.Length + 3];
 
             request[0] = 1;
-            request[1] = (byte)uname.Length;
-            uname.CopyTo(request, 2);
-            request[2 + uname.Length] = (byte)passwd.Length;
-            passwd.CopyTo(request, 3 + uname.Length);
+            request[1] = (byte)username.Length;
+            username.CopyTo(request, 2);
+            request[2 + username.Length] = (byte)password.Length;
+            password.CopyTo(request, 3 + username.Length);
 
             nStream.Write(request, 0, request.Length);
 
@@ -261,10 +261,10 @@ namespace Leaf.xNet
                 throw NewProxyException(Resources.ProxyException_Socks5_FailedAuthOn);
         }
 
-        private void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
+        private void SendCommand(Stream nStream, byte command, string destinationHost, int destinationPort)
         {
             byte aTyp = GetAddressType(destinationHost);
-            var dstAddr = GetAddressBytes(aTyp, destinationHost);
+            var dstAddress = GetAddressBytes(aTyp, destinationHost);
             var dstPort = GetPortBytes(destinationPort);
 
             // +----+-----+-------+------+----------+----------+
@@ -272,14 +272,14 @@ namespace Leaf.xNet
             // +----+-----+-------+------+----------+----------+
             // | 1  |  1  | X'00' |  1   | Variable |    2     |
             // +----+-----+-------+------+----------+----------+
-            var request = new byte[4 + dstAddr.Length + 2];
+            var request = new byte[4 + dstAddress.Length + 2];
 
             request[0] = VersionNumber;
             request[1] = command;
             request[2] = Reserved;
             request[3] = aTyp;
-            dstAddr.CopyTo(request, 4);
-            dstPort.CopyTo(request, 4 + dstAddr.Length);
+            dstAddress.CopyTo(request, 4);
+            dstPort.CopyTo(request, 4 + dstAddress.Length);
 
             nStream.Write(request, 0, request.Length);
 
@@ -301,11 +301,11 @@ namespace Leaf.xNet
 
         private byte GetAddressType(string host)
         {
-            if (!IPAddress.TryParse(host, out IPAddress ipAddr))
+            if (!IPAddress.TryParse(host, out var ipAddress))
                 return AddressTypeDomainName;
 
             // ReSharper disable once SwitchStatementMissingSomeCases
-            switch (ipAddr.AddressFamily)
+            switch (ipAddress.AddressFamily)
             {
                 case AddressFamily.InterNetwork:
                     return AddressTypeIPv4;
@@ -315,7 +315,7 @@ namespace Leaf.xNet
 
                 default:
                     throw new ProxyException(string.Format(Resources.ProxyException_NotSupportedAddressType,
-                        host, Enum.GetName(typeof(AddressFamily), ipAddr.AddressFamily), ToString()), this);
+                        host, Enum.GetName(typeof(AddressFamily), ipAddress.AddressFamily), ToString()), this);
             }
         }
 

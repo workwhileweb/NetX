@@ -3,7 +3,7 @@
 namespace Leaf.xNet
 {
     /// <summary>
-    /// Класс-обёртка- для потокобезопасной генерации пресевдо-случайных чисел.
+    /// Класс-обёртка- для потокобезопасной генерации псевдослучайных чисел.
     /// Lazy-load singleton для ThreadStatic <see cref="Random"/>.
     /// </summary>
     public static class Randomizer

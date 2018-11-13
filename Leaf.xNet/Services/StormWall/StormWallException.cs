@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable UnusedMember.Global
 
 namespace Leaf.xNet.Services.StormWall
 {
@@ -9,6 +10,7 @@ namespace Leaf.xNet.Services.StormWall
     [Serializable]
     public class StormWallException : Exception
     {
+        /// <inheritdoc />
         public StormWallException() { }
 
         public StormWallException(string message) : base(message) {}

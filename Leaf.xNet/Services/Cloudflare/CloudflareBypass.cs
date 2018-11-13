@@ -141,7 +141,7 @@ namespace Leaf.xNet.Services.Cloudflare
                         return response;
                 }
 
-                log?.Invoke($"CloudFlare не смог пройти JS Challange, причина не ясна. Статус код: {response.StatusCode}" + retry);
+                log?.Invoke($"CloudFlare не смог пройти JS Challenge, причина не ясна. Статус код: {response.StatusCode}" + retry);
             }
 
             throw new CloudflareException(MaxRetries, "Превышен лимит попыток обхода Cloudflare");

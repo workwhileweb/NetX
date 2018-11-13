@@ -11,7 +11,7 @@ using Leaf.xNet.Extensions;
 namespace Leaf.xNet
 {
     /// <summary>
-    /// Представляет класс, предназначеннный для загрузки ответа от HTTP-сервера.
+    /// Представляет класс, предназначенный для загрузки ответа от HTTP-сервера.
     /// </summary>
     public sealed class HttpResponse
     {
@@ -19,7 +19,7 @@ namespace Leaf.xNet
 
         // Обёртка для массива байтов.
         // Указывает реальное количество байтов содержащихся в массиве.
-        private sealed class BytesWraper
+        private sealed class BytesWrapper
         {
             public int Length { get; set; }
 
@@ -132,7 +132,7 @@ namespace Leaf.xNet
         // Данный класс используется при загрузки сжатых данных.
         // Он позволяет определить точное количество считаных байт (сжатых данных).
         // Это нужно, так как потоки для считывания сжатых данных сообщают количество байт уже преобразованных данных.
-        private sealed class ZipWraperStream : Stream
+        private sealed class ZipWrapperStream : Stream
         {
             #region Поля (закрытые)
 
@@ -173,7 +173,7 @@ namespace Leaf.xNet
             #endregion
 
 
-            public ZipWraperStream(Stream baseStream, ReceiverHelper receiverHelper)
+            public ZipWrapperStream(Stream baseStream, ReceiverHelper receiverHelper)
             {
                 _baseStream = baseStream;
                 _receiverHelper = receiverHelper;
@@ -344,25 +344,25 @@ namespace Leaf.xNet
         /// <summary>
         /// Возвращает кодировку тела сообщения.
         /// </summary>
-        /// <value>Кодировка тела сообщения, если соответствующий заголок задан, иначе значение заданное в <see cref="HttpRequest"/>. Если и оно не задано, то значение <see cref="System.Text.Encoding.Default"/>.</value>
+        /// <value>Кодировка тела сообщения, если соответствующий заголовок задан, иначе значение заданное в <see cref="HttpRequest"/>. Если и оно не задано, то значение <see cref="System.Text.Encoding.Default"/>.</value>
         public Encoding CharacterSet { get; private set; }
 
         /// <summary>
         /// Возвращает длину тела сообщения.
         /// </summary>
-        /// <value>Длина тела сообщения, если соответствующий заголок задан, иначе -1.</value>
+        /// <value>Длина тела сообщения, если соответствующий заголовок задан, иначе -1.</value>
         public int ContentLength { get; private set; }
 
         /// <summary>
         /// Возвращает тип содержимого ответа.
         /// </summary>
-        /// <value>Тип содержимого ответа, если соответствующий заголок задан, иначе пустая строка.</value>
+        /// <value>Тип содержимого ответа, если соответствующий заголовок задан, иначе пустая строка.</value>
         public string ContentType { get; private set; }
 
         /// <summary>
         /// Возвращает значение HTTP-заголовка 'Location'.
         /// </summary>
-        /// <returns>Значение заголовка, если такой заголок задан, иначе пустая строка.</returns>
+        /// <returns>Значение заголовка, если такой заголовок задан, иначе пустая строка.</returns>
         // ReSharper disable once UnusedMember.Global
         public string Location => this["Location"];
 
@@ -941,10 +941,11 @@ namespace Leaf.xNet
                         {
                             keyValue = arguments[i].Split(new[] {'='}, 2);
 
-                            // Обрабатываем ключи нерегистрозависимо
+                            // Обрабатываем ключи регистронезависимо
                             string key = keyValue[0].Trim().ToLower();
                             string value = keyValue.Length < 2 ? null : keyValue[1].Trim();
 
+                            // ReSharper disable once SwitchStatementMissingSomeCases
                             switch (key)
                             {
                                 case "expires":
@@ -981,7 +982,7 @@ namespace Leaf.xNet
 
         #region Загрузка тела сообщения
 
-        private IEnumerable<BytesWraper> GetMessageBodySource()
+        private IEnumerable<BytesWrapper> GetMessageBodySource()
         {
             if (_headers.ContainsKey("Content-Encoding") &&
                 !string.Equals(_headers["Content-Encoding"], 
@@ -994,15 +995,15 @@ namespace Leaf.xNet
         }
 
         // Загрузка обычных данных.
-        private IEnumerable<BytesWraper> GetMessageBodySourceStd()
+        private IEnumerable<BytesWrapper> GetMessageBodySourceStd()
         {
             return _headers.ContainsKey("Transfer-Encoding")
                 ? ReceiveMessageBodyChunked()
-                : (ContentLength != -1 ? ReceiveMessageBody(ContentLength) : ReceiveMessageBody(_request.ClientStream));
+                : ContentLength != -1 ? ReceiveMessageBody(ContentLength) : ReceiveMessageBody(_request.ClientStream);
         }
 
         // Загрузка сжатых данных.
-        private IEnumerable<BytesWraper> GetMessageBodySourceZip()
+        private IEnumerable<BytesWrapper> GetMessageBodySourceZip()
         {
             if (_headers.ContainsKey("Transfer-Encoding"))
                 return ReceiveMessageBodyChunkedZip();
@@ -1010,21 +1011,21 @@ namespace Leaf.xNet
             if (ContentLength != -1)
                 return ReceiveMessageBodyZip(ContentLength);
 
-            var streamWrapper = new ZipWraperStream(
+            var streamWrapper = new ZipWrapperStream(
                 _request.ClientStream, _receiverHelper);
 
             return ReceiveMessageBody(GetZipStream(streamWrapper));
         }
 
         // Загрузка тела сообщения неизвестной длины.
-        private IEnumerable<BytesWraper> ReceiveMessageBody(Stream stream)
+        private IEnumerable<BytesWrapper> ReceiveMessageBody(Stream stream)
         {
-            var bytesWraper = new BytesWraper();
+            var bytesWrapper = new BytesWrapper();
 
             int bufferSize = _request.TcpClient.ReceiveBufferSize;
             var buffer = new byte[bufferSize];
 
-            bytesWraper.Value = buffer;
+            bytesWrapper.Value = buffer;
 
             int begBytesRead = 0;
 
@@ -1041,8 +1042,8 @@ namespace Leaf.xNet
             }
 
             // Возвращаем начальные данные.
-            bytesWraper.Length = begBytesRead;
-            yield return bytesWraper;
+            bytesWrapper.Length = begBytesRead;
+            yield return bytesWrapper;
 
             // Проверяем, есть ли открывающий тег '<html'.
             // Если есть, то считываем данные то тех пор, пока не встретим закрывающий тек '</html>'.
@@ -1074,8 +1075,8 @@ namespace Leaf.xNet
 
                     if (found)
                     {
-                        bytesWraper.Length = bytesRead;
-                        yield return bytesWraper;
+                        bytesWrapper.Length = bytesRead;
+                        yield return bytesWrapper;
 
                         yield break;
                     }
@@ -1083,21 +1084,21 @@ namespace Leaf.xNet
                 else if (bytesRead == 0)
                     yield break;
 
-                bytesWraper.Length = bytesRead;
-                yield return bytesWraper;
+                bytesWrapper.Length = bytesRead;
+                yield return bytesWrapper;
             }
         }
 
         // Загрузка тела сообщения известной длины.
-        private IEnumerable<BytesWraper> ReceiveMessageBody(int contentLength)
+        private IEnumerable<BytesWrapper> ReceiveMessageBody(int contentLength)
         {
             var stream = _request.ClientStream;
-            var bytesWraper = new BytesWraper();
+            var bytesWrapper = new BytesWrapper();
 
             int bufferSize = _request.TcpClient.ReceiveBufferSize;
             var buffer = new byte[bufferSize];
 
-            bytesWraper.Value = buffer;
+            bytesWrapper.Value = buffer;
 
             int totalBytesRead = 0;
 
@@ -1111,22 +1112,22 @@ namespace Leaf.xNet
                 {
                     totalBytesRead += bytesRead;
 
-                    bytesWraper.Length = bytesRead;
-                    yield return bytesWraper;
+                    bytesWrapper.Length = bytesRead;
+                    yield return bytesWrapper;
                 }
             }
         }
 
         // Загрузка тела сообщения частями.
-        private IEnumerable<BytesWraper> ReceiveMessageBodyChunked()
+        private IEnumerable<BytesWrapper> ReceiveMessageBodyChunked()
         {
             var stream = _request.ClientStream;
-            var bytesWraper = new BytesWraper();
+            var bytesWrapper = new BytesWrapper();
 
             int bufferSize = _request.TcpClient.ReceiveBufferSize;
             var buffer = new byte[bufferSize];
 
-            bytesWraper.Value = buffer;
+            bytesWrapper.Value = buffer;
 
             while (true)
             {
@@ -1185,17 +1186,17 @@ namespace Leaf.xNet
                     {
                         totalBytesRead += bytesRead;
 
-                        bytesWraper.Length = bytesRead;
-                        yield return bytesWraper;
+                        bytesWrapper.Length = bytesRead;
+                        yield return bytesWrapper;
                     }
                 }
             }
         }
 
-        private IEnumerable<BytesWraper> ReceiveMessageBodyZip(int contentLength)
+        private IEnumerable<BytesWrapper> ReceiveMessageBodyZip(int contentLength)
         {
-            var bytesWraper = new BytesWraper();
-            var streamWrapper = new ZipWraperStream(
+            var bytesWrapper = new BytesWrapper();
+            var streamWrapper = new ZipWrapperStream(
                 _request.ClientStream, _receiverHelper);
 
             using (var stream = GetZipStream(streamWrapper))
@@ -1203,7 +1204,7 @@ namespace Leaf.xNet
                 int bufferSize = _request.TcpClient.ReceiveBufferSize;
                 var buffer = new byte[bufferSize];
 
-                bytesWraper.Value = buffer;
+                bytesWrapper.Value = buffer;
 
                 while (true)
                 {
@@ -1219,16 +1220,16 @@ namespace Leaf.xNet
                         continue;
                     }
 
-                    bytesWraper.Length = bytesRead;
-                    yield return bytesWraper;
+                    bytesWrapper.Length = bytesRead;
+                    yield return bytesWrapper;
                 }
             }
         }
 
-        private IEnumerable<BytesWraper> ReceiveMessageBodyChunkedZip()
+        private IEnumerable<BytesWrapper> ReceiveMessageBodyChunkedZip()
         {
-            var bytesWraper = new BytesWraper();
-            var streamWrapper = new ZipWraperStream
+            var bytesWrapper = new BytesWrapper();
+            var streamWrapper = new ZipWrapperStream
                 (_request.ClientStream, _receiverHelper);
 
             using (var stream = GetZipStream(streamWrapper))
@@ -1236,7 +1237,7 @@ namespace Leaf.xNet
                 int bufferSize = _request.TcpClient.ReceiveBufferSize;
                 var buffer = new byte[bufferSize];
 
-                bytesWraper.Value = buffer;
+                bytesWrapper.Value = buffer;
 
                 while (true)
                 {
@@ -1294,8 +1295,8 @@ namespace Leaf.xNet
                             continue;
                         }
 
-                        bytesWraper.Length = bytesRead;
-                        yield return bytesWraper;
+                        bytesWrapper.Length = bytesRead;
+                        yield return bytesWrapper;
                     }
                 }
             }

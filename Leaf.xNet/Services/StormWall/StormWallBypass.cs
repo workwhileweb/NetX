@@ -25,6 +25,7 @@ namespace Leaf.xNet.Services.StormWall
                 || resp.Contains("://reports.stormwall.pro");
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static HttpResponse GetThroughStormWall(this HttpRequest req, string url, HttpResponse rawResp)
         {
             return GetThroughStormWall(req, url, rawResp.ToString());
