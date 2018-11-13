@@ -462,32 +462,32 @@ namespace Leaf.xNet
             if (MessageBodyLoaded)
                 return new byte[0];
 
-            var memoryStream = new MemoryStream(
-                ContentLength == -1 ? 0 : ContentLength);
-
-            try
+            using (var memoryStream = new MemoryStream(ContentLength == -1 ? 0 : ContentLength))
             {
-                var source = GetMessageBodySource();
+                try
+                {
+                    var source = GetMessageBodySource();
 
-                foreach (var bytes in source)
-                    memoryStream.Write(bytes.Value, 0, bytes.Length);
+                    foreach (var bytes in source)
+                        memoryStream.Write(bytes.Value, 0, bytes.Length);
+                }
+                catch (Exception ex)
+                {
+                    HasError = true;
+
+                    if (ex is IOException || ex is InvalidOperationException)
+                        throw NewHttpException(Resources.HttpException_FailedReceiveMessageBody, ex);
+
+                    throw;
+                }
+
+                if (ConnectionClosed())
+                    _request?.Dispose();
+
+                MessageBodyLoaded = true;
+
+                return memoryStream.ToArray();
             }
-            catch (Exception ex)
-            {
-                HasError = true;
-
-                if (ex is IOException || ex is InvalidOperationException)
-                    throw NewHttpException(Resources.HttpException_FailedReceiveMessageBody, ex);
-
-                throw;
-            }
-
-            if (ConnectionClosed())
-                _request?.Dispose();
-
-            MessageBodyLoaded = true;
-
-            return memoryStream.ToArray();
         }
 
         /// <summary>

@@ -96,6 +96,7 @@ namespace Leaf.xNet
 
             serializationInfo.AddValue("Status", (int)Status);
             serializationInfo.AddValue("HttpStatusCode", (int)HttpStatusCode);
+            serializationInfo.AddValue("EmptyMessageBody", (bool)EmptyMessageBody);
         }
     }
 }

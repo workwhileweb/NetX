@@ -1,11 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Leaf.xNet
 {
+    /// <inheritdoc />
     /// <summary>
     /// Представляет тело запроса. Освобождается сразу после отправки.
     /// </summary>
-    public abstract class HttpContent
+    public abstract class HttpContent : IDisposable
     {
         /// <summary>MIME-тип контента.</summary>
         protected string MimeContentType = string.Empty;

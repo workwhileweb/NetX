@@ -1503,7 +1503,11 @@ namespace Leaf.xNet
 
             TcpClient.Close();
             TcpClient = null;
+
+            ClientStream?.Dispose();
             ClientStream = null;
+            
+            ClientNetworkStream?.Dispose();
             ClientNetworkStream = null;
 
             _keepAliveRequestCount = 0;
