@@ -6,6 +6,7 @@ namespace Leaf.xNet
     {
         public static bool Enabled = true;
 
+        public static bool Trim = true;
         public static bool Path = true;
         public static bool CommaEndingValue = true;
 
@@ -18,8 +19,15 @@ namespace Leaf.xNet
         {
             return !Enabled ? rawCookie
                 : rawCookie
+                    .TrimWhitespace()
                     .FilterPath()
                     .FilterCommaEndingValue();
+        }
+
+        /// <summary>Убираем любые пробелы в начале и конце</summary>
+        private static string TrimWhitespace(this string rawCookie)
+        {
+            return !Trim ? rawCookie : rawCookie.Trim();
         }
 
         /// <summary>Заменяем все значения path на "/"</summary>

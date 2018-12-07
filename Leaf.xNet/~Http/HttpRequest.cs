@@ -1430,7 +1430,7 @@ namespace Leaf.xNet
         // ReSharper disable once UnusedMember.Global
         public bool ContainsCookie(string url, string name)
         {
-            return !DontTrackCookies && Cookies != null && Cookies.ContainsKey(url, name);
+            return !DontTrackCookies && Cookies != null && Cookies.Contains(url, name);
         }
 
         #region Работа с заголовками

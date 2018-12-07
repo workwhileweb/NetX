@@ -131,6 +131,21 @@ namespace Leaf.xNet.Tests
                 Assert.AreEqual(CookieFilters.Filter(item.Key), item.Value);
             }
         }
+
+        /*
+        [TestMethod]
+        public void AvoidCrossdomainCookieDuplication()
+        {
+            var req = new HttpRequest("https://viastyle.org");
+            req.Proxy = HttpProxyClient.Parse("127.0.0.1:8888");
+            CookieStorage.DefaultExpireBeforeSet = true;
+
+            var resp = req.Get("/up/leaf-cookie.php");
+            var resp2 = req.Get("/up/leaf-cookie.php?q=q");
+            var resp3 = req.Get("/up/leaf-cookie.php");
+
+        }*/
+
         /*
         [TestMethod]
         public void GetCookies()

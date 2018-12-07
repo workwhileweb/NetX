@@ -726,7 +726,7 @@ namespace Leaf.xNet
         /// <returns>Значение <see langword="true"/>, если указанные куки содержатся, иначе значение <see langword="false"/>.</returns>
         public bool ContainsCookie(string url, string name)
         {
-            return Cookies != null && Cookies.ContainsKey(url, name);
+            return Cookies != null && Cookies.Contains(url, name);
         }
         
         #endregion
@@ -841,6 +841,7 @@ namespace Leaf.xNet
                 StatusCode == HttpStatusCode.NoContent ||
                 StatusCode == HttpStatusCode.NotModified)
             {
+                _loadedMessageBody = string.Empty;
                 MessageBodyLoaded = true;
             }
 

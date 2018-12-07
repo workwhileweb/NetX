@@ -13,14 +13,10 @@ namespace Leaf.xNet
         /// </summary>
         public CookieContainer Container { get; private set; }
 
-        private static BinaryFormatter _binaryFormatter;
-        private static BinaryFormatter Bf => _binaryFormatter ?? (_binaryFormatter = new BinaryFormatter());
-
-        public CookieStorage(bool isLocked = false, CookieContainer container = null)
-        {
-            IsLocked = isLocked;
-            Container = container ?? new CookieContainer();
-        }
+        /// <summary>
+        /// Число <see cref="Cookie"/> в <see cref="CookieContainer"/> (для всех адресов).
+        /// </summary>
+        public int Count => Container.Count;
 
         /// <summary>
         /// Возвращает или задает значение, указывающие, закрыты ли куки для редактирования через ответы сервера.
@@ -29,20 +25,71 @@ namespace Leaf.xNet
         public bool IsLocked { get; set; }
 
         /// <summary>
-        /// Добавляет или изменяет существующие Cookies в <see cref="CookieContainer"/>.
+        /// Значение по умолчанию для всех экземпляров.
+        /// Сбрасывать старую Cookie при вызове <see cref="Set"/> если найдено совпадение по домену и имени Cookie.
+        /// </summary>
+        public static bool DefaultExpireBeforeSet { get; set; } = true;
+
+        /// <summary>
+        /// Сбрасывать старую Cookie при вызове <see cref="Set"/> если найдено совпадение по домену и имени Cookie.
+        /// </summary>
+        public bool ExpireBeforeSet { get; set; } = DefaultExpireBeforeSet;
+
+
+        private static BinaryFormatter Bf => _binaryFormatter ?? (_binaryFormatter = new BinaryFormatter());
+        private static BinaryFormatter _binaryFormatter;
+
+
+        public CookieStorage(bool isLocked = false, CookieContainer container = null)
+        {
+            IsLocked = isLocked;
+            Container = container ?? new CookieContainer();
+        }
+
+        /// <summary>
+        /// Добавляет Cookie в хранилище <see cref="CookieContainer"/>.
+        /// </summary>
+        /// <param name="cookie">Кука</param>
+        public void Add(Cookie cookie)
+        {
+            Container.Add(cookie);
+        }
+
+        /// <summary>
+        /// Добавляет коллекцию Cookies в хранилище <see cref="CookieContainer"/>.
         /// </summary>
         /// <param name="cookies">Коллекция Cookie</param>
-        public void Set(CookieCollection cookies)
+        public void Add(CookieCollection cookies)
         {
             Container.Add(cookies);
         }
 
-        /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
+        /// <summary>
+        /// Добавляет или обновляет существующую Cookie в хранилище <see cref="CookieContainer"/>.
+        /// </summary>
         /// <param name="cookie">Кука</param>
         // ReSharper disable once UnusedMember.Global
         public void Set(Cookie cookie)
         {
-            Container.Add(cookie);
+            if (ExpireBeforeSet)
+                ExpireIfExists(cookie);
+
+            Add(cookie);
+        }
+
+        /// <summary>
+        /// Добавляет или обновляет существующие Cookies из коллекции в хранилище <see cref="CookieContainer"/>.
+        /// </summary>
+        /// <param name="cookies">Коллекция Cookie</param>
+        public void Set(CookieCollection cookies)
+        {
+            if (ExpireBeforeSet)
+            {
+                foreach (Cookie cookie in cookies)
+                    ExpireIfExists(cookie);
+            }
+
+            Add(cookies);
         }
 
         /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
@@ -53,7 +100,8 @@ namespace Leaf.xNet
         // ReSharper disable once UnusedMember.Global
         public void Set(string name, string value, string domain, string path = "/")
         {
-            Container.Add(new Cookie(name, value, path, domain));
+            var cookie = new Cookie(name, value, path, domain);
+            Set(cookie);
         }
 
         /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
@@ -62,6 +110,17 @@ namespace Leaf.xNet
         public void Set(Uri uri, string rawCookie)
         {
             string filteredCookie = CookieFilters.Filter(rawCookie);
+
+            if (ExpireBeforeSet)
+            {
+                int equalIndex = filteredCookie.IndexOf('=');
+                if (equalIndex != -1)
+                {
+                    string cookieName = filteredCookie.Substring(0, equalIndex + 1);
+                    ExpireIfExists(uri, cookieName);
+                }
+            }
+
             Container.SetCookies(uri, filteredCookie);
         }
 
@@ -72,6 +131,28 @@ namespace Leaf.xNet
         public void Set(string url, string rawCookie)
         {
             Set(new Uri(url), rawCookie);
+        }
+
+        private void ExpireIfExists(Uri uri, string cookieName)
+        {
+            var cookies = Container.GetCookies(uri);
+            foreach (Cookie storageCookie in cookies)
+            {
+                if (storageCookie.Name == cookieName)
+                    storageCookie.Expired = true;
+            }
+        }
+
+        private void ExpireIfExists(Cookie cookie)
+        {
+            if (string.IsNullOrEmpty(cookie.Domain)) 
+                return;
+
+            // Fast trim: Domain.Remove is slower and much more slower variation: cookie.Domain.TrimStart('.')
+            string domain = cookie.Domain[0] == '.' ? cookie.Domain.Substring(1) : cookie.Domain;
+            var uri = new Uri($"{(cookie.Secure ? "https://" : "http://")}{domain}");
+
+            ExpireIfExists(uri, cookie.Name);
         }
 
         /// <summary>
@@ -163,21 +244,21 @@ namespace Leaf.xNet
         /// Проверяет существование <see cref="Cookie"/> в <see cref="CookieContainer"/> по адресу ресурса и имени ключа куки.
         /// </summary>
         /// <param name="uri">URI адрес ресурса</param>
-        /// <param name="name">Имя-ключ куки</param>
+        /// <param name="cookieName">Имя-ключ куки</param>
         /// <returns>Вернет <see langword="true"/> если ключ найден по запросу.</returns>
-        public bool ContainsKey(Uri uri, string name)
+        public bool Contains(Uri uri, string cookieName)
         {
             if (Container.Count <= 0)
                 return false;
 
             var cookies = Container.GetCookies(uri);
-            return cookies[name] != null;
+            return cookies[cookieName] != null;
         }
 
-        /// <inheritdoc cref="ContainsKey(System.Uri,string)"/>
-        public bool ContainsKey(string url, string name)
+        /// <inheritdoc cref="Contains(System.Uri, string)"/>
+        public bool Contains(string url, string cookieName)
         {
-            return ContainsKey(new Uri(url), name);
+            return Contains(new Uri(url), cookieName);
         }
 
         /// <summary>
@@ -210,10 +291,5 @@ namespace Leaf.xNet
             using (var fs = new FileStream(filePath, FileMode.Open))
                 return (CookieStorage)Bf.Deserialize(fs);
         }
-
-        /// <summary>
-        /// Число <see cref="Cookie"/> в <see cref="CookieContainer"/> (для всех адресов).
-        /// </summary>
-        public int Count => Container.Count;
     }
 }

@@ -11,7 +11,7 @@ namespace Leaf.xNet
         GET,
         HEAD,
         DELETE,
-        OPTION,
+        OPTIONS,
         POST,
         PATCH,
         PUT,

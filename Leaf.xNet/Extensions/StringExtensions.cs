@@ -10,7 +10,7 @@ namespace Leaf.xNet.Extensions
     public static class StringExtensions
     {
         /// <summary>
-        /// Проверяет наличие слова в строке, аналогично <see cref="string.Contains"/>, но без учета реестра и региональных стандартов.
+        /// Проверяет наличие слова в строке, аналогично <see cref="string.Contains(string)"/>, но без учета реестра и региональных стандартов.
         /// </summary>
         /// <param name="str">Строка для поиска слова</param>
         /// <param name="value">Слово которое должно содержаться в строке</param>
@@ -20,7 +20,7 @@ namespace Leaf.xNet.Extensions
             return str.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1;
         }
 
-        #region Вырезание нескольких строк        
+        #region Вырезание нескольких строк
         /// <summary>
         /// Вырезает несколько строк между двумя подстроками.
         /// </summary>
