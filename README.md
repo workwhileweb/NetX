@@ -37,11 +37,11 @@ Webmoney **WMZ**: `Z349403749504`
 Webmoney **WMU**: `U313788999957`  
 Webmoney **WME**: `E894184114651`  
 Webmoney **WMX**: `X428336365219`
-  
-Bitcoin **BTC**: `3AYA9xsGGZcbnX63i5bwfGkvXNDxC7r7Uo`  
-Bitcoin Gold **BTG**: `AaXkAfose8ArsZHoWuC2bYZhMfkdutNG8S`  
-Bitcoin Cash **BCH**: `3N2wxyixecHtUrqJgRrdKs4pu7oPzMFtpm`  
-LiteCoin **LTC**: `MK5Dsyo6ek9z1CN19oNRhTrK2VrvNWq654`  
+
+Bitcoin **BTC**: `36uHKL713c1FmmpWB89MkbLEeCgbsfsGc5`
+Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`
+LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`
+LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`
 
 
 # Features
@@ -71,7 +71,7 @@ var md = resp.MiddleHeaders;
 ## Cookies by default
 Cookies enabled by default. If you wait to disable parsing it use:
 ```csharp
-HttpRequest.DontTrackCookies = true;
+HttpRequest.UseCookies = false;
 ```
 
 ## Modern User-Agent Randomization
