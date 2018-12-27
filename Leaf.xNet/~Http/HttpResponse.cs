@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Leaf.xNet.Extensions;
+
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace Leaf.xNet
 {
     /// <summary>
     /// Представляет класс, предназначенный для загрузки ответа от HTTP-сервера.
     /// </summary>
+    #if DEBUG
+    [DebuggerDisplay("ToString() disabled in debug mode")]
+    #endif
     public sealed class HttpResponse
     {
         #region Классы (закрытые)
@@ -799,7 +805,7 @@ namespace Leaf.xNet
             }
             _headers.Clear();
 
-            if (!_request.DontTrackCookies)
+            if (_request.UseCookies)
             {
                 Cookies = _request.Cookies != null && !_request.Cookies.IsLocked
                     ? _request.Cookies
@@ -918,65 +924,26 @@ namespace Leaf.xNet
                 string headerValue = header.Substring(separatorPos + 1).Trim(' ', '\t', '\r', '\n');
 
                 if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (_request.DontTrackCookies) 
-                        continue;
-
-                    // Отделяем Cross-domain cookie - если не делать, будет исключение.
-                    // Родной парсинг raw-cookie плохо работает.
-                    if (!headerValue.ContainsIgnoreCase("domain="))
-                        Cookies.Set(_request.Address, headerValue);
-                    else
-                    {
-                        // Разделяем все key=value
-                        var arguments = headerValue.Split(new [] {';'}, StringSplitOptions.RemoveEmptyEntries);
-                        if (arguments.Length == 0)
-                            continue;
-
-                        // Получаем ключ и значение самой Cookie
-                        var keyValue = arguments[0].Split(new[] {'='}, 2);
-                        var cookie = new Cookie(keyValue[0], keyValue.Length < 2 ? string.Empty : keyValue[1]);
-
-                        // Обрабатываем дополнительные ключи Cookie
-                        for (int i = 1; i < arguments.Length; i++)
-                        {
-                            keyValue = arguments[i].Split(new[] {'='}, 2);
-
-                            // Обрабатываем ключи регистронезависимо
-                            string key = keyValue[0].Trim().ToLower();
-                            string value = keyValue.Length < 2 ? null : keyValue[1].Trim();
-
-                            // ReSharper disable once SwitchStatementMissingSomeCases
-                            switch (key)
-                            {
-                                case "expires":
-                                    if (!DateTime.TryParse(value, out var expires))
-                                        continue;
-
-                                    cookie.Expires = expires;
-                                    break;
-
-                                case "path":
-                                    cookie.Path = value;
-                                    break;
-                                case "domain":
-                                    cookie.Domain = value;
-                                    break;
-                                case "secure":
-                                    cookie.Secure = true;
-                                    break;
-                                case "httponly":
-                                    cookie.HttpOnly = true;
-                                    break;
-                            }
-                        }
-
-                        Cookies.Set(cookie);
-                    }
-                }
+                    ParseCookieFromHeader(headerValue);
                 else
                     _headers[headerName] = headerValue;
             }
+        }
+
+        #endregion
+
+        #region Ручной разбор Cookie с расширенными атрибутами
+
+        private void ParseCookieFromHeader(string headerValue)
+        {
+            if (!_request.UseCookies)
+                return;
+
+            // Обычная Cookie, без указания домена
+            if (!headerValue.ContainsIgnoreCase("domain="))
+                Cookies.Set(_request.Address, headerValue);
+            else
+                Cookies.SetFromHeader(headerValue);
         }
 
         #endregion

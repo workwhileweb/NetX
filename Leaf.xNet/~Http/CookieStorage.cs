@@ -26,15 +26,14 @@ namespace Leaf.xNet
 
         /// <summary>
         /// Значение по умолчанию для всех экземпляров.
-        /// Сбрасывать старую Cookie при вызове <see cref="Set"/> если найдено совпадение по домену и имени Cookie.
+        /// Сбрасывать старую Cookie при вызове <see cref="Set(Cookie)"/> если найдено совпадение по домену и имени Cookie.
         /// </summary>
         public static bool DefaultExpireBeforeSet { get; set; } = true;
 
-        /// <summary>
-        /// Сбрасывать старую Cookie при вызове <see cref="Set"/> если найдено совпадение по домену и имени Cookie.
+        /// <summary>        
+        /// Сбрасывать старую Cookie при вызове <see cref="Set(Cookie)"/> если найдено совпадение по домену и имени Cookie.
         /// </summary>
         public bool ExpireBeforeSet { get; set; } = DefaultExpireBeforeSet;
-
 
         private static BinaryFormatter Bf => _binaryFormatter ?? (_binaryFormatter = new BinaryFormatter());
         private static BinaryFormatter _binaryFormatter;
@@ -131,6 +130,60 @@ namespace Leaf.xNet
         public void Set(string url, string rawCookie)
         {
             Set(new Uri(url), rawCookie);
+        }
+
+
+        public void SetFromHeader(string headerValue)
+        {
+            // Отделяем Cross-domain cookie - если не делать, будет исключение.
+            // Разделяем все key=value
+            var arguments = headerValue.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            if (arguments.Length == 0)
+                return;
+
+            // Получаем ключ и значение самой Cookie
+            var keyValue = arguments[0].Split(new[] {'='}, 2);
+            var cookie = new Cookie(keyValue[0], keyValue.Length < 2 ? string.Empty : keyValue[1]);
+
+            // Обрабатываем дополнительные ключи Cookie
+            for (int i = 1; i < arguments.Length; i++)
+            {
+                keyValue = arguments[i].Split(new[] {'='}, 2);
+
+                // Обрабатываем ключи регистронезависимо
+                string key = keyValue[0].Trim().ToLower();
+                string value = keyValue.Length < 2 ? null : keyValue[1].Trim();
+
+                // ReSharper disable once SwitchStatementMissingSomeCases
+                switch (key)
+                {
+                    case "expires":
+                        if (!DateTime.TryParse(value, out var expires))
+                            continue;
+
+                        cookie.Expires = expires;
+                        break;
+
+                    case "path":
+                        cookie.Path = value;
+                        break;
+                    case "domain":
+                        string domain = CookieFilters.FilterDomain(value);
+                        if (domain == null)
+                            return;
+
+                        cookie.Domain = domain;
+                        break;
+                    case "secure":
+                        cookie.Secure = true;
+                        break;
+                    case "httponly":
+                        cookie.HttpOnly = true;
+                        break;
+                }
+            }
+
+            Set(cookie);
         }
 
         private void ExpireIfExists(Uri uri, string cookieName)

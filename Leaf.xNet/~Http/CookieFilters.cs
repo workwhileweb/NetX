@@ -24,6 +24,11 @@ namespace Leaf.xNet
                     .FilterCommaEndingValue();
         }
 
+        public static string FilterDomain(string domain)
+        {
+            return string.IsNullOrWhiteSpace(domain) ? null : domain.Trim('.', '\t', '\n', '\r', ' ');
+        }
+
         /// <summary>Убираем любые пробелы в начале и конце</summary>
         private static string TrimWhitespace(this string rawCookie)
         {

@@ -37,8 +37,9 @@ namespace Leaf.xNet
         /// <param name="stream">Поток, куда будут записаны данные тела запроса.</param>
         public abstract void WriteTo(Stream stream);
 
+        /// <inheritdoc />
         /// <summary>
-        /// Освобождает все ресурсы, используемые текущим экземпляром класса <see cref="HttpContent"/>.
+        /// Освобождает все ресурсы, используемые текущим экземпляром класса <see cref="T:Leaf.xNet.HttpContent" />.
         /// </summary>
         public void Dispose()
         {

@@ -5,11 +5,12 @@ using System.Threading;
 namespace Leaf.xNet.Services.Cloudflare
 {
     /// <summary>
-    /// Cloudflare Anti-DDoS bypass extension for HttpRequest.
+    /// CloudFlare Anti-DDoS bypass extension for HttpRequest.
     /// </summary>
     /// <remarks>
     /// Only the JavaScript challenge can be handled. CAPTCHA and IP address blocking cannot be bypassed.
     /// </remarks>
+    // ReSharper disable once UnusedMember.Global
     public static class CloudflareBypass
     {
         /// <summary>
@@ -69,7 +70,7 @@ namespace Leaf.xNet.Services.Cloudflare
             DLog log = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (request.DontTrackCookies)
+            if (!request.UseCookies)
                 throw new HttpException("В свойствах HTTP запроса отключена обработка Cookies через свойство DontTrackCookies. Для CloudFlare куки обязательны.");
 
             // User-Agent is required
@@ -87,7 +88,7 @@ namespace Leaf.xNet.Services.Cloudflare
                 var response = ManualGet(request, url);
                 if (!response.IsCloudflared())
                 {
-                    log?.Invoke("УСПЕХ: Cloudflare не обнаружен, работаем дальше: " + url);
+                    log?.Invoke("УСПЕХ: CloudFlare не обнаружен, работаем дальше: " + url);
                     return response;
                 }
 

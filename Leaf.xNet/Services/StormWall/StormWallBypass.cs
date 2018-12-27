@@ -7,6 +7,7 @@ namespace Leaf.xNet.Services.StormWall
     /// <summary>
     /// Класс-расширение для обхода AntiDDoS защиты StormWall.
     /// </summary>
+    // ReSharper disable once UnusedMember.Global
     public static class StormWallBypass
     {
         #region Solver Singleton

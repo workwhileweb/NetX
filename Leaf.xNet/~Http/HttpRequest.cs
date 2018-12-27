@@ -553,17 +553,19 @@ namespace Leaf.xNet
 
         /// <summary>
         /// Возвращает или задает куки, связанные с запросом.
+        /// Создается автоматически, если задано свойство <see cref="UseCookies"/> в значении <see langword="true"/>.
         /// </summary>
-        /// <value>Значение по умолчанию — <see langword="null"/>.</value>
+        /// <value>Значение по умолчанию: если <see cref="UseCookies"/> установлено в <see langword="true"/>, то вернется коллекция.
+        /// Если <see langword="false"/>, то вернется <see langword="null"/>.</value>
         /// <remarks>Куки могут изменяться ответом от HTTP-сервера. Чтобы не допустить этого, нужно установить свойство <see cref="Leaf.xNet.CookieStorage.IsLocked"/> равным <see langword="true"/>.</remarks>
         public CookieStorage Cookies { get; set; }
 
         /// <summary>
-        /// Позволяет отключить автоматическое создание <see cref="CookieStorage"/> в свойстве Cookies когда получены куки от сервера.
-        /// Запрос не будет отправлять заголовок с куками. Ответ не будет обрабатывать заголовки Set-Cookie. 
+        /// Позволяет задать автоматическое создание <see cref="CookieStorage"/> в свойстве Cookies когда получены куки от сервера.
+        /// Если установить значение в <see langword="false"/> - заголовки с куками не будут отправляться и не будут сохраняться из ответа (заголовок Set-Cookie).
         /// </summary>
-        /// <value>Значение по умолчанию — <see langword="false"/>.</value>
-        public bool DontTrackCookies { get; set; }
+        /// <value>Значение по умолчанию — <see langword="true"/>.</value>
+        public bool UseCookies { get; set; } = true;
 
         #endregion
 
@@ -1430,7 +1432,7 @@ namespace Leaf.xNet
         // ReSharper disable once UnusedMember.Global
         public bool ContainsCookie(string url, string name)
         {
-            return !DontTrackCookies && Cookies != null && Cookies.Contains(url, name);
+            return UseCookies && Cookies != null && Cookies.Contains(url, name);
         }
 
         #region Работа с заголовками
@@ -2029,7 +2031,7 @@ namespace Leaf.xNet
                 MergeHeaders(headers, _temporaryHeaders);
 
             // Disabled cookies
-            if (DontTrackCookies)
+            if (!UseCookies)
                 return ToHeadersString(headers);
 
             // Cookies isn't set now

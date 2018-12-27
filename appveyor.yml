@@ -40,6 +40,8 @@ artifacts:
   name: netcoreapp2.0
 - path: Leaf.xNet\bin\Release\netcoreapp2.1
   name: netcoreapp2.1
+- path: Leaf.xNet\bin\Release\netcoreapp2.2
+  name: netcoreapp2.2
 deploy:
 - provider: NuGet
   api_key:
@@ -52,7 +54,7 @@ deploy:
   release: Leaf.xNet v$(appveyor_build_version)
   auth_token:
     secure: NQtMOO3yB309cDK/pFWRiQ==
-  artifact: net452;net462;net471;net472;netcoreapp2.0;netcoreapp2.1
+  artifact: net452;net462;net471;net472;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2
   on:
     branch: master
 only_commits:
