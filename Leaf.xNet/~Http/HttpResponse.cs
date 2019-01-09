@@ -310,6 +310,15 @@ namespace Leaf.xNet
             }
         }
 
+
+        /// <summary>
+        /// Возвращает значение, указывающее, была ли переадресация на протокол отличный от HTTP или HTTPS.
+        /// </summary>
+        public bool HasExternalRedirect =>
+            HasRedirect && RedirectAddress != null &&
+            !RedirectAddress.Scheme.Equals("http", StringComparison.InvariantCultureIgnoreCase) &&
+            !RedirectAddress.Scheme.Equals("https", StringComparison.InvariantCultureIgnoreCase);
+
         /// <summary>
         /// Возвращает количество попыток переподключения.
         /// </summary>

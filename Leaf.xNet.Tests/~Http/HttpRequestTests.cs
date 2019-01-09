@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Policy;
-using Leaf.xNet.Services.Cloudflare;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Leaf.xNet.Tests
@@ -55,20 +52,6 @@ namespace Leaf.xNet.Tests
 
                 StringAssert.Contains(source, getArgument);
                 StringAssert.Contains(source, getValue);
-            }
-        }
-
-        [TestMethod]
-        public void GetInconsistantCoookie()
-        {
-            const string url = "https://tinybuildgames.us7.list-manage.com/subscribe?u=7c5ba06b8b6710be2a32d1afc&id=5211b170b7";
-            //const string url2 = "https://www.favbet.com/en/bets/";
-
-            using (var req = new HttpRequest())
-            {
-                req.UserAgentRandomize();
-                req.Get(url);
-                //req.GetThroughCloudflare(url2);
             }
         }
 
