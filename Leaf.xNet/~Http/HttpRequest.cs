@@ -1658,6 +1658,13 @@ namespace Leaf.xNet
                     if (++_redirectionCount > _maximumAutomaticRedirections)
                         throw NewHttpException(Resources.HttpException_LimitRedirections);
 
+                    bool isWebRedirect =
+                        Response.RedirectAddress.Scheme.Equals("http", StringComparison.InvariantCultureIgnoreCase) ||
+                        Response.RedirectAddress.Scheme.Equals("https", StringComparison.InvariantCultureIgnoreCase);
+
+                    if (!isWebRedirect)
+                        return Response;
+
                     ClearRequestData();
                     method = HttpMethod.GET;
                     address = Response.RedirectAddress;
