@@ -313,16 +313,16 @@ namespace Leaf.xNet
         /// <returns>Случайный User-Agent от браузера Chrome.</returns>
         public static string ChromeUserAgent()
         {
-            int major = Randomizer.Instance.Next(41, 64);
-            int build = Randomizer.Instance.Next(2100, 3200);
+            int major = Randomizer.Instance.Next(62, 70);
+            int build = Randomizer.Instance.Next(2100, 3538);
             int branchBuild = Randomizer.Instance.Next(170);
 
             return $"Mozilla/5.0 ({RandomWindowsVersion()}) AppleWebKit/537.36 (KHTML, like Gecko) " +
-                   $"Chrome/{major}.0.{build}.{branchBuild} Safari/537.36";
+                $"Chrome/{major}.0.{build}.{branchBuild} Safari/537.36";
         }
 
 
-        private static readonly byte[] FirefoxVersions = { 58, 56, 52, 50, 47, 39 };
+        private static readonly byte[] FirefoxVersions = { 64, 63, 62, 60, 58, 52, 51, 46, 45 };
 
         /// <summary>
         /// Генерирует случайный User-Agent от браузера Firefox.
@@ -330,7 +330,7 @@ namespace Leaf.xNet
         /// <returns>Случайный User-Agent от браузера Firefox.</returns>
         public static string FirefoxUserAgent()
         {
-            var version = FirefoxVersions[Randomizer.Instance.Next(FirefoxVersions.Length - 1)];
+            byte version = FirefoxVersions[Randomizer.Instance.Next(FirefoxVersions.Length - 1)];
 
             return $"Mozilla/5.0 ({RandomWindowsVersion()}; rv:{version}.0) Gecko/20100101 Firefox/{version}.0";
         }
@@ -387,20 +387,20 @@ namespace Leaf.xNet
 
             // TODO: edge, yandex browser, safari
 
-            // Chrome = 60%
-            if (rand >= 1 && rand <= 60)
+            // Chrome = 70%
+            if (rand >= 1 && rand <= 70)
                 return ChromeUserAgent();
 
-            // Firefox = 20%
-            if (rand > 60 && rand <= 80)
+            // Firefox = 15%
+            if (rand > 70 && rand <= 85)
                 return FirefoxUserAgent();
 
-            // IE = 10%
-            if (rand > 80 && rand <= 90)
+            // IE = 6%
+            if (rand > 85 && rand <= 91)
                 return IEUserAgent();
 
-            // Opera 12 = 6%
-            if (rand > 90 && rand <= 96)
+            // Opera 12 = 5%
+            if (rand > 91 && rand <= 96)
                 return OperaUserAgent();
 
             // Opera mini = 4%
@@ -422,36 +422,26 @@ namespace Leaf.xNet
         private static string RandomWindowsVersion()
         {
             string windowsVersion = "Windows NT ";
-            const string windowsVersionXp64Bit = "5.2";
-
             int random = Randomizer.Instance.Next(99) + 1;
 
-            // Windows 10 = 40% popularity
-            if (random >= 1 && random <= 40)
+            // Windows 10 = 45% popularity
+            if (random >= 1 && random <= 45)
                 windowsVersion += "10.0";
 
-            // Windows 7 = 40% popularity
-            else if (random > 40 && random <= 80)
+            // Windows 7 = 35% popularity
+            else if (random > 45 && random <= 80)
                 windowsVersion += "6.1";
 
-            // Windows 8.1 = 10% popularity
-            else if (random > 80 && random <= 90)
+            // Windows 8.1 = 15% popularity
+            else if (random > 80 && random <= 95)
                 windowsVersion += "6.3";
 
-            // Windows XP x86 = 4% popularity
-            else if (random > 90 && random <= 94)
-                windowsVersion += "5.1";
-
-            // Windows 8 = 3% popularity
-            else if (random > 94 && random <= 97)
+            // Windows 8 = 5% popularity
+            else
                 windowsVersion += "6.2";
 
-            // Windows XP x64 = 3% popularity
-            else // if (random > 97 && random <= 100)
-                windowsVersion += windowsVersionXp64Bit;
-
             // Append WOW64 for X64 system
-            if (Randomizer.Instance.NextDouble() <= 0.5 || windowsVersion == windowsVersionXp64Bit)
+            if (Randomizer.Instance.NextDouble() <= 0.65)
                 windowsVersion += Randomizer.Instance.NextDouble() <= 0.5 ? "; WOW64" : "; Win64; x64";
 
             return windowsVersion;
