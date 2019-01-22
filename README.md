@@ -38,10 +38,10 @@ Webmoney **WMU**: `U313788999957`
 Webmoney **WME**: `E894184114651`  
 Webmoney **WMX**: `X428336365219`
 
-Bitcoin **BTC**: `36uHKL713c1FmmpWB89MkbLEeCgbsfsGc5`
-Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`
-LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`
-LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`
+Bitcoin **BTC**: `36uHKL713c1FmmpWB89MkbLEeCgbsfsGc5`  
+Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`  
+LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`  
+LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
 
 
 # Features
@@ -78,4 +78,68 @@ HttpRequest.UseCookies = false;
 ```csharp
 httpRequest.UserAgentRandomize();
 // Call it again if you want change it again
+```
+
+# How to
+## Send multipart requests with fields and files
+Methods `AddField()` and `AddFile()` has been removed (unstable).
+Use this code:
+```csharp
+using (var request = new HttpRequest())
+{
+    var multipartContent = new MultipartContent()
+    {
+        {new StringContent("Harry Potter"), "login"},
+        {new StringContent("Crucio"), "password"},
+        {new FileContent(@"C:\hp.rar"), "file1", "hp.rar"}
+    };
+
+    // When response isn't required
+    request.Post("https://google.com", multipartContent).None();
+
+    // Or
+    // var resp = request.Post("https://google.com", multipartContent);
+    // And then read as string
+    // string respStr = resp.ToString();
+}
+```
+
+## Get page source (response body) and find a value between strings
+```csharp
+// Add in the beginning 
+using Leaf.xNet.Extensions;
+
+// Add in your method
+// Don't forget about Dispose HttpRequest (use using statement or call r.Dispose())
+var r = new HttpRequest();
+string html = r.Get("https://google.com").ToString();
+string title = html.Substring("<title>", "</title>");
+```
+
+## Download a file
+```csharp
+var request = new HttpRequest();
+var resp = request.Get("http://google.com/file.zip");
+// Do you checks here
+request.ToFile("C:\\myDownloadedFile.zip");
+```
+
+## Get Cookies
+```csharp
+var req = new HttpRequest();
+string response = req.Get("https://twitter.com/login").ToString();
+var cookies = req.Cookies.GetCookies("https://twitter.com");
+foreach (Cookie cookie in cookies) {
+    // concat your string or do what you want
+    Console.WriteLine($"{cookie.Name}: {cookie.Value}");
+}
+```
+
+## Add a Cookie to HttpRequest.Cookies storage
+```csharp
+var req = new HttpRequest();
+req.Cookies.Set(string name, string value, string domain, string path = "/");
+// or
+var cookie = new Cookie(string name, string value, string domain, string path);
+req.Cookies.Set(cookie);
 ```
