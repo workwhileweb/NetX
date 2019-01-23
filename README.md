@@ -129,6 +129,10 @@ var cookie = new Cookie(string name, string value, string domain, string path);
 req.Cookies.Set(cookie);
 ```
 
+# TODO:
+- Move `HttpResponse` indexer to `Headers` property and implement IEnumerable for it
+- Implement new property `StoreResponseCookies` for `HttpRequest`: `HttpResponse` should have `Cookies` as `IReadOnlyKeyValueCollection<string,Cookie>` with indexer.
+
 # Donate
 If this project help you reduce time to develop, you can give me a cup of coffee :)  
 **PayPal**: `mixtape774@yandex.com`
