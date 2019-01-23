@@ -834,7 +834,8 @@ namespace Leaf.xNet
         /// </summary>
         /// <param name="address">Адрес интернет-ресурса.</param>
         /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
-        /// <param name="dontEscape">Указывает, нужно ли кодировать параметры запроса.</param>
+        /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
+        /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">
         /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
@@ -844,7 +845,7 @@ namespace Leaf.xNet
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         // ReSharper disable once UnusedMember.Global
-        public HttpResponse Post(string address, RequestParams reqParams, bool dontEscape = false)
+        public HttpResponse Post(string address, RequestParams reqParams, bool valuesUnescaped = false, bool keysUnescaped = false)
         {
             #region Проверка параметров
 
@@ -853,7 +854,7 @@ namespace Leaf.xNet
 
             #endregion
 
-            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, dontEscape, CharacterSet));
+            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, valuesUnescaped, keysUnescaped, CharacterSet));
         }
 
 
@@ -862,7 +863,8 @@ namespace Leaf.xNet
         /// </summary>
         /// <param name="address">Адрес интернет-ресурса.</param>
         /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
-        /// <param name="dontEscape">Указывает, нужно ли кодировать параметры запроса.</param>
+        /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
+        /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">
         /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
@@ -871,7 +873,7 @@ namespace Leaf.xNet
         /// </exception>
         /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         // ReSharper disable once UnusedMember.Global
-        public HttpResponse Post(Uri address, RequestParams reqParams, bool dontEscape = false)
+        public HttpResponse Post(Uri address, RequestParams reqParams, bool valuesUnescaped = false,  bool keysUnescaped = false)
         {
             #region Проверка параметров
 
@@ -880,7 +882,7 @@ namespace Leaf.xNet
 
             #endregion
 
-            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, dontEscape, CharacterSet));
+            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, valuesUnescaped, keysUnescaped, CharacterSet));
         }
 
         /// <summary>

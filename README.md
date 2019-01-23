@@ -37,16 +37,32 @@ var resp = httpRequest.Get("https://account.sonyentertainmentnetwork.com/");
 var md = resp.MiddleHeaders;
 ```
 
-### Cookies by default
+### Cross Domain Cookies
+Used native cookie storage from .NET with domain shared access support.  
 Cookies enabled by default. If you wait to disable parsing it use:
 ```csharp
 HttpRequest.UseCookies = false;
 ```
 
 ### Modern User-Agent Randomization
+UserAgents were updated in January 2019.
 ```csharp
 httpRequest.UserAgentRandomize();
 // Call it again if you want change it again
+```
+
+## Cyrilic and Unicode Form parameters
+```csharp
+using (var request = new HttpRequest())
+{
+    var urlParams = new RequestParams();
+
+    // Now correctly encoded
+    urlParams["привет"] = "мир";
+    urlParams["param2"] = "val2";
+
+    string content = request.Post("https://google.com", urlParams).ToString();
+}
 ```
 
 # How to:
@@ -130,5 +146,5 @@ LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`
 LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
 
 # Contacts
-**Telegram**: [@kelog](https://t.me/kelog)
-**E-Mail**: mixtape774@gmail.com  
+**Telegram**: [@kelog](https://t.me/kelog)  
+**E-Mail**: mixtape774@gmail.com
