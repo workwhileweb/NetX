@@ -1,38 +1,16 @@
 [![NuGet version](https://badge.fury.io/nu/Leaf.xNet.svg)](https://badge.fury.io/nu/Leaf.xNet) [![Build status](https://ci.appveyor.com/api/projects/status/em4aje36etb63kdt/branch/master?svg=true)](https://ci.appveyor.com/project/grandsilence/leaf-xnet/branch/master) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FZLZ5ED65HVCL)
 
 # Leaf.xNet
-**Leaf.xNet** - provides HTTP/HTTPS, Socks 4A, Socks 4, Socks 5. It's a based on [Extreme.Net](https://github.com/Fedorus/Extreme.Net). And original library [xNet](https://github.com/X-rus/xNet).
+**Leaf.xNet** - provides HTTP/HTTPS, Socks 4A, Socks 4, Socks 5.  
+It's a based on [Extreme.Net](https://github.com/Fedorus/Extreme.Net). And original library [xNet](https://github.com/X-rus/xNet).  
 Usage same like original xNet.
 
-# Contacts
-**E-Mail**: mixtape774@gmail.com
-**Telegram**: [@kelog](https://t.me/kelog)
-
-# Donate
-If this project help you reduce time to develop, you can give me a cup of coffee :)
-**PayPal**: `mixtape774@yandex.com`
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FZLZ5ED65HVCL)
-
-[**Via web-payment**: WebMoney | Steam Item | MasterCard | Visa | Sberbank.Online | BitCoin ](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
-[![Imgur](https://i.imgur.com/APbu91c.png)](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
-
-### Wallets
-**Yandex**.Money / **Яндекс**.Деньги: `410011037924983`  
-**Webmoney**: `R246626749259` | `Z349403749504` | `U313788999957` | `E894184114651` | `X428336365219`  
-Bitcoin **BTC**: `36uHKL713c1FmmpWB89MkbLEeCgbsfsGc5`  
-Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`  
-LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`  
-LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
 
 # Installation
-### 
-```bash
-# NuGet
-PM > Install-Package Leaf.xNet
-# or .NET CLI
-dotnet add package Leaf.xNet
-# orPaket CLI
-paket add Leaf.xNet
+###
+Install using [NuGet](https://www.nuget.org/):
+```
+Install-Package Leaf.xNet
 ```
 
 # Features
@@ -134,3 +112,23 @@ req.Cookies.Set(string name, string value, string domain, string path = "/");
 var cookie = new Cookie(string name, string value, string domain, string path);
 req.Cookies.Set(cookie);
 ```
+
+# Donate
+If this project help you reduce time to develop, you can give me a cup of coffee :)  
+**PayPal**: `mixtape774@yandex.com`
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FZLZ5ED65HVCL)
+
+[**Via web-payment**: WebMoney | Steam Item | MasterCard | Visa | Sberbank.Online | BitCoin ](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
+[![Imgur](https://i.imgur.com/APbu91c.png)](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
+
+### Wallets
+**Yandex**.Money | **Яндекс**.Деньги: `410011037924983`  
+**Webmoney**: `R246626749259` | `Z349403749504` | `U313788999957` | `E894184114651` | `X428336365219`  
+Bitcoin **BTC**: `36uHKL713c1FmmpWB89MkbLEeCgbsfsGc5`  
+Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`  
+LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`  
+LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
+
+# Contacts
+**Telegram**: [@kelog](https://t.me/kelog)
+**E-Mail**: mixtape774@gmail.com  
