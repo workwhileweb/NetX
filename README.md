@@ -53,67 +53,82 @@ httpRequest.UserAgentRandomize();
 
 ## Cyrilic and Unicode Form parameters
 ```csharp
-using (var request = new HttpRequest())
-{
-    var urlParams = new RequestParams();
-
-    // Now correctly encoded
-    urlParams["привет"] = "мир";
-    urlParams["param2"] = "val2";
-
-    string content = request.Post("https://google.com", urlParams).ToString();
+var urlParams = new RequestParams {
+    { ["привет"] = "мир"  },
+    { ["param2"] = "val2" }
 }
+// Or
+// urlParams["привет"] = "мир";
+// urlParams["param2"] = "val2";
+
+string content = request.Post("https://google.com", urlParams).ToString();
 ```
 
 # How to:
+### Get started
+Add in the beggining of file.
+```csharp
+using Leaf.xNet;
+```
+And use one of this code templates:
+
+```csharp
+using (var request = new HttpRequest()) {
+    // Do something
+}
+
+// Or
+HttpRequest request = null;
+try {
+    request = new HttpRequest();
+    // Do something 
+}
+catch (Excetion ex) {
+    // Error handling
+}
+finally {
+    // Cleanup in the end if initialized
+    request?.Dispose();
+}
+
+```
+
 ### Send multipart requests with fields and files
 Methods `AddField()` and `AddFile()` has been removed (unstable).
 Use this code:
 ```csharp
-using (var request = new HttpRequest())
+var multipartContent = new MultipartContent()
 {
-    var multipartContent = new MultipartContent()
-    {
-        {new StringContent("Harry Potter"), "login"},
-        {new StringContent("Crucio"), "password"},
-        {new FileContent(@"C:\hp.rar"), "file1", "hp.rar"}
-    };
+    {new StringContent("Harry Potter"), "login"},
+    {new StringContent("Crucio"), "password"},
+    {new FileContent(@"C:\hp.rar"), "file1", "hp.rar"}
+};
 
-    // When response isn't required
-    request.Post("https://google.com", multipartContent).None();
+// When response isn't required
+request.Post("https://google.com", multipartContent).None();
 
-    // Or
-    // var resp = request.Post("https://google.com", multipartContent);
-    // And then read as string
-    // string respStr = resp.ToString();
-}
+// Or
+var resp = request.Post("https://google.com", multipartContent);
+// And then read as string
+string respStr = resp.ToString();
 ```
 
 ### Get page source (response body) and find a value between strings
 ```csharp
-// Add in the beginning 
-using Leaf.xNet.Extensions;
-
-// Add in your method
-// Don't forget about Dispose HttpRequest (use using statement or call r.Dispose())
-var r = new HttpRequest();
-string html = r.Get("https://google.com").ToString();
+string html = request.Get("https://google.com").ToString();
 string title = html.Substring("<title>", "</title>");
 ```
 
 ### Download a file
 ```csharp
-var request = new HttpRequest();
 var resp = request.Get("http://google.com/file.zip");
-// Do you checks here
 request.ToFile("C:\\myDownloadedFile.zip");
 ```
 
 ### Get Cookies
 ```csharp
-var req = new HttpRequest();
-string response = req.Get("https://twitter.com/login").ToString();
-var cookies = req.Cookies.GetCookies("https://twitter.com");
+string response = request.Get("https://twitter.com/login").ToString();
+var cookies = request.Cookies.GetCookies("https://twitter.com");
 foreach (Cookie cookie in cookies) {
     // concat your string or do what you want
     Console.WriteLine($"{cookie.Name}: {cookie.Value}");
@@ -122,11 +137,11 @@ foreach (Cookie cookie in cookies) {
 
 ### Add a Cookie to HttpRequest.Cookies storage
 ```csharp
-var req = new HttpRequest();
-req.Cookies.Set(string name, string value, string domain, string path = "/");
+request.Cookies.Set(string name, string value, string domain, string path = "/");
+
 // or
 var cookie = new Cookie(string name, string value, string domain, string path);
-req.Cookies.Set(cookie);
+request.Cookies.Set(cookie);
 ```
 
 # TODO:
