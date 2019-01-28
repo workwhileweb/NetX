@@ -8,8 +8,7 @@ namespace Leaf.xNet
     /// </summary>
     public static class Randomizer
     {
-        [ThreadStatic] private static Random _rand;
         public static Random Instance => _rand ?? (_rand = new Random());
-
+        [ThreadStatic] private static Random _rand;
     }
 }

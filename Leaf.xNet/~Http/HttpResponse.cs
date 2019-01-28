@@ -366,7 +366,7 @@ namespace Leaf.xNet
         /// Возвращает длину тела сообщения.
         /// </summary>
         /// <value>Длина тела сообщения, если соответствующий заголовок задан, иначе -1.</value>
-        public int ContentLength { get; private set; }
+        public long ContentLength { get; private set; }
 
         /// <summary>
         /// Возвращает тип содержимого ответа.
@@ -477,8 +477,10 @@ namespace Leaf.xNet
             if (MessageBodyLoaded)
                 return new byte[0];
 
-            using (var memoryStream = new MemoryStream(ContentLength == -1 ? 0 : ContentLength))
+            using (var memoryStream = new MemoryStream())
             {
+                memoryStream.SetLength(ContentLength == -1 ? 0 : ContentLength);
+
                 try
                 {
                     var source = GetMessageBodySource();
@@ -523,11 +525,11 @@ namespace Leaf.xNet
             if (MessageBodyLoaded)
                 return _loadedMessageBody;
 
-            var memoryStream = new MemoryStream(
-                ContentLength == -1 ? 0 : ContentLength);
+            var memoryStream = new MemoryStream();
+            memoryStream.SetLength(ContentLength == -1 ? 0 : ContentLength);
 
             try
-            {
+            {    
                 var source = GetMessageBodySource();
 
                 foreach (var bytes in source)
@@ -659,8 +661,8 @@ namespace Leaf.xNet
             if (MessageBodyLoaded)
                 return null;
 
-            var memoryStream = new MemoryStream(
-                ContentLength == -1 ? 0 : ContentLength);
+            var memoryStream = new MemoryStream();
+            memoryStream.SetLength(ContentLength == -1 ? 0 : ContentLength);
 
             try
             {
@@ -1067,7 +1069,7 @@ namespace Leaf.xNet
         }
 
         // Загрузка тела сообщения известной длины.
-        private IEnumerable<BytesWrapper> ReceiveMessageBody(int contentLength)
+        private IEnumerable<BytesWrapper> ReceiveMessageBody(long contentLength)
         {
             var stream = _request.ClientStream;
             var bytesWrapper = new BytesWrapper();
@@ -1081,7 +1083,7 @@ namespace Leaf.xNet
 
             while (totalBytesRead != contentLength)
             {
-                var bytesRead = _receiverHelper.HasData ? _receiverHelper.Read(buffer, 0, bufferSize) : stream.Read(buffer, 0, bufferSize);
+                int bytesRead = _receiverHelper.HasData ? _receiverHelper.Read(buffer, 0, bufferSize) : stream.Read(buffer, 0, bufferSize);
 
                 if (bytesRead == 0)
                     WaitData();
@@ -1170,7 +1172,7 @@ namespace Leaf.xNet
             }
         }
 
-        private IEnumerable<BytesWrapper> ReceiveMessageBodyZip(int contentLength)
+        private IEnumerable<BytesWrapper> ReceiveMessageBodyZip(long contentLength)
         {
             var bytesWrapper = new BytesWrapper();
             var streamWrapper = new ZipWrapperStream(
@@ -1356,14 +1358,14 @@ namespace Leaf.xNet
             }
         }
 
-        private int GetContentLength()
+        private long GetContentLength()
         {
             string contentLengthHeader = Http.Headers[HttpHeader.ContentLength];
 
             if (!_headers.ContainsKey(contentLengthHeader))
                 return -1;
 
-            if (!int.TryParse(_headers[contentLengthHeader], out var contentLength))
+            if (!long.TryParse(_headers[contentLengthHeader], out long contentLength))
                 throw new FormatException($"Invalid response header \"{contentLengthHeader}\" value");
 
             return contentLength;
