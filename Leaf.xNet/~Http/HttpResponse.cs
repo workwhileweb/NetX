@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Leaf.xNet.Extensions;
 
 #if DEBUG
 using System.Diagnostics;
