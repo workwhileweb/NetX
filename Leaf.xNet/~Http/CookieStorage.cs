@@ -94,6 +94,9 @@ namespace Leaf.xNet
         // ReSharper disable once UnusedMember.Global
         public void Set(Cookie cookie)
         {
+            cookie.Name = cookie.Name.Trim();
+            cookie.Value = cookie.Value.Trim();
+
             if (ExpireBeforeSet)
                 ExpireIfExists(cookie);
 

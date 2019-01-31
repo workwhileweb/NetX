@@ -43,13 +43,26 @@ Cookies enabled by default. If you wait to disable parsing it use:
 ```csharp
 HttpRequest.UseCookies = false;
 ```
+Cookies now escaping values. If you wait to disable it use:
+```csharp
+HttpRequest.Cookies = 
+```
 
 ### Modern User-Agent Randomization
 UserAgents were updated in January 2019.
 ```csharp
 httpRequest.UserAgentRandomize();
 // Call it again if you want change it again
+
+// or set property
+httpRequest.UserAgent = Http.RandomUserAgent();
 ```
+When you need a specific browser just use the `Http` class same way:
+- `ChromeUserAgent()`
+- `FirefoxUserAgent()`
+- `IEUserAgent()`
+- `OperaUserAgent()`
+- `OperaMiniUserAgent()`
 
 ## Cyrilic and Unicode Form parameters
 ```csharp
@@ -62,6 +75,29 @@ var urlParams = new RequestParams {
 // urlParams["param2"] = "val2";
 
 string content = request.Post("https://google.com", urlParams).ToString();
+```
+
+## A lot of Substring functions
+```csharp
+string title = html.Substring("<title>", "</title>");
+
+// substring or default
+string titleWithDefault  = html.Substring("<title>", "</title>") ?? "Nothing";
+string titleWithDefault2 = html.Substring("<title>", "</title>", fallback: "Nothing");
+
+// substring or empty
+string titleOrEmpty  = html.SubstringOrEmpty("<title>", "</title>");
+string titleOrEmpty2 = html.Substring("<title>", "</title>") ?? ""; // "" or string.Empty
+string titleOrEmpty3 = html.Substring("<title>", "</title>", fallback: string.Empty);
+
+// substring or thrown exception when not found
+// it will throw new SubstringException with left and right arguments in the message
+string titleOrException  = html.SubstringEx("<title>", "</title>");
+// when you need your own Exception
+string titleOrException2 = html.Substring("<title>", "</title>")
+    ?? throw MyCustomException();
+
+
 ```
 
 # How to:
