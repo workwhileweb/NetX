@@ -45,7 +45,11 @@ HttpRequest.UseCookies = false;
 ```
 Cookies now escaping values. If you wait to disable it use:
 ```csharp
-HttpRequest.Cookies = 
+HttpRequest.Cookies.EscapeValuesOnReceive = false;
+
+// UnescapeValuesOnSend by default = EscapeValuesOnReceive
+// so set if to false isn't necessary
+HttpRequest.Cookies.UnescapeValuesOnSend = false;
 ```
 
 ### Modern User-Agent Randomization
