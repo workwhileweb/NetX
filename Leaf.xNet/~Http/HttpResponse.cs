@@ -810,7 +810,7 @@ namespace Leaf.xNet
 
             if (trackMiddleHeaders && _headers.Count > 0)
             {
-                foreach (var key in _headers.Keys)
+                foreach (string key in _headers.Keys)
                     MiddleHeaders[key] = _headers[key];
             }
             _headers.Clear();
@@ -949,11 +949,7 @@ namespace Leaf.xNet
             if (!_request.UseCookies)
                 return;
 
-            // Обычная Cookie, без указания домена
-            if (!headerValue.ContainsIgnoreCase("domain="))
-                Cookies.Set(_request.Address, headerValue);
-            else
-                Cookies.SetFromHeader(headerValue);
+            Cookies.Set(_request.Address, headerValue);
         }
 
         #endregion

@@ -21,12 +21,14 @@ namespace Leaf.xNet
                 : rawCookie
                     .TrimWhitespace()
                     .FilterPath()
+                    .FilterInvalidExpireYear()
                     .FilterCommaEndingValue();
         }
 
         public static string FilterDomain(string domain)
         {
-            return string.IsNullOrWhiteSpace(domain) ? null : domain.Trim('.', '\t', '\n', '\r', ' ');
+            // dot has been removed for cross-domain support
+            return string.IsNullOrWhiteSpace(domain) ? null : domain.Trim('\t', '\n', '\r', ' ');
         }
 
         /// <summary>Убираем любые пробелы в начале и конце</summary>
@@ -76,6 +78,34 @@ namespace Leaf.xNet
             return rawCookie[lastCharIndex] != ','
                 ? rawCookie
                 : rawCookie.Remove(lastCharIndex, 1).Insert(lastCharIndex, "%2C");
+        }
+
+        /// <summary>
+        /// Исправляет исключение при GMT 9999 года методом замены на 9998 год.
+        /// </summary>
+        /// <returns>Вернет исправленную куку с годом 9998 вместо 9999 при котором может возникнуть исключение.</returns>
+        private static string FilterInvalidExpireYear(this string rawCookie)
+        {
+            const string expireKey = "expires=";
+            const string invalidYear = "9999";
+
+            int startIndex = rawCookie.IndexOf(expireKey, StringComparison.OrdinalIgnoreCase);
+            if (startIndex == -1)
+                return rawCookie;
+            startIndex += expireKey.Length;
+
+            int endIndex = rawCookie.IndexOf(';', startIndex);
+            if (endIndex == -1)
+                endIndex = rawCookie.Length;
+
+            string expired = rawCookie.Substring(startIndex, endIndex - startIndex);
+
+            int invalidYearIndex = expired.IndexOf(invalidYear, StringComparison.Ordinal);
+            if (invalidYearIndex == -1)
+                return rawCookie;
+            invalidYearIndex += startIndex + invalidYear.Length - 1;
+
+            return rawCookie.Remove(invalidYearIndex, 1).Insert(invalidYearIndex, "8");
         }
     }
 }

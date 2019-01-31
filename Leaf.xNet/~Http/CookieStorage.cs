@@ -35,6 +35,30 @@ namespace Leaf.xNet
         /// </summary>
         public bool ExpireBeforeSet { get; set; } = DefaultExpireBeforeSet;
 
+        /// <summary>
+        /// Возвращает или задаёт экранирование символов значения Cookie получаемого от сервера.
+        /// </summary>
+        public bool EscapeValuesOnReceive { get; set; } = true;
+
+        /// <summary>
+        /// Возвращает или задаёт возможность де-экранировать символы значения Cookie прежде чем отправлять запрос на сервер.
+        /// <remarks>
+        /// По умолчанию задан тому же значению что и <see cref="EscapeValuesOnReceive"/>.
+        /// Иными словами, по умолчанию режим работы такой: получили - экранировали значение в хранилище, отправляем - де-экранируем значение и отправляем на сервер оригинальное.
+        /// </remarks>
+        /// </summary>
+        public bool UnescapeValuesOnSend {
+            get => !_unescapeValuesOnSendCustomized ? EscapeValuesOnReceive : _unescapeValuesOnSend;
+            set {
+                _unescapeValuesOnSendCustomized = true;
+                _unescapeValuesOnSend = value;
+            }
+        }
+
+        private bool _unescapeValuesOnSend;
+        private bool _unescapeValuesOnSendCustomized;
+
+
         private static BinaryFormatter Bf => _binaryFormatter ?? (_binaryFormatter = new BinaryFormatter());
         private static BinaryFormatter _binaryFormatter;
 
@@ -103,47 +127,27 @@ namespace Leaf.xNet
             Set(cookie);
         }
 
-        /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
-        /// <param name="uri">Uri куки</param>
+                /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
+        /// <param name="requestAddress">Адрес запроса</param>
         /// <param name="rawCookie">Сырой формат записи в виде строки</param>
-        public void Set(Uri uri, string rawCookie)
-        {
-            string filteredCookie = CookieFilters.Filter(rawCookie);
-
-            if (ExpireBeforeSet)
-            {
-                int equalIndex = filteredCookie.IndexOf('=');
-                if (equalIndex != -1)
-                {
-                    string cookieName = filteredCookie.Substring(0, equalIndex + 1);
-                    ExpireIfExists(uri, cookieName);
-                }
-            }
-
-            Container.SetCookies(uri, filteredCookie);
-        }
-
-        /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
-        /// <param name="url">Url куки</param>
-        /// <param name="rawCookie">Сырой формат записи в виде строки</param>
-        // ReSharper disable once UnusedMember.Global
-        public void Set(string url, string rawCookie)
-        {
-            Set(new Uri(url), rawCookie);
-        }
-
-
-        public void SetFromHeader(string headerValue)
+        public void Set(Uri requestAddress, string rawCookie)
         {
             // Отделяем Cross-domain cookie - если не делать, будет исключение.
             // Разделяем все key=value
-            var arguments = headerValue.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            var arguments = rawCookie.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
             if (arguments.Length == 0)
                 return;
 
             // Получаем ключ и значение самой Cookie
             var keyValue = arguments[0].Split(new[] {'='}, 2);
-            var cookie = new Cookie(keyValue[0], keyValue.Length < 2 ? string.Empty : keyValue[1]);
+            keyValue[0] = keyValue[0].Trim();
+            keyValue[1] = keyValue[1].Trim();
+
+            var cookie = new Cookie(keyValue[0], keyValue.Length < 2 ? string.Empty 
+                : EscapeValuesOnReceive ? Uri.EscapeDataString(keyValue[1]) : keyValue[1]
+            );
+
+            bool hasDomainKey = false;
 
             // Обрабатываем дополнительные ключи Cookie
             for (int i = 1; i < arguments.Length; i++)
@@ -158,8 +162,8 @@ namespace Leaf.xNet
                 switch (key)
                 {
                     case "expires":
-                        if (!DateTime.TryParse(value, out var expires))
-                            continue;
+                        if (!DateTime.TryParse(value, out var expires) || expires.Year >= 9999)
+                            expires = new DateTime(9998, 12, 31, 23, 59, 59, DateTimeKind.Local);
 
                         cookie.Expires = expires;
                         break;
@@ -170,8 +174,9 @@ namespace Leaf.xNet
                     case "domain":
                         string domain = CookieFilters.FilterDomain(value);
                         if (domain == null)
-                            return;
+                            continue;
 
+                        hasDomainKey = true;
                         cookie.Domain = domain;
                         break;
                     case "secure":
@@ -183,7 +188,29 @@ namespace Leaf.xNet
                 }
             }
 
+            if (!hasDomainKey)
+            {
+                if (string.IsNullOrEmpty(cookie.Path) || cookie.Path.StartsWith("/"))
+                    cookie.Domain = requestAddress.Host;
+                else if (cookie.Path.Contains("."))
+                {
+                    string domain = cookie.Path;
+                    cookie.Domain = domain;
+                    cookie.Path = null;
+                }
+            }
+               
             Set(cookie);
+        }
+
+
+        /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
+        /// <param name="requestAddress">Адрес запроса</param>
+        /// <param name="rawCookie">Сырой формат записи в виде строки</param>
+        // ReSharper disable once UnusedMember.Global
+        public void Set(string requestAddress, string rawCookie)
+        {
+            Set(new Uri(requestAddress), rawCookie);
         }
 
         private void ExpireIfExists(Uri uri, string cookieName)

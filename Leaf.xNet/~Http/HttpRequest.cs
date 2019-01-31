@@ -2174,7 +2174,10 @@ namespace Leaf.xNet
                 var cookies = header.Value.Split(new[] {"; "}, StringSplitOptions.None);
                 // ReSharper disable once ForCanBeConvertedToForeach
                 for (int i = 0; i < cookies.Length; i++)
-                    headersBuilder.AppendFormat("Cookie: {0}\r\n", cookies[i]);
+                {
+                    string cookie = Cookies.UnescapeValuesOnSend ? Uri.UnescapeDataString(cookies[i]) : cookies[i];
+                    headersBuilder.AppendFormat("Cookie: {0}\r\n", cookie);
+                }
             }
 
             headersBuilder.AppendLine();
