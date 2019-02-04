@@ -5,14 +5,14 @@
 It's a based on [Extreme.Net](https://github.com/Fedorus/Extreme.Net). And original library [xNet](https://github.com/X-rus/xNet).  
 Usage same like original xNet.
 
-# Gratitudes
+## Gratitudes
 - **Igor' Vasilyev** - found many bugs and reported it. Thank you.
 - **Monaco** (BHF) - bug reporter, donations help.
 - **Wizard** - donation support.
 - **@azor83** - donation for implementation of MiddleHeaders.  
 [Make a donation to the development of the library](#donate)
 
-# Contacts
+## Contacts
 **Telegram**: [@kelog](https://t.me/kelog)  
 **E-Mail**: mixtape774@gmail.com
 
