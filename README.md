@@ -5,10 +5,18 @@
 It's a based on [Extreme.Net](https://github.com/Fedorus/Extreme.Net). And original library [xNet](https://github.com/X-rus/xNet).  
 Usage same like original xNet.
 
+# Gratitudes
+- **Igor' Vasilyev** - found many bugs and reported it. Thank you.
+- **Monaco** (BHF) - bug reporter, donations help.
+- **Wizard** - donation support.
+- **@azor83** - donation for implementation of MiddleHeaders.
+[Make a donation to the development of the library](#donate)
 
-# Installation
-###
-Install using [NuGet](https://www.nuget.org/):
+# Contacts
+**Telegram**: [@kelog](https://t.me/kelog)  
+**E-Mail**: mixtape774@gmail.com
+
+# Installation via [NuGet](https://www.nuget.org/)
 ```
 Install-Package Leaf.xNet
 ```
@@ -184,10 +192,6 @@ var cookie = new Cookie(string name, string value, string domain, string path);
 request.Cookies.Set(cookie);
 ```
 
-# TODO:
-- Move `HttpResponse` indexer to `Headers` property and implement IEnumerable for it
-- Implement new property `StoreResponseCookies` for `HttpRequest`: `HttpResponse` should have `Cookies` as `IReadOnlyKeyValueCollection<string,Cookie>` with indexer.
-
 # Donate
 If this project help you reduce time to develop, you can give me a cup of coffee :)  
 **PayPal**: `mixtape774@yandex.com`
@@ -204,6 +208,6 @@ Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`
 LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`  
 LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
 
-# Contacts
-**Telegram**: [@kelog](https://t.me/kelog)  
-**E-Mail**: mixtape774@gmail.com
+# TODO:
+- Move `HttpResponse` indexer to `Headers` property and implement IEnumerable for it
+- Implement new property `StoreResponseCookies` for `HttpRequest`: `HttpResponse` should have `Cookies` as `IReadOnlyKeyValueCollection<string,Cookie>` with indexer.
