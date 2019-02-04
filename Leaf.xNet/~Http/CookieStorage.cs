@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 
 namespace Leaf.xNet
 {
@@ -295,7 +296,27 @@ namespace Leaf.xNet
         /// <returns>Вернет строку содержащую все куки для адреса.</returns>
         public string GetCookieHeader(Uri uri)
         {
-            return Container.GetCookieHeader(uri);
+            string header = Container.GetCookieHeader(uri);
+            if (!UnescapeValuesOnSend)
+                return header;
+
+            // Unescape cookies values
+            var sb = new StringBuilder();
+            var cookies = header.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string cookie in cookies)
+            {
+                var kv = cookie.Split(new []{'='}, 2);
+                sb.Append(kv[0].Trim());
+                sb.Append('=');
+                sb.Append(Uri.UnescapeDataString(kv[1].Trim()));
+                sb.Append("; ");
+            }
+
+            if (sb.Length > 0)
+                sb.Remove(sb.Length - 2, 2);
+
+            return sb.ToString();
         }
 
         /// <inheritdoc cref="GetCookieHeader(System.Uri)"/>
