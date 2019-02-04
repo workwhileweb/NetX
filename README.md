@@ -9,7 +9,7 @@ Usage same like original xNet.
 - **Igor' Vasilyev** - found many bugs and reported it. Thank you.
 - **Monaco** (BHF) - bug reporter, donations help.
 - **Wizard** - donation support.
-- **@azor83** - donation for implementation of MiddleHeaders.
+- **@azor83** - donation for implementation of MiddleHeaders.  
 [Make a donation to the development of the library](#donate)
 
 # Contacts
