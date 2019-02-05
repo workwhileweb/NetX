@@ -60,6 +60,12 @@ HttpRequest.Cookies.EscapeValuesOnReceive = false;
 HttpRequest.Cookies.UnescapeValuesOnSend = false;
 ```
 
+### Select SSL Protocols (downgrade when required)
+```csharp
+// By Default (SSL 2 & 3 not used)
+httpRequest.SslProtocols = SslProtocols.Tls | SslProtocols.Tls12 | SslProtocols.Tls11;
+```
+
 ### Modern User-Agent Randomization
 UserAgents were updated in January 2019.
 ```csharp
