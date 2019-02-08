@@ -1829,8 +1829,9 @@ namespace Leaf.xNet
         private static bool CanContainsRequestBody(HttpMethod method)
         {
             return
-                method == HttpMethod.PUT ||
                 method == HttpMethod.POST ||
+                method == HttpMethod.PUT ||
+                method == HttpMethod.PATCH ||
                 method == HttpMethod.DELETE;
         }
 
