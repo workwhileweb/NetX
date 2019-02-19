@@ -176,7 +176,7 @@ string title = html.Substring("<title>", "</title>");
 ### Download a file
 ```csharp
 var resp = request.Get("http://google.com/file.zip");
-request.ToFile("C:\\myDownloadedFile.zip");
+resp.ToFile("C:\\myDownloadedFile.zip");
 ```
 
 ### Get Cookies
