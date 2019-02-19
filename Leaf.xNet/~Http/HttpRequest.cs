@@ -2016,11 +2016,11 @@ namespace Leaf.xNet
         private string GenerateStartingLine(HttpMethod method)
         {
             // Fix by Igor Vacil'ev: sometimes proxies returns 404 when used full path.
-            /*string query = _currentProxy != null && _currentProxy.Type == ProxyType.HTTP
+            string query = _currentProxy != null && _currentProxy.Type == ProxyType.HTTP && _currentProxy.AbsoluteUriInStartingLine
                 ? Address.AbsoluteUri
-                : Address.PathAndQuery;*/
+                : Address.PathAndQuery;
 
-            return $"{method} {Address.PathAndQuery} HTTP/{ProtocolVersion}\r\n";
+            return $"{method} {query} HTTP/{ProtocolVersion}\r\n";
         }
 
 
