@@ -6,6 +6,7 @@ It's a based on [Extreme.Net](https://github.com/Fedorus/Extreme.Net). And origi
 Usage same like original xNet.
 
 ## Gratitudes
+- **Artem** (devspec) - domation support. Thank you.
 - **Igor' Vasilyev** - found many bugs and reported it. Thank you.
 - **Monaco** (BHF) - bug reporter, donations help.
 - **Wizard** - donation support.

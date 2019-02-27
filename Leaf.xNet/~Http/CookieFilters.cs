@@ -25,10 +25,22 @@ namespace Leaf.xNet
                     .FilterCommaEndingValue();
         }
 
+        /// <summary>
+        /// Фильтр неверных доменов перед помещением <see cref="System.Net.Cookie"/> в <see cref="CookieStorage"/>.
+        /// </summary>
+        /// <param name="domain">Домен куки из заголовка domain</param>
+        /// <returns>Вернет <see langword="null"/> если домен не является корректным для помещения в хранилище <see cref="CookieStorage"/></returns>
         public static string FilterDomain(string domain)
         {
-            // dot has been removed for cross-domain support
-            return string.IsNullOrWhiteSpace(domain) ? null : domain.Trim('\t', '\n', '\r', ' ');
+            if (string.IsNullOrWhiteSpace(domain))
+                return null;
+
+            domain = domain.Trim('\t', '\n', '\r', ' ');
+            bool isWildCard = domain.Length > 1 && domain[0] == '.';
+            bool isFirstLevel = domain.IndexOf('.', 1) == -1;
+
+            // Local wildcard domains aren't accepted by CookieStorage and native CookieContainer.
+            return isWildCard && isFirstLevel ? domain.Substring(1) : domain;
         }
 
         /// <summary>Убираем любые пробелы в начале и конце</summary>

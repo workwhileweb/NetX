@@ -23,7 +23,7 @@ namespace Leaf.xNet.Tests
                 {
                     req.UserAgentRandomize();
                     if (string.IsNullOrEmpty(req.UserAgent))
-                        Assert.Fail("Не удалось сгенерировать случайный UserAgent");
+                        Assert.Fail("Unable to generate random UserAgent");
 
                     if (lastUserAgent != req.UserAgent)
                         ++scores;
@@ -32,7 +32,7 @@ namespace Leaf.xNet.Tests
                 }
                         
                 if (scores < minScore)
-                    Assert.Fail($"За {generateRetries} попыток не было сгенерировано минимальное число агентов (${minScore})");
+                    Assert.Fail($"For {generateRetries} retries unable to generate minimal count of user agents (${minScore})");
 
                 string useragentJson = req.Get("/httpbin/user-agent").ToString();
                 StringAssert.Contains(useragentJson, req.UserAgent);
@@ -48,7 +48,7 @@ namespace Leaf.xNet.Tests
             using (var req = new HttpRequest(BaseUrl))
             {
                 var response = req.Get("/httpbin/get?{getArgument}={getValue}");
-                var source = response.ToString();
+                string source = response.ToString();
 
                 StringAssert.Contains(source, getArgument);
                 StringAssert.Contains(source, getValue);
@@ -112,6 +112,52 @@ namespace Leaf.xNet.Tests
             foreach (var item in list)
             {
                 Assert.AreEqual(CookieFilters.Filter(item.Key), item.Value);
+            }
+        }
+
+        [TestMethod]
+        public void FilterCookieDomains()
+        {
+            var validDomains = new[] {
+                // 1st level
+                "localhost",
+                // 2nd level
+                "google.com",
+                // 3rd level wildcard subdomains
+                ".google.com",
+                // 3rd level
+                "maps.google.com",
+                ".maps.google.com",
+
+            };
+
+            foreach (string validDomain in validDomains)
+                Assert.IsNotNull(CookieFilters.FilterDomain(validDomain), $"Domain \"{validDomain}\" filtered bad but should be good");
+
+            // Normalized Wildcard Domains
+            //
+            // 1st level with wildcard will be normalized to
+            var normalizedDomains = new Dictionary<string, string> {
+                {"  .localhost", "localhost"}
+            };
+
+            foreach (var normalizedDomain in normalizedDomains)
+            {
+                string filteredNormalizedDomain = CookieFilters.FilterDomain(normalizedDomain.Key);
+                Assert.AreEqual(normalizedDomain.Value, filteredNormalizedDomain, "Invalid first level cookie domain normalization");
+            }
+
+            // Invalid Domains
+            //
+            var invalidDomains = new[] {
+                "    ",
+                null,
+                "\r\n\t\t",
+                "\n\n "
+            };
+            foreach (string invalidDomain in invalidDomains)
+            {
+                Assert.IsNull(CookieFilters.FilterDomain(invalidDomain), $"Domain \"{invalidDomain}\" filtered good but it should be bad");
             }
         }
 
