@@ -229,6 +229,8 @@ namespace Leaf.xNet
 
             // Выделяем строку статуса. Пример: HTTP/1.1 200 OK\r\n
             string strStatus = response.Substring(" ", Http.NewLine);
+            if (strStatus == null)
+                throw NewProxyException(Resources.ProxyException_ReceivedWrongResponse);
 
             int simPos = strStatus.IndexOf(' ');
             if (simPos == -1)

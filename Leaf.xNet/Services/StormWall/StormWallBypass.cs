@@ -98,7 +98,7 @@ namespace Leaf.xNet.Services.StormWall
             }
 
             string value = resp.Substring(string.Format(patternBegin, variable), patternEnd);
-            if (value == string.Empty)
+            if (value == null)
                 ThrowNotFoundJsValue(variable);
 
             return value;
@@ -107,7 +107,7 @@ namespace Leaf.xNet.Services.StormWall
         private static string ParseJsVariableValue(this string resp, string variable)
         {
             string value = resp.Substring($"var {variable}=\"", "\",");
-            if (value == string.Empty)
+            if (value == null)
                 ThrowNotFoundJsValue(variable);
 
             return value;
