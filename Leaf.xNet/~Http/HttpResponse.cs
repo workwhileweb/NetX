@@ -897,16 +897,15 @@ namespace Leaf.xNet
             string statusCode = startingLine.Substring(" ", " ");
 
             // Если сервер не возвращает Reason Phrase
-            if (statusCode.Length == 0)
+            if (string.IsNullOrEmpty(statusCode))
                 statusCode = startingLine.Substring(" ", Http.NewLine);
 
-            if (version.Length == 0 || statusCode.Length == 0)
+            if (string.IsNullOrEmpty(version) || string.IsNullOrEmpty(statusCode))
                 throw NewHttpException(Resources.HttpException_ReceivedEmptyResponse);
 
             ProtocolVersion = Version.Parse(version);
 
-            StatusCode = (HttpStatusCode)Enum.Parse(
-                typeof(HttpStatusCode), statusCode);
+            StatusCode = (HttpStatusCode)Enum.Parse(typeof(HttpStatusCode), statusCode);
         }
         
         private void ReceiveHeaders()
