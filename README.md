@@ -37,6 +37,15 @@ var resp = httpRequest.Get("https://...");
 bool isCloudFlared = resp.isCloudFlared();
 ```
 
+### Keep temporary headers (when redirected)
+It's enabled by default. But you can disable this behavior:
+```csharp
+httpRequest.KeepTemporaryHeadersOnRedirect = false;
+httpRequest.AddHeader(HttpHeader.Referer, "https://google.com");
+httpRequest.Get("http://google.com").None();
+// After redirection to www.google.com - request won't have Referer header because KeepTemporaryHeadersOnRedirect = false
+```
+
 ### Middle response headers (when redirected)
 ```csharp
 httpRequest.EnableMiddleHeaders = true;

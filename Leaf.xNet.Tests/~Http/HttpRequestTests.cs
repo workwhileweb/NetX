@@ -163,6 +163,39 @@ namespace Leaf.xNet.Tests
 
         /*
         [TestMethod]
+        public void KeepTempHeadersAfterRedirect()
+        {
+            using (var req = new HttpRequest())
+            {
+                req.Proxy = HttpProxyClient.Parse("127.0.0.1:8887");
+                req.Proxy.AbsoluteUriInStartingLine = false;
+
+                req.KeepTemporaryHeadersOnRedirect = true;
+                req.AddHeader(HttpHeader.Referer, "https://google.com");
+                var res = req.Get("http://google.com");
+
+                var res3 = req.Get("http://ya.ru");
+
+                req.KeepTemporaryHeadersOnRedirect = false;
+                req.AddHeader(HttpHeader.Referer, "https://google.com");
+                var resNo = req.Get("http://google.com");
+
+
+
+                req.KeepTemporaryHeadersOnRedirect = true;
+                req.AddHeader(HttpHeader.Referer, "https://google.com");
+                req.Get("http://google.com").None();
+
+                req.KeepTemporaryHeadersOnRedirect = false;
+                req.AddHeader(HttpHeader.Referer, "https://google.com");
+                req.Get("http://google.com").None();
+
+
+            }
+        }
+
+        
+        [TestMethod]
         public void AvoidCrossdomainCookieDuplication()
         {
             var req = new HttpRequest("https://viastyle.org");

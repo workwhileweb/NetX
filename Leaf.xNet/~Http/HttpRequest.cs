@@ -261,6 +261,11 @@ namespace Leaf.xNet
         /// </summary>
         public bool AllowEmptyHeaderValues { get; set; }
 
+        /// <summary>
+        /// Следует ли отправлять временные заголовки (добавленные через <see cref="AddHeader(string,string)"/>) переадресованным запросам.
+        /// По умолчанию <see langword="true"/>.
+        /// </summary>
+        public bool KeepTemporaryHeadersOnRedirect { get; set; } = true;
 
         /// <summary>
         /// Включить отслеживание заголовков в промежуточных запросах (переадресованные) и сохранять их в <see cref="HttpResponse.MiddleHeaders"/>.
@@ -1327,7 +1332,7 @@ namespace Leaf.xNet
             {
                 content?.Dispose();
 
-                ClearRequestData();
+                ClearRequestData(false);
             }
         }
 
@@ -1670,7 +1675,8 @@ namespace Leaf.xNet
                     if (Response.HasExternalRedirect)
                         return Response;
 
-                    ClearRequestData();
+                    ClearRequestData(true);
+
                     method = HttpMethod.GET;
                     address = Response.RedirectAddress;
                     content = null;
@@ -2207,12 +2213,14 @@ namespace Leaf.xNet
             }
         }
 
-        private void ClearRequestData()
+        private void ClearRequestData(bool redirect)
         {
             _content = null;
 
             _temporaryMultipartContent = null;
-            _temporaryHeaders = null;
+
+            if (!redirect || !KeepTemporaryHeadersOnRedirect)
+                _temporaryHeaders = null;
         }
 
         private HttpException NewHttpException(string message,
