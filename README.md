@@ -223,7 +223,7 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 ### Wallets
 **Yandex**.Money | **Яндекс**.Деньги: `410011037924983`  
 **Webmoney**: `R246626749259` | `Z349403749504` | `U313788999957` | `E894184114651` | `X428336365219`  
-Bitcoin **BTC**: `39Q6GDFpyraQDgTCudCwVyrvK4iyL3uPax`  
+Bitcoin **BTC**: `3MTuJDRK9RcSQURsvJysqg1gp91FFTDSs7`  
 Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`  
 LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`  
 LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
