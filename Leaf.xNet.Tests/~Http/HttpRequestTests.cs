@@ -162,6 +162,7 @@ namespace Leaf.xNet.Tests
             }
         }
 
+        /*
         [TestMethod]
         public void CloudFlareBypass()
         {
@@ -169,8 +170,11 @@ namespace Leaf.xNet.Tests
             {
                 var resp = req.GetThroughCloudflare("https://uam.zaczero.pl/");
                 Assert.AreEqual("OK", resp.ToString());
+
+                //var resp = req.GetThroughCloudflare("http://lionroyalcpk.club:2082/");
+                //string respStr = resp.ToString();
             }
-        }
+        }*/
 
         /*
         [TestMethod]

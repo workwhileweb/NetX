@@ -26,9 +26,9 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <param name="challengePageContent">The HTML content of the clearance page, which contains the challenge.</param>
         /// <param name="targetHost">The hostname of the protected website.</param>
         /// <returns>The solution.</returns>
-        public static ChallengeSolution Solve(string challengePageContent, string targetHost)
+        public static ChallengeSolution Solve(string challengePageContent, string targetHost, int targetPort)
         {
-            double jschlAnswer = DecodeSecretNumber(challengePageContent, targetHost, out bool containsIntegerTag);
+            double jschlAnswer = DecodeSecretNumber(challengePageContent, targetHost, targetPort, out bool containsIntegerTag);
             string jschlVc = Regex.Match(challengePageContent, "name=\"jschl_vc\" value=\"(?<jschl_vc>[^\"]+)").Groups["jschl_vc"].Value;
             string pass = Regex.Match(challengePageContent, "name=\"pass\" value=\"(?<pass>[^\"]+)").Groups["pass"].Value;
             string clearancePage = Regex.Match(challengePageContent, "id=\"challenge-form\" action=\"(?<action>[^\"]+)").Groups["action"].Value;
@@ -37,7 +37,7 @@ namespace Leaf.xNet.Services.Cloudflare
             return new ChallengeSolution(clearancePage, jschlVc, pass, jschlAnswer, s, containsIntegerTag);
         }
 
-        private static double DecodeSecretNumber(string challengePageContent, string targetHost, out  bool containsIntegerTag)
+        private static double DecodeSecretNumber(string challengePageContent, string targetHost, int targetPort, out  bool containsIntegerTag)
         {
             string script = Regex.Matches(challengePageContent, ScriptPattern, RegexOptions.Singleline)
                 .Cast<Match>().Select(m => m.Groups["Content"].Value)
@@ -49,6 +49,12 @@ namespace Leaf.xNet.Services.Cloudflare
             double seed = steps.First().Item2;
 
             double secretNumber = Math.Round(steps.Skip(1).Aggregate(seed, ApplyDecodingStep), 10) + targetHost.Length;
+            // If targetHost has custom port - it should 
+            if (targetPort != 80 && targetPort != 443)
+            {
+                secretNumber += targetPort.ToString().Length + 1; // +1 because we have colon in JS targetHost --> host:port 
+            }
+
             containsIntegerTag = script.Contains(IntegerSolutionTag);
             return  containsIntegerTag ? (int)secretNumber : secretNumber;
         }

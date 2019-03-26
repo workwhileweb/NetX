@@ -170,11 +170,11 @@ namespace Leaf.xNet.Services.Cloudflare
 
         private static Uri GetSolutionUri(HttpResponse response)
         {
-            var pageContent = response.ToString();
-            var scheme = response.Address.Scheme;
-            var host = response.Address.Host;
-            var port = response.Address.Port;
-            var solution = ChallengeSolver.Solve(pageContent, host);
+            string pageContent = response.ToString();
+            string scheme = response.Address.Scheme;
+            string host = response.Address.Host;
+            int port = response.Address.Port;
+            var solution = ChallengeSolver.Solve(pageContent, host, port);
 
             return new Uri($"{scheme}://{host}:{port}{solution.ClearanceQuery}");
         }
