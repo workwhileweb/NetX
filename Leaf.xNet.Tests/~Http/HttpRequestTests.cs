@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Leaf.xNet.Services.Cloudflare;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Leaf.xNet.Tests
@@ -158,6 +159,16 @@ namespace Leaf.xNet.Tests
             foreach (string invalidDomain in invalidDomains)
             {
                 Assert.IsNull(CookieFilters.FilterDomain(invalidDomain), $"Domain \"{invalidDomain}\" filtered good but it should be bad");
+            }
+        }
+
+        [TestMethod]
+        public void CloudFlareBypass()
+        {
+            using (var req = new HttpRequest())
+            {
+                var resp = req.GetThroughCloudflare("https://uam.zaczero.pl/");
+                Assert.AreEqual("OK", resp.ToString());
             }
         }
 

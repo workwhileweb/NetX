@@ -28,26 +28,27 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <returns>The solution.</returns>
         public static ChallengeSolution Solve(string challengePageContent, string targetHost)
         {
-            var jschlAnswer = DecodeSecretNumber(challengePageContent, targetHost, out bool containsIntegerTag);
-            var jschlVc = Regex.Match(challengePageContent, "name=\"jschl_vc\" value=\"(?<jschl_vc>[^\"]+)").Groups["jschl_vc"].Value;
-            var pass = Regex.Match(challengePageContent, "name=\"pass\" value=\"(?<pass>[^\"]+)").Groups["pass"].Value;
-            var clearancePage = Regex.Match(challengePageContent, "id=\"challenge-form\" action=\"(?<action>[^\"]+)").Groups["action"].Value;
+            double jschlAnswer = DecodeSecretNumber(challengePageContent, targetHost, out bool containsIntegerTag);
+            string jschlVc = Regex.Match(challengePageContent, "name=\"jschl_vc\" value=\"(?<jschl_vc>[^\"]+)").Groups["jschl_vc"].Value;
+            string pass = Regex.Match(challengePageContent, "name=\"pass\" value=\"(?<pass>[^\"]+)").Groups["pass"].Value;
+            string clearancePage = Regex.Match(challengePageContent, "id=\"challenge-form\" action=\"(?<action>[^\"]+)").Groups["action"].Value;
+            string s = Regex.Match(challengePageContent, "name=\"s\" value=\"(?<s>[^\"]+)").Groups["s"].Value; 
 
-            return new ChallengeSolution(clearancePage, jschlVc, pass, jschlAnswer, containsIntegerTag);
+            return new ChallengeSolution(clearancePage, jschlVc, pass, jschlAnswer, s, containsIntegerTag);
         }
 
         private static double DecodeSecretNumber(string challengePageContent, string targetHost, out  bool containsIntegerTag)
         {
-            var script = Regex.Matches(challengePageContent, ScriptPattern, RegexOptions.Singleline)
+            string script = Regex.Matches(challengePageContent, ScriptPattern, RegexOptions.Singleline)
                 .Cast<Match>().Select(m => m.Groups["Content"].Value)
                 .First(c => c.Contains("jschl-answer"));
 
             var statements = script.Split(';');
             var stepGroups = statements.Select(GetSteps).Where(g => g.Any()).ToList();
             var steps = stepGroups.Select(ResolveStepGroup).ToList();
-            var seed = steps.First().Item2;
+            double seed = steps.First().Item2;
 
-            var secretNumber = Math.Round(steps.Skip(1).Aggregate(seed, ApplyDecodingStep), 10) + targetHost.Length;
+            double secretNumber = Math.Round(steps.Skip(1).Aggregate(seed, ApplyDecodingStep), 10) + targetHost.Length;
             containsIntegerTag = script.Contains(IntegerSolutionTag);
             return  containsIntegerTag ? (int)secretNumber : secretNumber;
         }
@@ -55,10 +56,10 @@ namespace Leaf.xNet.Services.Cloudflare
         private static Tuple<string, double> ResolveStepGroup(IEnumerable<Tuple<string, double>> group)
         {
             var steps = group.ToList();
-            var op = steps.First().Item1;
-            var seed = steps.First().Item2;
+            string op = steps.First().Item1;
+            double seed = steps.First().Item2;
 
-            var operand = steps.Skip(1).Aggregate(seed, ApplyDecodingStep);
+            double operand = steps.Skip(1).Aggregate(seed, ApplyDecodingStep);
 
             return Tuple.Create(op, operand);
         }
@@ -78,15 +79,15 @@ namespace Leaf.xNet.Services.Cloudflare
                 .Groups["Digits"].Captures.Cast<Capture>()
                 .Select(c => Regex.Matches(c.Value, OnePattern).Count);
 
-            var number = double.Parse(string.Join(string.Empty, digits));
+            double number = double.Parse(string.Join(string.Empty, digits));
 
             return number;
         }
 
         private static double ApplyDecodingStep(double number, Tuple<string, double> step)
         {
-            var op = step.Item1;
-            var operand = step.Item2;
+            string op = step.Item1;
+            double operand = step.Item2;
 
             switch (op)
             {

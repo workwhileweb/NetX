@@ -30,6 +30,11 @@ namespace Leaf.xNet.Services.Cloudflare
         public double Answer { get; }
 
         /// <summary>
+        /// Новый модификатор JS Challenge.
+        /// </summary>
+        public string S { get; }
+
+        /// <summary>
         /// Вернет истину если испытание подсчитывается только типом <see cref="Int32"/>, а не <see cref="Double"/> с плавающей точкой.
         /// </summary>
         public bool ContainsIntegerTag { get; }
@@ -37,19 +42,21 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <summary>
         /// Результирующий URL запроса который необходимо исполнить для прохождения JS испытания.
         /// </summary>
-        public string ClearanceQuery =>
+        public string ClearanceQuery => !(string.IsNullOrEmpty(S)) ?
+            $"{ClearancePage}?s={Uri.EscapeDataString(S)}&jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer.ToString("R", CultureInfo.InvariantCulture)}" :
             $"{ClearancePage}?jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer.ToString("R", CultureInfo.InvariantCulture)}";
 
         /// <summary>
         /// Содержит информацию которая необходима для прохождения испытания CloudFlare.
         /// </summary>
-        public ChallengeSolution(string clearancePage, string verificationCode, string pass, double answer,
+        public ChallengeSolution(string clearancePage, string verificationCode, string pass, double answer, string s,
             bool containsIntegerTag)
         {
             ClearancePage = clearancePage;
             VerificationCode = verificationCode;
             Pass = pass;
             Answer = answer;
+            S = s;
             ContainsIntegerTag = containsIntegerTag;
         }
 
