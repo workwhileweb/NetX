@@ -147,8 +147,12 @@ try {
     request = new HttpRequest();
     // Do something 
 }
-catch (Excetion ex) {
-    // Error handling
+catch (HttpException ex) {
+    // Http error handling
+    // You can use ex.Status or ex.HttpStatusCode for more details.
+}
+catch (Exception ex) {
+	// Unhandled exceptions
 }
 finally {
     // Cleanup in the end if initialized
@@ -219,7 +223,7 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 ### Wallets
 **Yandex**.Money | **Яндекс**.Деньги: `410011037924983`  
 **Webmoney**: `R246626749259` | `Z349403749504` | `U313788999957` | `E894184114651` | `X428336365219`  
-Bitcoin **BTC**: `36uHKL713c1FmmpWB89MkbLEeCgbsfsGc5`  
+Bitcoin **BTC**: `39Q6GDFpyraQDgTCudCwVyrvK4iyL3uPax`  
 Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`  
 LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`  
 LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
