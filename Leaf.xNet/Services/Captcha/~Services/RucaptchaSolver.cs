@@ -9,7 +9,7 @@ namespace Leaf.xNet.Services.Captcha
     /// <inheritdoc />
     public class RucaptchaSolver : BaseCaptchaSolver
     {
-        public virtual string Host { get; } = "rucaptcha.com";
+        public string Host { get; protected set; } = "rucaptcha.com";
 
         public string Proxy { get; set; }
         public string ProxyType { get; set; }

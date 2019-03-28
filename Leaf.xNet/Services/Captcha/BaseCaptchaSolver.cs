@@ -8,8 +8,8 @@ namespace Leaf.xNet.Services.Captcha
     public abstract class BaseCaptchaSolver : ICaptchaSolver, IDisposable
     {
         public string ApiKey { get; set; }
+        public bool IsApiKeyRequired { get; protected set; } = true;
         public virtual bool IsApiKeyValid => !string.IsNullOrEmpty(ApiKey);
-        public virtual bool IsApiKeyRequired { get; } = true;
         
         public uint UploadRetries { get; set; } = 40;
         public uint StatusRetries { get; set; } = 80;
