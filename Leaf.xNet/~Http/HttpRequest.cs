@@ -10,6 +10,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
+using Leaf.xNet.Services.Captcha;
 
 namespace Leaf.xNet
 {
@@ -578,6 +579,15 @@ namespace Leaf.xNet
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="true"/>.</value>
         public bool UseCookies { get; set; } = true;
+
+        #endregion
+
+        #region Сервисы
+
+        /// <summary>
+        /// Сервис для решения каптч. Применяется для Cloudflare.
+        /// </summary>
+        public ICaptchaSolver CaptchaSolver { get; set; }
 
         #endregion
 

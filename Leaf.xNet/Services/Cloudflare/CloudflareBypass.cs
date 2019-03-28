@@ -27,6 +27,10 @@ namespace Leaf.xNet.Services.Cloudflare
         /// </summary>
         public const string CfClearanceCookie = "cf_clearance";
 
+        /// <summary>
+        /// Default Accept-Language header added to Cloudflare server request.
+        /// </summary>
+        public static string DefaultAcceptLanguage { get; set; } = "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7";
 
         /// <summary>
         /// Gets or sets the number of clearance retries, if clearance fails.
@@ -243,6 +247,9 @@ namespace Leaf.xNet.Services.Cloudflare
         private static bool SolveRecaptchaChallenge(ref HttpResponse response, HttpRequest request, string url, string retry, 
             DLog log, CancellationToken cancellationToken)
         {
+            if (request.CaptchaSolver == null)
+                throw new CaptchaException(CaptchaError.CaptchaResolverRequired);
+
             throw new NotImplementedException();
         }
 
@@ -266,10 +273,11 @@ namespace Leaf.xNet.Services.Cloudflare
         private static void AddCloudflareHeaders(this HttpRequest request, string refererUrl)
         {
             request.AddHeader(HttpHeader.Referer, refererUrl);
-            request.AddHeader(HttpHeader.Accept,
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+            request.AddHeader(HttpHeader.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
             request.AddHeader("Upgrade-Insecure-Requests", "1");
-            request.AddHeader(HttpHeader.AcceptLanguage, "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7");
+            
+            if (!request.ContainsHeader(HttpHeader.AcceptLanguage))
+                request.AddHeader(HttpHeader.AcceptLanguage, DefaultAcceptLanguage);
         }
 
         #endregion

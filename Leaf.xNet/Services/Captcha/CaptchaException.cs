@@ -7,7 +7,8 @@ namespace Leaf.xNet.Services.Captcha
         Unknown,
         CustomMessage,
         InvalidApiKey,
-        EmptyResponse
+        EmptyResponse,
+        CaptchaResolverRequired
     }
 
     //[Serializable]
@@ -15,8 +16,19 @@ namespace Leaf.xNet.Services.Captcha
     {
         public readonly CaptchaError Error;
 
-        public CaptchaException(string message) : base(message)
+        public override string Message => Error == CaptchaError.CustomMessage ? _message : Error.ToString();
+
+        private readonly string _message;
+
+        public CaptchaException(string message)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                Error = CaptchaError.Unknown;
+                return;
+            }
+                
+            _message = message;
             Error = CaptchaError.CustomMessage;
         }
 
