@@ -4,6 +4,9 @@
     /// <inheritdoc />
     public class TwoCaptchaSolver : RucaptchaSolver
     {
-        public override string Host { get; } = "2captcha.com";
+        public TwoCaptchaSolver()
+        {
+            Host = "2captcha.com";
+        }
     }
 }
