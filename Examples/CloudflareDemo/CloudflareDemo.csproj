@@ -50,9 +50,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="api_key.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="api_key.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
