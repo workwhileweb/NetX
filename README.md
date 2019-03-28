@@ -50,7 +50,7 @@ See demo project in the Examples folder.
 ```csharp
 using Leaf.xNet.Services.Captcha;
 
-// Available: RucaptchaSolver | TwoCaptchaSolver
+// You can use: RucaptchaSolver | TwoCaptchaSolver | CapmonsterSolver
 http.CaptchaSolver = new RucaptchaSolver {
     ApiKey = "your_key"
 };

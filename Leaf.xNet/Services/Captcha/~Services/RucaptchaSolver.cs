@@ -17,7 +17,7 @@ namespace Leaf.xNet.Services.Captcha
         public override string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken))
         {
             // Validation
-            ApiKeyRequired();
+            ThrowIfApiKeyRequiredAndInvalid();
 
             if (string.IsNullOrEmpty(pageUrl))
                 throw new ArgumentException($@"Invalid argument: ""{nameof(pageUrl)}"" = {pageUrl ?? "null"} when called ""{nameof(SolveRecaptcha)}""", nameof(pageUrl));

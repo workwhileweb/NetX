@@ -9,7 +9,8 @@ namespace Leaf.xNet.Services.Captcha
     {
         public string ApiKey { get; set; }
         public virtual bool IsApiKeyValid => !string.IsNullOrEmpty(ApiKey);
-
+        public virtual bool IsApiKeyRequired { get; } = true;
+        
         public uint UploadRetries { get; set; } = 40;
         public uint StatusRetries { get; set; } = 80;
 
@@ -56,9 +57,9 @@ namespace Leaf.xNet.Services.Captcha
             throw NotImplemented(nameof(SolveRecaptcha), "string, string");
         }
 
-        protected void ApiKeyRequired()
+        protected void ThrowIfApiKeyRequiredAndInvalid()
         {
-            if (!IsApiKeyValid)
+            if (IsApiKeyRequired && !IsApiKeyValid)
                 throw new CaptchaException(CaptchaError.InvalidApiKey);
         }
 
