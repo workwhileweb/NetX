@@ -44,7 +44,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\Git\C#\Libs\Leaf.xNet\Leaf.xNet\Leaf.xNet.csproj">
+    <ProjectReference Include="..\..\Leaf.xNet\Leaf.xNet.csproj">
       <Project>{9ebef1bc-95f2-4c8c-9e52-454388d3912e}</Project>
       <Name>Leaf.xNet</Name>
     </ProjectReference>
