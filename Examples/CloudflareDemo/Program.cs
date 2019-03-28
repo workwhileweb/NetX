@@ -31,7 +31,7 @@ namespace CloudflareDemo
                 Console.WriteLine($"{nameof(jsChallengePassed)} = {jsChallengePassed}");
 
                 // Recaptcha Challenge
-                http.CaptchaSolver = new RucaptchaClient {
+                http.CaptchaSolver = new RucaptchaSolver {
                     ApiKey = File.ReadAllText("api_key.txt")
                 };
 

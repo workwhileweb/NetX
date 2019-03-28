@@ -23,7 +23,9 @@ Install-Package Leaf.xNet
 ```
 
 # Features
-### CloudFlare bypass inside
+### CloudFlare bypass
+See demo project in the Examples folder.
+
 ```csharp
 using Leaf.xNet.Services.Cloudflare;
 
@@ -35,6 +37,18 @@ var clearResp = httpRequest.GetThroughCloudflare("https://...");
 // Check only (without solution)
 var resp = httpRequest.Get("https://...");
 bool isCloudFlared = resp.isCloudFlared();
+```
+
+### CloudFlare bypass when ReCaptcha required
+See demo project in the Examples folder.
+```csharp
+using Leaf.xNet.Services.Captcha;
+
+// Available: RucaptchaSolver | TwoCaptchaSolver
+http.CaptchaSolver = new RucaptchaSolver {
+    ApiKey = "your_key"
+};
+var clearResp = httpRequest.GetThroughCloudflare("https://...");
 ```
 
 ### Keep temporary headers (when redirected)

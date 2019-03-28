@@ -5,7 +5,9 @@ using System.Threading;
 
 namespace Leaf.xNet.Services.Captcha
 {
-    public class RucaptchaClient : BaseCaptchaSolver
+    // ReSharper disable once UnusedMember.Global
+    /// <inheritdoc />
+    public class RucaptchaSolver : BaseCaptchaSolver
     {
         public virtual string Host { get; } = "rucaptcha.com";
 
@@ -18,10 +20,10 @@ namespace Leaf.xNet.Services.Captcha
             ApiKeyRequired();
 
             if (string.IsNullOrEmpty(pageUrl))
-                throw new ArgumentException($"Invalid argument: \"{nameof(pageUrl)}\" = {pageUrl ?? "null"} when called \"{nameof(SolveRecaptcha)}\"", nameof(pageUrl));
+                throw new ArgumentException($@"Invalid argument: ""{nameof(pageUrl)}"" = {pageUrl ?? "null"} when called ""{nameof(SolveRecaptcha)}""", nameof(pageUrl));
             
             if (string.IsNullOrEmpty(siteKey))
-                throw new ArgumentException($"Invalid argument: \"{nameof(siteKey)}\" = {siteKey ?? "null"} when called \"{nameof(SolveRecaptcha)}\"", nameof(siteKey));
+                throw new ArgumentException($@"Invalid argument: ""{nameof(siteKey)}"" = {siteKey ?? "null"} when called ""{nameof(SolveRecaptcha)}""", nameof(siteKey));
 
             // Upload
             //
