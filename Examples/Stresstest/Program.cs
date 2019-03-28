@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Leaf.xNet.Stresstest
+namespace Stresstest
 {
     internal class Program
     {
