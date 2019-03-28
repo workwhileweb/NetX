@@ -13,44 +13,45 @@ namespace Leaf.xNet.Services.Captcha
         public uint UploadRetries { get; set; } = 40;
         public uint StatusRetries { get; set; } = 80;
 
-        public TimeSpan UploadDelayOnNoSlotAvailable { get; set; }
-        public TimeSpan StatusDelayOnNotReady { get; set; }
-        public TimeSpan BeforeStatusCheckingDelay { get; set; } = TimeSpan.FromSeconds(4);
+        public TimeSpan UploadDelayOnNoSlotAvailable { get; set; } = TimeSpan.FromSeconds(5);
+        public TimeSpan StatusDelayOnNotReady { get; set; } = TimeSpan.FromSeconds(3);
+        public TimeSpan BeforeStatusCheckingDelay { get; set; } = TimeSpan.FromSeconds(3);
 
-        public CancellationToken CancelToken { get; set; } = CancellationToken.None;
+        public const string NameOfString = "string";
 
         protected readonly WebClient Http = new WebClient();
+
 
         #region SolveImage : Generic
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveImage(string imageUrl)
+        public virtual string SolveImage(string imageUrl, CancellationToken cancelToken = default(CancellationToken))
         {
-            throw NotImplemented(nameof(SolveImage), "string");
+            throw NotImplemented(nameof(SolveImage), NameOfString);
         }
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveImage(byte[] imageBytes)
+        public virtual string SolveImage(byte[] imageBytes, CancellationToken cancelToken = default(CancellationToken))
         {
             throw NotImplemented(nameof(SolveImage), "byte[]");
         }
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveImage(Stream imageStream)
+        public virtual string SolveImage(Stream imageStream, CancellationToken cancelToken = default(CancellationToken))
         {
             throw NotImplemented(nameof(SolveImage), nameof(Stream));
         }
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public string SolveImageFromBase64(string imageBase64)
+        public string SolveImageFromBase64(string imageBase64, CancellationToken cancelToken = default(CancellationToken))
         {
-            throw NotImplemented(nameof(SolveImageFromBase64), "string");
+            throw NotImplemented(nameof(SolveImageFromBase64), NameOfString);
         }
 
         #endregion
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveRecaptcha(string pageUrl, string siteKey)
+        public virtual string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken))
         {
             throw NotImplemented(nameof(SolveRecaptcha), "string, string");
         }
@@ -61,21 +62,15 @@ namespace Leaf.xNet.Services.Captcha
                 throw new CaptchaException(CaptchaError.InvalidApiKey);
         }
 
-        protected void Delay(TimeSpan delay)
+        protected void Delay(TimeSpan delay, CancellationToken cancelToken)
         {
-            if (CancelToken != CancellationToken.None)
+            if (cancelToken != CancellationToken.None)
             {
-                CancelToken.WaitHandle.WaitOne(UploadDelayOnNoSlotAvailable);
-                CancelToken.ThrowIfCancellationRequested();
+                cancelToken.WaitHandle.WaitOne(UploadDelayOnNoSlotAvailable);
+                cancelToken.ThrowIfCancellationRequested();
             }
             else
                 Thread.Sleep(UploadDelayOnNoSlotAvailable);
-        }
-
-        protected void ThrowOnCancel()
-        {
-            if (CancelToken != CancellationToken.None)
-                CancelToken.ThrowIfCancellationRequested();
         }
 
         private NotImplementedException NotImplemented(string method, string parameterType)

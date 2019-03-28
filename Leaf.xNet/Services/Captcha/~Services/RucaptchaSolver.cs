@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Text;
+using System.Threading;
 
 namespace Leaf.xNet.Services.Captcha
 {
@@ -11,19 +12,19 @@ namespace Leaf.xNet.Services.Captcha
         public string Proxy { get; set; }
         public string ProxyType { get; set; }
 
-        public override string SolveRecaptcha(string pageUrl, string siteKey)
+        public override string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken))
         {
+            // Validation
             ApiKeyRequired();
+
             if (string.IsNullOrEmpty(pageUrl))
-                throw new ArgumentException(
-                    $"Invalid argument: \"{nameof(pageUrl)}\" = {pageUrl ?? "null"} when called \"{nameof(SolveRecaptcha)}\"",
-                    nameof(pageUrl));
+                throw new ArgumentException($"Invalid argument: \"{nameof(pageUrl)}\" = {pageUrl ?? "null"} when called \"{nameof(SolveRecaptcha)}\"", nameof(pageUrl));
+            
             if (string.IsNullOrEmpty(siteKey))
-                throw new ArgumentException(
-                    $"Invalid argument: \"{nameof(siteKey)}\" = {siteKey ?? "null"} when called \"{nameof(SolveRecaptcha)}\"",
-                    nameof(siteKey));
+                throw new ArgumentException($"Invalid argument: \"{nameof(siteKey)}\" = {siteKey ?? "null"} when called \"{nameof(SolveRecaptcha)}\"", nameof(siteKey));
 
-
+            // Upload
+            //
             var postValues = new NameValueCollection {
                 {"key", ApiKey},
                 {"method", "userrecaptcha"},
@@ -42,6 +43,7 @@ namespace Leaf.xNet.Services.Captcha
 
             for (int i = 0; i < UploadRetries; i++)
             {
+                cancelToken.ThrowIfCancellationRequested();
                 result = Encoding.UTF8.GetString(Http.UploadValues($"http://{Host}/in.php", postValues));
 
                 if (!result.Contains("ERROR_NO_SLOT_AVAILABLE"))
@@ -50,17 +52,18 @@ namespace Leaf.xNet.Services.Captcha
                     break;
                 }
 
-                Delay(UploadDelayOnNoSlotAvailable);
+                Delay(UploadDelayOnNoSlotAvailable, cancelToken);
             }
 
             if (fatalError)
                 throw new CaptchaException(result);
 
-
+            // Status
+            //
             string lastCaptchaId = result.Replace("OK|", "").Trim();
 
             fatalError = true;
-            Delay(BeforeStatusCheckingDelay);
+            Delay(BeforeStatusCheckingDelay, cancelToken);
 
             for (int i = 0; i < StatusRetries; i++)
             {
@@ -71,10 +74,10 @@ namespace Leaf.xNet.Services.Captcha
                     break;
                 }
 
-                Delay(StatusDelayOnNotReady);
+                Delay(StatusDelayOnNotReady, cancelToken);
             }
 
-            ThrowOnCancel();
+            cancelToken.ThrowIfCancellationRequested();
             if (fatalError)
                 throw new CaptchaException(result);
 

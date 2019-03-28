@@ -12,14 +12,12 @@ namespace Leaf.xNet.Services.Captcha
         TimeSpan UploadDelayOnNoSlotAvailable { get; set; }
         TimeSpan StatusDelayOnNotReady { get; set; }
         TimeSpan BeforeStatusCheckingDelay { get; set; }
-        
-        CancellationToken CancelToken { get; set; }
 
-        string SolveImage(string imageUrl);
-        string SolveImage(byte[] imageBytes);
-        string SolveImage(Stream imageStream);
-        string SolveImageFromBase64(string imageBase64);
+        string SolveImage(string imageUrl, CancellationToken cancelToken = default(CancellationToken));
+        string SolveImage(byte[] imageBytes, CancellationToken cancelToken = default(CancellationToken));
+        string SolveImage(Stream imageStream, CancellationToken cancelToken = default(CancellationToken));
+        string SolveImageFromBase64(string imageBase64, CancellationToken cancelToken = default(CancellationToken));
 
-        string SolveRecaptcha(string pageUrl, string siteKey);
+        string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken));
     }
 }

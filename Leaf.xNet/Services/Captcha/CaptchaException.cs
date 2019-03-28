@@ -7,8 +7,7 @@ namespace Leaf.xNet.Services.Captcha
         Unknown,
         CustomMessage,
         InvalidApiKey,
-        EmptyResponse,
-        CaptchaResolverRequired
+        EmptyResponse
     }
 
     //[Serializable]

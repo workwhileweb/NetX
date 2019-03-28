@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Leaf.xNet.Services.Captcha;
@@ -42,7 +43,7 @@ namespace Leaf.xNet.Services.Cloudflare
         /// Delay before post form with solution in milliseconds.
         /// </summary>
         /// <remarks>Recommended value is 4000 ms. You can look extract value at challenge HTML. Second argument of setTimeout().</remarks>
-        public static int Delay { get; set; } = 5000;
+        public static int DelayMilliseconds { get; set; } = 5000;
 
         private const string LogPrefix = "[Cloudflare] ";
 
@@ -67,12 +68,15 @@ namespace Leaf.xNet.Services.Cloudflare
         /// GET request with bypassing Cloudflare JavaScript challenge.
         /// </summary>
         /// <param name="request">Http request</param>
-        /// <param name="url">Address</param>
+        /// <param name="uri">Uri Address</param>
         /// <param name="log">Log action</param>
         /// <param name="cancellationToken">Cancel protection</param>
         /// <param name="captchaSolver">Captcha solving provider when Recaptcha required for pass</param>
+        /// <exception cref="HttpException">When HTTP request failed</exception>
+        /// <exception cref="CloudflareException">When unable to bypass Cloudflare</exception>
+        /// <exception cref="CaptchaException">When unable to solve captcha using <see cref="ICaptchaSolver"/> provider.</exception>
         /// <returns>Returns original HttpResponse</returns>
-        public static HttpResponse GetThroughCloudflare(this HttpRequest request, string url,
+        public static HttpResponse GetThroughCloudflare(this HttpRequest request, Uri uri, 
             DLog log = null,
             CancellationToken cancellationToken = default(CancellationToken),
             ICaptchaSolver captchaSolver = null)
@@ -84,22 +88,22 @@ namespace Leaf.xNet.Services.Cloudflare
             if (string.IsNullOrEmpty(request.UserAgent))
                 request.UserAgent = Http.ChromeUserAgent();
 
-            log?.Invoke($"{LogPrefix}Checking availability at: {url} ...");
+            log?.Invoke($"{LogPrefix}Checking availability at: {uri.AbsoluteUri} ...");
 
             for (int i = 0; i < MaxRetries; i++)
             {
                 string retry = $". Retry {i + 1} / {MaxRetries}.";
                 log?.Invoke($"{LogPrefix}Trying to bypass{retry}");
 
-                var response = ManualGet(request, url);
+                var response = ManualGet(request, uri);
                 if (!response.IsCloudflared())
                 {
-                    log?.Invoke($"{LogPrefix} OK. Not found at: {url}");
+                    log?.Invoke($"{LogPrefix} OK. Not found at: {uri.AbsoluteUri}");
                     return response;
                 }
 
                 // Remove expired clearance if present
-                var cookies = request.Cookies.GetCookies(url);
+                var cookies = request.Cookies.GetCookies(uri);
                 foreach (Cookie cookie in cookies)
                 {
                     if (cookie.Name != CfClearanceCookie) 
@@ -116,12 +120,12 @@ namespace Leaf.xNet.Services.Cloudflare
                 //
                 if (IsJsChallenge(response))
                 {
-                    if (SolveJsChallenge(ref response, request, url, retry, log, cancellationToken))
+                    if (SolveJsChallenge(ref response, request, uri, retry, log, cancellationToken))
                         return response;
                 }
                 else if (IsRecaptchaChallenge(response))
                 {
-                    if (SolveRecaptchaChallenge(ref response, request, url, retry, log, cancellationToken))
+                    if (SolveRecaptchaChallenge(ref response, request, uri, retry, log, cancellationToken))
                         return response;
                 }
                 else
@@ -132,51 +136,58 @@ namespace Leaf.xNet.Services.Cloudflare
         }
 
         /// <inheritdoc cref="GetThroughCloudflare(HttpRequest, string, DLog, CancellationToken, ICaptchaSolver)"/>
-        /// <param name="request">Http request</param>
-        /// <param name="uri">Uri Address</param>
-        /// <param name="log">Log delegate</param>
-        /// <param name="cancellationToken"></param>
-        // ReSharper disable once UnusedMember.Global
-        public static HttpResponse GetThroughCloudflare(this HttpRequest request, Uri uri, 
+        /// <param name="url">URL address</param>
+        public static HttpResponse GetThroughCloudflare(this HttpRequest request, string url,
             DLog log = null,
             CancellationToken cancellationToken = default(CancellationToken),
             ICaptchaSolver captchaSolver = null)
         {
-            return GetThroughCloudflare(request, uri.AbsoluteUri, log, cancellationToken, captchaSolver);
+            var uri = request.BaseAddress != null && url.StartsWith("/") ? new Uri(request.BaseAddress, url) : new Uri(url);
+            return GetThroughCloudflare(request, uri, log, cancellationToken, captchaSolver);
         }
 
         #endregion
 
+        #region Private: Generic Challenge
 
-        #region Private: General (GetSolutionUri & PassClearance)
-
-        private static Uri GetSolutionUri(HttpResponse response)
+        private static bool IsChallengePassed(string tag, ref HttpResponse response, HttpRequest request, Uri uri, string retry, DLog log)
         {
-            string pageContent = response.ToString();
-            string scheme = response.Address.Scheme;
-            string host = response.Address.Host;
-            int port = response.Address.Port;
-            var solution = ChallengeSolver.Solve(pageContent, host, port);
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (response.StatusCode) {
+                case HttpStatusCode.ServiceUnavailable:
+                case HttpStatusCode.Forbidden:
+                    return false;
+                case HttpStatusCode.Found:
+                    // Т.к. ранее использовался ручной режим - нужно обработать редирект, если он есть, чтобы вернуть отфильтрованное тело запроса    
+                    if (response.HasRedirect)
+                    {
+                        if (!response.ContainsCookie(uri, CfClearanceCookie))
+                            return false;
 
-            return new Uri($"{scheme}://{host}:{port}{solution.ClearanceQuery}");
-        }
+                        log?.Invoke($"{LogPrefix}Passed [{tag}]. Trying to get the original response at: {uri.AbsoluteUri} ...");
 
-        private static HttpResponse PassClearance(HttpRequest request, HttpResponse response, string refererUrl,
-            DLog log, CancellationToken cancellationToken)
-        {
-            // Using Uri for correct port resolving
-            var uri = GetSolutionUri(response);
+                        // Не используем manual т.к. могут быть переадресации
+                        bool ignoreProtocolErrors = request.IgnoreProtocolErrors;
+                        // Отключаем обработку HTTP ошибок
+                        request.IgnoreProtocolErrors = true;
 
-            log?.Invoke($"{LogPrefix}: delay {Delay} ms...");
-            if (cancellationToken == default(CancellationToken))
-                Thread.Sleep(Delay);
-            else
-            {
-                cancellationToken.WaitHandle.WaitOne(Delay);
-                cancellationToken.ThrowIfCancellationRequested();
+                        request.AddCloudflareHeaders(uri); // заголовки важны для прохождения cloudflare
+                        response = request.Get(response.RedirectAddress.AbsoluteUri);
+                        request.IgnoreProtocolErrors = ignoreProtocolErrors;
+
+                        if (IsCloudflared(response))
+                        {
+                            log?.Invoke($"{LogPrefix}ERROR [{tag}]. Unable to get he original response at: {uri.AbsoluteUri}");
+                            return false;
+                        }
+                    }
+
+                    log?.Invoke($"{LogPrefix}OK [{tag}]. Done: {uri.AbsoluteUri}");
+                    return true;
             }
 
-            return request.ManualGet( uri.AbsoluteUri, refererUrl);
+            log?.Invoke($"{LogPrefix}ERROR [{tag}]. Status code : {response.StatusCode}{retry}.");
+            return false;
         }
 
         #endregion
@@ -190,47 +201,35 @@ namespace Leaf.xNet.Services.Cloudflare
             return response.ToString().IndexOf("jschl-answer", StringComparison.OrdinalIgnoreCase) != -1;
         }
 
-        private static bool SolveJsChallenge(ref HttpResponse response, HttpRequest request, string url, string retry, 
+        private static bool SolveJsChallenge(ref HttpResponse response, HttpRequest request, Uri uri, string retry, 
             DLog log, CancellationToken cancellationToken)
         {
-            response = PassClearance(request, response, url, log, cancellationToken);
+            log?.Invoke($"{LogPrefix}Solving JS Challenge for URL: {uri.AbsoluteUri} ...");
+            response = PassClearance(request, response, uri, log, cancellationToken);
 
-            // ReSharper disable once SwitchStatementMissingSomeCases
-            switch (response.StatusCode) {
-                case HttpStatusCode.ServiceUnavailable:
-                case HttpStatusCode.Forbidden:
-                    return false;
-                case HttpStatusCode.Found:
-                    // Т.к. ранее использовался ручной режим - нужно обработать редирект, если он есть, чтобы вернуть отфильтрованное тело запроса    
-                    if (response.HasRedirect)
-                    {
-                        if (!response.ContainsCookie(url, CfClearanceCookie))
-                            return false;
+            return IsChallengePassed("JS", ref response, request, uri, retry, log);
+        }
 
-                        log?.Invoke($"{LogPrefix}Passed. Trying to get the original response at: {url} ...");
+        private static Uri GetSolutionUri(HttpResponse response)
+        {
+            string pageContent = response.ToString();
+            string scheme = response.Address.Scheme;
+            string host = response.Address.Host;
+            int port = response.Address.Port;
+            var solution = ChallengeSolver.Solve(pageContent, host, port);
 
-                        // Не используем manual т.к. могут быть переадресации
-                        bool ignoreProtocolErrors = request.IgnoreProtocolErrors;
-                        // Отключаем обработку HTTP ошибок
-                        request.IgnoreProtocolErrors = true;
+            return new Uri($"{scheme}://{host}:{port}{solution.ClearanceQuery}");
+        }
 
-                        request.AddCloudflareHeaders(url); // заголовки важны для прохождения cloudflare
-                        response = request.Get(response.RedirectAddress.AbsoluteUri);
-                        request.IgnoreProtocolErrors = ignoreProtocolErrors;
+        private static HttpResponse PassClearance(HttpRequest request, HttpResponse response, Uri refererUri,
+            DLog log, CancellationToken cancellationToken)
+        {
+            // Using Uri for correct port resolving
+            var uri = GetSolutionUri(response);
 
-                        if (IsCloudflared(response))
-                        {
-                            log?.Invoke($"{LogPrefix}ERROR. Unable to get he original response at: {url}");
-                            return false;
-                        }
-                    }
+            Delay(DelayMilliseconds, log, cancellationToken);
 
-                    log?.Invoke($"{LogPrefix}OK. Done: {url}");
-                    return true;
-            }
-
-            log?.Invoke($"{LogPrefix}ERROR. Status code: {response.StatusCode}{retry}.");
-            return false;
+            return request.ManualGet(uri, refererUri);
         }
 
         #endregion
@@ -244,40 +243,82 @@ namespace Leaf.xNet.Services.Cloudflare
             return response.ToString().IndexOf("<div class=\"g-recaptcha\">", StringComparison.OrdinalIgnoreCase) != -1;
         }
 
-        private static bool SolveRecaptchaChallenge(ref HttpResponse response, HttpRequest request, string url, string retry, 
-            DLog log, CancellationToken cancellationToken)
+        private static bool SolveRecaptchaChallenge(ref HttpResponse response, HttpRequest request, Uri uri, string retry, 
+            DLog log, CancellationToken cancelToken)
         {
-            if (request.CaptchaSolver == null)
-                throw new CaptchaException(CaptchaError.CaptchaResolverRequired);
+            log?.Invoke($"{LogPrefix}Solving Recaptcha Challenge for URL: {uri.AbsoluteUri} ...");
 
-            throw new NotImplementedException();
+            if (request.CaptchaSolver == null)
+                throw new CloudflareException($"{nameof(HttpRequest.CaptchaSolver)} required");
+
+            string respStr = response.ToString();
+            string siteKey = respStr.Substring("data-sitekey=\"", "\"")
+                ?? throw new CloudflareException("Value of \"data-sitekey\" not found");
+
+            string s = respStr.Substring("name=\"s\" value=\"", "\"")
+                ?? throw new CloudflareException("Value of \"s\" not found");
+
+            string rayId = respStr.Substring("data-ray=\"", "\"")
+                ?? throw new CloudflareException("Ray Id not found");
+
+            string bfChallengeId = respStr.Substring("'bf_challenge_id', '", "'")
+                ?? throw new CloudflareException("bf_challenge_id not found");
+
+            string answer = request.CaptchaSolver.SolveRecaptcha(uri.AbsoluteUri, siteKey, cancelToken);
+            
+            cancelToken.ThrowIfCancellationRequested();
+            response = request.ManualGet(new Uri(uri, "/cdn-cgi/l/chk_captcha"), uri, new RequestParams {
+                ["s"] = s,
+                ["id"] = rayId,
+                ["g-recaptcha-response"] = answer,
+                ["bf_challenge_id"] = bfChallengeId,
+                ["bf_execution_time"] = "4",
+                ["bf_result_hash"] = string.Empty
+            });
+
+            return IsChallengePassed("ReCaptcha", ref response, request, uri, retry, log);
         }
 
         #endregion
 
 
-        #region Private: HttpRequest Extensions
+        #region Private: HttpRequest Extensions & Tools
 
-        private static HttpResponse ManualGet(this HttpRequest request, string url, string refererUrl = null)
+        private static HttpResponse ManualGet(this HttpRequest request, Uri uri, Uri refererUri = null, RequestParams requestParams = null)
         {
             request.ManualMode = true;
+            // Manual start
 
-            request.AddCloudflareHeaders(refererUrl ?? url);
-            var response = request.Get(url);
+            request.AddCloudflareHeaders(refererUri ?? uri);
+            var response = requestParams == null ? request.Get(uri) : request.Get(uri, requestParams);
 
+            // End manual mode
             request.ManualMode = false;
 
             return response;
         }
 
-        private static void AddCloudflareHeaders(this HttpRequest request, string refererUrl)
+        private static void AddCloudflareHeaders(this HttpRequest request, Uri refererUri)
         {
-            request.AddHeader(HttpHeader.Referer, refererUrl);
+            request.AddHeader(HttpHeader.Referer, refererUri.AbsoluteUri);
             request.AddHeader(HttpHeader.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
             request.AddHeader("Upgrade-Insecure-Requests", "1");
             
             if (!request.ContainsHeader(HttpHeader.AcceptLanguage))
                 request.AddHeader(HttpHeader.AcceptLanguage, DefaultAcceptLanguage);
+        }
+
+        private static void Delay(int milliseconds, DLog log, CancellationToken cancellationToken)
+        {
+            log?.Invoke($"{LogPrefix}: delay {milliseconds} ms...");
+
+            if (cancellationToken == default(CancellationToken))
+                Thread.Sleep(milliseconds);
+            else
+            {
+                cancellationToken.WaitHandle.WaitOne(milliseconds);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
         }
 
         #endregion
