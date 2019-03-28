@@ -18,6 +18,8 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <param name="message">Message</param>
         public CloudflareException(string message) : base(message) { }
 
+        public CloudflareException(string message, Exception inner) : base(message, inner) { }
+
         public CloudflareException(int attempts) : this(attempts, $"Clearance failed after {attempts} attempt(s).") { }
 
         public CloudflareException(int attempts, string message) : base(message)

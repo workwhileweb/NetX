@@ -60,6 +60,7 @@ namespace Leaf.xNet
 
         #endregion
 
+
         #region Статические свойства (открытые)
         /// <summary>
         /// Версия протокола которая должна использоваться. HTTP 2.0 не поддерживается в данный момент.
@@ -67,6 +68,7 @@ namespace Leaf.xNet
         public static string ProtocolVersion { get; set; } = "1.1"; 
         
         #endregion
+
 
         #region Статические методы (открытые)
 
@@ -103,6 +105,28 @@ namespace Leaf.xNet
             return true;
         }
 
+        #endregion
+
+
+        #region Статические свойства (открытые)
+
+        /// <summary>
+        /// HTTPS прокси сервер для отладки (Charles / Fiddler).
+        /// </summary>
+        public static HttpProxyClient DebugProxy {
+            get {
+                if (_debugProxy != null)
+                    return _debugProxy;
+
+                _debugProxy = Parse("127.0.0.1:8888");
+                // Fix bug in Charles 
+                _debugProxy.AbsoluteUriInStartingLine = false;
+
+                return _debugProxy;
+            }
+        }
+        private static HttpProxyClient _debugProxy;
+        
         #endregion
 
 

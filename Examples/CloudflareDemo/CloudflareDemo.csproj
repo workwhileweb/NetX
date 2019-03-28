@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{99D98852-736A-41C5-A907-54BEFC18F417}</ProjectGuid>
+    <ProjectGuid>{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Leaf.xNet.Stresstest</RootNamespace>
-    <AssemblyName>Leaf.xNet.Stresstest</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <RootNamespace>CloudflareDemo</RootNamespace>
+    <AssemblyName>CloudflareDemo</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -44,15 +44,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sites.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Leaf.xNet\Leaf.xNet.csproj">
+    <ProjectReference Include="D:\Git\C#\Libs\Leaf.xNet\Leaf.xNet\Leaf.xNet.csproj">
       <Project>{9ebef1bc-95f2-4c8c-9e52-454388d3912e}</Project>
       <Name>Leaf.xNet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="api_key.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -91,11 +91,13 @@ namespace Leaf.xNet
         /// Преобразует параметры в строку запроса.
         /// </summary>
         /// <param name="parameters">Параметры.</param>
-        /// <param name="dontEscape">Указывает, нужно ли кодировать значения параметров.</param>
+        /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
+        /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
         /// <returns>Строка запроса.</returns>
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="parameters"/> равно <see langword="null"/>.</exception>
         // ReSharper disable once UnusedMember.Global
-        public static string ToQueryString(IEnumerable<KeyValuePair<string, string>> parameters, bool dontEscape)
+        public static string ToQueryString(IEnumerable<KeyValuePair<string, string>> parameters, 
+            bool valuesUnescaped = false, bool keysUnescaped = false)
         {
             #region Проверка параметров
 
@@ -111,47 +113,7 @@ namespace Leaf.xNet
                 if (string.IsNullOrEmpty(param.Key))
                     continue;
 
-                queryBuilder.Append(param.Key);
-                queryBuilder.Append('=');
-
-                queryBuilder.Append(dontEscape ? param.Value : Uri.EscapeDataString(param.Value ?? string.Empty));
-
-                queryBuilder.Append('&');
-            }
-
-            // Удаляем '&' в конце, если есть контент
-            if (queryBuilder.Length != 0)
-                queryBuilder.Remove(queryBuilder.Length - 1, 1);
-
-            return queryBuilder.ToString();
-        }
-
-        /// <summary>
-        /// Преобразует параметры в строку POST-запроса.
-        /// </summary>
-        /// <param name="parameters">Параметры.</param>
-        /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
-        /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
-        /// <param name="encoding">Кодировка, применяемая для преобразования параметров запроса. Если значение параметра равно <see langword="null"/>, то будет использовано значение <see cref="System.Text.Encoding.UTF8"/>.</param>
-        /// <returns>Строка запроса.</returns>
-        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="parameters"/> равно <see langword="null"/>.</exception>
-        public static string ToPostQueryString(IEnumerable<KeyValuePair<string, string>> parameters, bool valuesUnescaped, bool keysUnescaped, Encoding encoding = null)
-        {
-            #region Проверка параметров
-
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
-
-            #endregion
-
-            var queryBuilder = new StringBuilder();
-
-            foreach (var param in parameters)
-            {
-                if (string.IsNullOrEmpty(param.Key))
-                    continue;
-
-                queryBuilder.Append(keysUnescaped ? param.Key : Uri.EscapeDataString(param.Key ?? string.Empty));
+                queryBuilder.Append(keysUnescaped ? param.Key : Uri.EscapeDataString(param.Key));
                 queryBuilder.Append('=');
 
                 queryBuilder.Append(valuesUnescaped ? param.Value : Uri.EscapeDataString(param.Value ?? string.Empty));

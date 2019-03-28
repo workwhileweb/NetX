@@ -10,6 +10,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
+using Leaf.xNet.Services.Captcha;
 
 namespace Leaf.xNet
 {
@@ -581,6 +582,15 @@ namespace Leaf.xNet
 
         #endregion
 
+        #region Сервисы
+
+        /// <summary>
+        /// Сервис для решения каптч. Применяется для Cloudflare.
+        /// </summary>
+        public ICaptchaSolver CaptchaSolver { get; set; }
+
+        #endregion
+
         #endregion
 
 
@@ -793,6 +803,15 @@ namespace Leaf.xNet
         /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         public HttpResponse Get(string address, RequestParams urlParams = null)
         {
+            // ReSharper disable once InvertIf
+            if (urlParams != null)
+            {
+                var uriBuilder = new UriBuilder(address) {
+                    Query = urlParams.Query
+                };
+                address = uriBuilder.Uri.AbsoluteUri;
+            }
+
             return Raw(HttpMethod.GET, address);
         }
 
@@ -807,6 +826,15 @@ namespace Leaf.xNet
         // ReSharper disable once UnusedMember.Global
         public HttpResponse Get(Uri address, RequestParams urlParams = null)
         {
+            // ReSharper disable once InvertIf
+            if (urlParams != null)
+            {
+                var uriBuilder = new UriBuilder(address) {
+                    Query = urlParams.Query
+                };
+                address = uriBuilder.Uri;
+            }
+
             return Raw(HttpMethod.GET, address);
         }
 
@@ -846,8 +874,6 @@ namespace Leaf.xNet
         /// </summary>
         /// <param name="address">Адрес интернет-ресурса.</param>
         /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
-        /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
-        /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">
         /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
@@ -857,7 +883,7 @@ namespace Leaf.xNet
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
         /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         // ReSharper disable once UnusedMember.Global
-        public HttpResponse Post(string address, RequestParams reqParams, bool valuesUnescaped = false, bool keysUnescaped = false)
+        public HttpResponse Post(string address, RequestParams reqParams)
         {
             #region Проверка параметров
 
@@ -866,7 +892,7 @@ namespace Leaf.xNet
 
             #endregion
 
-            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, valuesUnescaped, keysUnescaped, CharacterSet));
+            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams));
         }
 
 
@@ -875,8 +901,6 @@ namespace Leaf.xNet
         /// </summary>
         /// <param name="address">Адрес интернет-ресурса.</param>
         /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
-        /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
-        /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
         /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
         /// <exception cref="System.ArgumentNullException">
         /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
@@ -885,7 +909,7 @@ namespace Leaf.xNet
         /// </exception>
         /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
         // ReSharper disable once UnusedMember.Global
-        public HttpResponse Post(Uri address, RequestParams reqParams, bool valuesUnescaped = false,  bool keysUnescaped = false)
+        public HttpResponse Post(Uri address, RequestParams reqParams)
         {
             #region Проверка параметров
 
@@ -894,7 +918,7 @@ namespace Leaf.xNet
 
             #endregion
 
-            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams, valuesUnescaped, keysUnescaped, CharacterSet));
+            return Raw(HttpMethod.POST, address, new FormUrlEncodedContent(reqParams));
         }
 
         /// <summary>

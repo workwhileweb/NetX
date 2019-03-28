@@ -17,10 +17,9 @@ namespace Leaf.xNet
         /// <param name="content">Содержимое тела запроса в виде параметров запроса.</param>
         /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
         /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
-        /// <param name="encoding">Кодировка, применяемая для преобразования параметров запроса. Если значение параметра равно <see langword="null" />, то будет использовано значение <see cref="P:System.Text.Encoding.UTF8" />.</param>
         /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="content" /> равно <see langword="null" />.</exception>
         /// <remarks>По умолчанию используется тип контента - 'application/x-www-form-urlencoded'.</remarks>
-        public FormUrlEncodedContent(IEnumerable<KeyValuePair<string, string>> content, bool valuesUnescaped = false, bool keysUnescaped = false, Encoding encoding = null)
+        public FormUrlEncodedContent(IEnumerable<KeyValuePair<string, string>> content, bool valuesUnescaped = false, bool keysUnescaped = false)
         {
             #region Проверка параметров
 
@@ -29,9 +28,24 @@ namespace Leaf.xNet
 
             #endregion
 
-            string queryString = Http.ToPostQueryString(content, valuesUnescaped, keysUnescaped, encoding);
+            Init(Http.ToQueryString(content, valuesUnescaped, keysUnescaped));
+        }
 
-            Content = Encoding.ASCII.GetBytes(queryString);
+        public FormUrlEncodedContent(RequestParams rp)
+        {
+            #region Проверка параметров
+
+            if (rp == null)
+                throw new ArgumentNullException(nameof(rp));
+
+            #endregion
+
+            Init(rp.Query);
+        }
+
+        private void Init(string content)
+        {
+            Content = Encoding.ASCII.GetBytes(content);
             Offset = 0;
             Count = Content.Length;
 

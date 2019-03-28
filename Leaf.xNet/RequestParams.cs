@@ -10,6 +10,30 @@ namespace Leaf.xNet
     public class RequestParams : List<KeyValuePair<string,string>>
     {
         /// <summary>
+        /// Запрос перечислением параметров и их значений.
+        /// </summary>
+        public string Query => Http.ToQueryString(this, ValuesUnescaped, KeysUnescaped);
+        
+        /// <summary>
+        /// Указывает, нужно ли пропустить кодирование значений параметров запроса.
+        /// </summary>
+        public readonly bool ValuesUnescaped;
+        
+        /// <summary>
+        /// Указывает, нужно ли пропустить кодирование имен параметров запроса.
+        /// </summary>
+        public readonly bool KeysUnescaped;
+
+        /// <inheritdoc />
+        /// <param name="valuesUnescaped">Указывает, нужно ли пропустить кодирование значений параметров запроса.</param>
+        /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
+        public RequestParams(bool valuesUnescaped = false, bool keysUnescaped = false)
+        {
+            ValuesUnescaped = valuesUnescaped;
+            KeysUnescaped = keysUnescaped;
+        }
+        
+        /// <summary>
         /// Задаёт новый параметр запроса.
         /// </summary>
         /// <param name="paramName">Название параметра запроса.</param>

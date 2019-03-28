@@ -30,7 +30,7 @@ namespace Leaf.xNet
     /// </summary>
     public static class StringExtensions
     {
-         #region Substrings: Несколько строк
+        #region Substrings: Несколько строк
 
         /// <summary>
         /// Вырезает несколько строк между двумя подстроками. Если совпадений нет, вернет пустой массив.

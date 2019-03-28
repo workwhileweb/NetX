@@ -735,14 +735,31 @@ namespace Leaf.xNet
         #region Работа с куки
 
         /// <summary>
-        /// Определяет, содержатся ли указанные куки.
+        /// Определяет, содержатся ли указанные куки по указанному веб-адресу.
         /// </summary>
-        /// <param name="url">Путь для куки.</param>
+        /// <param name="url">Адрес ресурса.</param>
         /// <param name="name">Название куки.</param>
         /// <returns>Значение <see langword="true"/>, если указанные куки содержатся, иначе значение <see langword="false"/>.</returns>
         public bool ContainsCookie(string url, string name)
         {
             return Cookies != null && Cookies.Contains(url, name);
+        }
+
+        /// <inheritdoc cref="ContainsCookie(string,string)"/>
+        /// <param name="uri">Адрес для куки</param>
+        public bool ContainsCookie(Uri uri, string name)
+        {
+            return Cookies != null && Cookies.Contains(uri, name);
+        }
+
+        /// <inheritdoc cref="ContainsCookie(string,string)"/>
+        /// <summary>
+        /// Определяет, содержатся ли указанные куки по адресу из ответа.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Global
+        public bool ContainsCookie(string name)
+        {
+            return Cookies != null && Cookies.Contains(HasRedirect && !HasExternalRedirect ? RedirectAddress : Address, name);
         }
         
         #endregion
