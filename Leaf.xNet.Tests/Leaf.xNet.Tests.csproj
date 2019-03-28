@@ -18,6 +18,8 @@
     <PackageProjectUrl>https://github.com/csharp-leaf</PackageProjectUrl>
 
     <RepositoryUrl>https://github.com/csharp-leaf/Leaf.xNet</RepositoryUrl>
+
+    <Configurations>Debug;Release;ReleaseLibs;Release Examples</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

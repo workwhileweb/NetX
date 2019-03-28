@@ -16,25 +16,32 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release Examples|Any CPU = Release Examples|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
 		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
 		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{99D98852-736A-41C5-A907-54BEFC18F417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{99D98852-736A-41C5-A907-54BEFC18F417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99D98852-736A-41C5-A907-54BEFC18F417}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{99D98852-736A-41C5-A907-54BEFC18F417}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
 		{99D98852-736A-41C5-A907-54BEFC18F417}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99D98852-736A-41C5-A907-54BEFC18F417}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
 		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
