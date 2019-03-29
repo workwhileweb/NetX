@@ -211,6 +211,12 @@ string html = request.Get("https://google.com").ToString();
 string title = html.Substring("<title>", "</title>");
 ```
 
+### Get response headers
+```csharp
+var httpResponse = httpRequest.Get("https://yoursever.com");
+string responseHeader = httpResponse["X-User-Authentication-Token"];
+```
+
 ### Download a file
 ```csharp
 var resp = request.Get("http://google.com/file.zip");
