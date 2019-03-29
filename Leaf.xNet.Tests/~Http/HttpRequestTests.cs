@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Leaf.xNet.Services.Cloudflare;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Leaf.xNet.Tests

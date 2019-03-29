@@ -11,8 +11,7 @@ namespace Leaf.xNet.Services.Captcha
     {
         public string Host { get; protected set; } = "rucaptcha.com";
 
-        public string Proxy { get; set; }
-        public string ProxyType { get; set; }
+        public CaptchaProxy Proxy { get; set; }
 
         public override string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken))
         {
@@ -34,12 +33,12 @@ namespace Leaf.xNet.Services.Captcha
                 {"pageurl", pageUrl},
             };
 
-            if (!string.IsNullOrEmpty(Proxy) && !string.IsNullOrEmpty(ProxyType))
+            if (Proxy.IsValid)
             {
-                postValues.Add("proxy", Proxy);
-                postValues.Add("proxytype", ProxyType);
+                postValues.Add("proxy", Proxy.Address);
+                postValues.Add("proxytype", Proxy.Type.ToString());
             }
-
+            
             string result = "unknown";
             bool fatalError = true;
 

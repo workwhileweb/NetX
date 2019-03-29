@@ -19,8 +19,7 @@ namespace CloudflareDemo
                 http.UserAgentRandomize();
 
                 #if CHARLES
-                http.Proxy = HttpProxyClient.DebugProxy;
-                http.Proxy.AbsoluteUriInStartingLine = false;
+                http.Proxy = ProxyClient.DebugHttpProxy;
                 #endif
 
                 // JS Challenge (+ custom port)
@@ -28,7 +27,7 @@ namespace CloudflareDemo
                 string respJsChallengeStr = respJsChallenge.ToString();
 
                 bool jsChallengePassed = respJsChallengeStr.Contains("Lion Royal Casino");
-                Console.WriteLine($"{nameof(jsChallengePassed)} = {jsChallengePassed}");
+                Console.WriteLine($@"{nameof(jsChallengePassed)} = {jsChallengePassed}");
 
                 // Recaptcha Challenge
                 // You can use: RucaptchaSolver | TwoCaptchaSolver | CapmonsterSolver
@@ -40,11 +39,25 @@ namespace CloudflareDemo
                 string respRecaptchaStr = respRecaptcha.ToString();
 
                 bool recaptchaChallengePassed = respRecaptchaStr.Contains("Pablo Poker | Sign in");
-                Console.WriteLine($"{nameof(recaptchaChallengePassed)} = {recaptchaChallengePassed}");
+                Console.WriteLine($@"{nameof(recaptchaChallengePassed)} = {recaptchaChallengePassed}");
+
+                // Recaptcha Challenge (Access Denied)
+                try
+                {
+                    http.GetThroughCloudflare("https://lobbyl.wiw818.pw:8443/");
+                    Console.WriteLine(@"CloudFlare Access Denied PASSED! So your IP is allowed!");
+                }
+                catch (CloudflareException cfException)
+                {
+                    Console.WriteLine($@"CloudFlare, EXCEPTION raised when accessed to forbidden host by IP: {cfException.Message}");
+                    Console.WriteLine(@"It should have ""access denied..."" message");
+                }
+                
+                Console.WriteLine($@"{nameof(recaptchaChallengePassed)} = {recaptchaChallengePassed}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ERROR: {ex.Message}");
+                Console.WriteLine($@"ERROR: {ex.Message}");
             }
             finally
             {

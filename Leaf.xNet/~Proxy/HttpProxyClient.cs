@@ -19,6 +19,7 @@ namespace Leaf.xNet
 
         #endregion
 
+        // TODO: hide constructors and make ProxyClient Factory: ProxyClient.ParseHttp / ProxyClient.ParseSocks4 / ProxyClient.ParseSocks5
 
         #region Конструкторы (открытые)
 
@@ -106,29 +107,6 @@ namespace Leaf.xNet
         }
 
         #endregion
-
-
-        #region Статические свойства (открытые)
-
-        /// <summary>
-        /// HTTPS прокси сервер для отладки (Charles / Fiddler).
-        /// </summary>
-        public static HttpProxyClient DebugProxy {
-            get {
-                if (_debugProxy != null)
-                    return _debugProxy;
-
-                _debugProxy = Parse("127.0.0.1:8888");
-                // Fix bug in Charles 
-                _debugProxy.AbsoluteUriInStartingLine = false;
-
-                return _debugProxy;
-            }
-        }
-        private static HttpProxyClient _debugProxy;
-        
-        #endregion
-
 
         #region Методы (открытые)
 

@@ -52,7 +52,11 @@ using Leaf.xNet.Services.Captcha;
 
 // You can use: RucaptchaSolver | TwoCaptchaSolver | CapmonsterSolver
 http.CaptchaSolver = new RucaptchaSolver {
-    ApiKey = "your_key"
+    ApiKey = "your_key",
+	
+	// If you need to use Proxy (Recaptcha for example) - uncomment the line below
+	// Proxy = new CaptchaProxy(CaptchaProxyType.HTTPS, "80.81.82.83:8080"),
+	// // ProxyTypes: CaptchaProxyType.HTTP || HTTPS || SOCKS4 || SOCKS5
 };
 var clearResp = httpRequest.GetThroughCloudflare("https://...");
 ```
@@ -221,6 +225,29 @@ foreach (Cookie cookie in cookies) {
     // concat your string or do what you want
     Console.WriteLine($"{cookie.Name}: {cookie.Value}");
 }
+```
+
+### Proxy
+Your proxy server:
+```csharp
+// Type: HTTP / HTTPS 
+httpRequest.Proxy = HttpProxyClient.Parse("127.0.0.1:8080");
+// Type: Socks4
+httpRequest.Proxy = Socks4ProxyClient.Parse("127.0.0.1:9000");
+// Type: Socks4a
+httpRequest.Proxy = Socks4aProxyClient.Parse("127.0.0.1:9000");
+// Type: Socks5
+httpRequest.Proxy = Socks5ProxyClient.Parse("127.0.0.1:9000");
+
+```
+
+Debug proxy server (Charles / Fiddler):
+```csharp
+// HTTP / HTTPS (by default is HttpProxyClient at 127.0.0.1:8888)
+httpRequest.Proxy = ProxyClient.DebugHttpProxy;
+
+// Socks5 (by default is Socks5ProxyClient at 127.0.0.1:8889)
+httpRequest.Proxy = ProxyClient.DebugSocksProxy;
 ```
 
 ### Add a Cookie to HttpRequest.Cookies storage

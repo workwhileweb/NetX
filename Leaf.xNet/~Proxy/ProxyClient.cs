@@ -243,6 +243,35 @@ namespace Leaf.xNet
         #endregion
 
 
+        #region Статические свойства (защищенные)
+
+        /// <summary>
+        /// HTTPS прокси сервер для отладки (Charles / Fiddler).
+        /// По умолчанию используется адрес 127.0.0.1:8888.
+        /// </summary>
+        public static HttpProxyClient DebugHttpProxy {
+            get {
+                if (_debugHttpProxy != null)
+                    return _debugHttpProxy;
+
+                _debugHttpProxy = HttpProxyClient.Parse("127.0.0.1:8888");
+                _debugHttpProxy.AbsoluteUriInStartingLine = false; // Fix tree Charles bug 
+
+                return _debugHttpProxy;
+            }
+        }
+        private static HttpProxyClient _debugHttpProxy;
+
+        /// <summary>
+        /// SOCKS5 прокси сервер для отладки (Charles / Fiddler).
+        /// По умолчанию используется адрес 127.0.0.1:8889.
+        /// </summary>
+        public static Socks5ProxyClient DebugSocksProxy => _debugSocksProxy ?? (_debugSocksProxy = Socks5ProxyClient.Parse("127.0.0.1:8889"));
+        private static Socks5ProxyClient _debugSocksProxy;
+
+        #endregion
+
+
         #region Статические методы
 
         /// <summary>

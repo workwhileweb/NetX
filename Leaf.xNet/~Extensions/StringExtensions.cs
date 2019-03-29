@@ -275,5 +275,21 @@ namespace Leaf.xNet
         }
 
         #endregion
+
+
+        #region Дополнительные функции
+
+        /// <summary>
+        /// Проверяет наличие подстроки в строке, без учета реестра, через сравнение: <see cref="StringComparison.OrdinalIgnoreCase" />.
+        /// </summary>
+        /// <param name="self">Строка</param>
+        /// <param name="value">Подстрока которую следует искать в исходной строке</param>
+        /// <returns>Вернет <langword>true</langword> </returns>
+        public static bool ContainsInsensitive(this string self, string value)
+        {
+            return self.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1;
+        }
+
+        #endregion
     }
 }

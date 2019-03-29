@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Leaf.xNet.Services.Captcha;
@@ -129,7 +128,13 @@ namespace Leaf.xNet.Services.Cloudflare
                         return response;
                 }
                 else
-                    throw new CloudflareException("Unknown challenge type");
+                {
+                    string error = HasAccessDeniedError(response)
+                        ? "Access denied. Try to use another IP address."
+                        : "Unknown challenge type";
+
+                    throw new CloudflareException(error);
+                }
             }
 
             throw new CloudflareException(MaxRetries, $"{LogPrefix}ERROR. Rate limit reached.");
@@ -281,6 +286,19 @@ namespace Leaf.xNet.Services.Cloudflare
 
         #endregion
 
+
+        #region Private: Error Handling
+
+        private static bool HasAccessDeniedError(HttpResponse response)
+        {
+            string resp = response.ToString();
+            string title = resp.Substring("class=\"cf-subheadline\">", "<")
+                ?? resp.Substring("<title>", "</title>");
+
+            return !string.IsNullOrEmpty(title) && title.ContainsInsensitive("Access denied");
+        }
+
+        #endregion
 
         #region Private: HttpRequest Extensions & Tools
 

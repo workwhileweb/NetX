@@ -125,17 +125,6 @@ namespace Leaf.xNet
         #endregion
 
 
-        #region Статические свойства (открытые)
-
-        /// <summary>
-        /// SOCKS5 прокси сервер для отладки (Charles / Fiddler).
-        /// </summary>
-        public static Socks5ProxyClient DebugProxy => _debugProxy ?? (_debugProxy = Parse("127.0.0.1:8889"));
-        private static Socks5ProxyClient _debugProxy;
-
-        #endregion
-
-
         /// <inheritdoc />
         /// <summary>
         /// Создаёт соединение с сервером через прокси-сервер.

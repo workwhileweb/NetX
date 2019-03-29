@@ -20,8 +20,7 @@ namespace Leaf.xNet.Services.Captcha
 
         public const string NameOfString = "string";
 
-        protected readonly WebClient Http = new WebClient();
-
+        protected readonly AdvancedWebClient Http = new AdvancedWebClient();
 
         #region SolveImage : Generic
 
@@ -51,11 +50,16 @@ namespace Leaf.xNet.Services.Captcha
 
         #endregion
 
+        
+        #region SolveImage : Recaptcha
+
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
         public virtual string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken))
         {
             throw NotImplemented(nameof(SolveRecaptcha), "string, string");
         }
+
+        #endregion
 
         protected void ThrowIfApiKeyRequiredAndInvalid()
         {
