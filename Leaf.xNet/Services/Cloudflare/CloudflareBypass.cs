@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Leaf.xNet.Services.Captcha;
@@ -117,24 +118,20 @@ namespace Leaf.xNet.Services.Cloudflare
 
                 // Bypass depend on challenge type: JS / Recaptcha
                 //
-                if (IsJsChallenge(response))
-                {
-                    if (SolveJsChallenge(ref response, request, uri, retry, log, cancellationToken))
-                        return response;
-                }
-                else if (IsRecaptchaChallenge(response))
-                {
-                    if (SolveRecaptchaChallenge(ref response, request, uri, retry, log, cancellationToken))
-                        return response;
-                }
-                else
-                {
-                    string error = HasAccessDeniedError(response)
-                        ? "Access denied. Try to use another IP address."
-                        : "Unknown challenge type";
+                if (HasJsChallenge(response))
+                    SolveJsChallenge(ref response, request, uri, retry, log, cancellationToken);
+                
+                if (HasRecaptchaChallenge(response))
+                    SolveRecaptchaChallenge(ref response, request, uri, retry, log, cancellationToken);
 
-                    throw new CloudflareException(error);
+                if (response.IsCloudflared())
+                {
+                    throw new CloudflareException(HasAccessDeniedError(response)
+                        ? "Access denied. Try to use another IP address."
+                        : "Unknown challenge type");
                 }
+
+                return response;
             }
 
             throw new CloudflareException(MaxRetries, $"{LogPrefix}ERROR. Rate limit reached.");
@@ -200,11 +197,7 @@ namespace Leaf.xNet.Services.Cloudflare
 
         #region Private: Challenge (JS)
 
-        private static bool IsJsChallenge(HttpResponse response)
-        {
-            // Cross-platform string.Contains
-            return response.ToString().IndexOf("jschl-answer", StringComparison.OrdinalIgnoreCase) != -1;
-        }
+        private static bool HasJsChallenge(HttpResponse response) => response.ToString().ContainsInsensitive("jschl-answer");
 
         private static bool SolveJsChallenge(ref HttpResponse response, HttpRequest request, Uri uri, string retry, 
             DLog log, CancellationToken cancellationToken)
@@ -242,7 +235,7 @@ namespace Leaf.xNet.Services.Cloudflare
 
         #region Private: Challenge (Recaptcha)
 
-        private static bool IsRecaptchaChallenge(HttpResponse response)
+        private static bool HasRecaptchaChallenge(HttpResponse response)
         {
             // Cross-platform string.Contains
             return response.ToString().IndexOf("<div class=\"g-recaptcha\">", StringComparison.OrdinalIgnoreCase) != -1;
@@ -266,20 +259,25 @@ namespace Leaf.xNet.Services.Cloudflare
             string rayId = respStr.Substring("data-ray=\"", "\"")
                 ?? throw new CloudflareException("Ray Id not found");
 
-            string bfChallengeId = respStr.Substring("'bf_challenge_id', '", "'")
-                ?? throw new CloudflareException("bf_challenge_id not found");
-
             string answer = request.CaptchaSolver.SolveRecaptcha(uri.AbsoluteUri, siteKey, cancelToken);
             
             cancelToken.ThrowIfCancellationRequested();
-            response = request.ManualGet(new Uri(uri, "/cdn-cgi/l/chk_captcha"), uri, new RequestParams {
-                ["s"] = s,
-                ["id"] = rayId,
-                ["g-recaptcha-response"] = answer,
-                ["bf_challenge_id"] = bfChallengeId,
-                ["bf_execution_time"] = "4",
-                ["bf_result_hash"] = string.Empty
-            });
+
+            var rp = new RequestParams {
+                    ["s"] = s,
+                    ["id"] = rayId,
+                    ["g-recaptcha-response"] = answer
+            };
+
+            string bfChallengeId = respStr.Substring("'bf_challenge_id', '", "'");
+            if (bfChallengeId != null)
+            {
+                rp.Add(new KeyValuePair<string, string>("bf_challenge_id", bfChallengeId));
+                rp.Add(new KeyValuePair<string, string>("bf_execution_time", "4"));
+                rp.Add(new KeyValuePair<string, string>("bf_result_hash", string.Empty));
+            }
+
+            response = request.ManualGet(new Uri(uri, "/cdn-cgi/l/chk_captcha"), uri, rp);
 
             return IsChallengePassed("ReCaptcha", ref response, request, uri, retry, log);
         }

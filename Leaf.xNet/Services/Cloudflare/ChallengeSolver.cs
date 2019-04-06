@@ -43,6 +43,17 @@ namespace Leaf.xNet.Services.Cloudflare
                 .Cast<Match>().Select(m => m.Groups["Content"].Value)
                 .First(c => c.Contains("jschl-answer"));
 
+            // TODO: optional
+
+            /*
+            string k = challengePageContent.Substring("; k = '", "'")
+                ?? throw new ArgumentException("k not found", nameof(k));
+
+            string kValue = challengePageContent.Substring($"id=\"{k}\">", "</")
+                ?? throw new ArgumentException("kValue not found", nameof(kValue));
+
+            script = Regex.Replace(script, @"function\s*\(p\)\s*\{.*?\(p\)\}\(\)", kValue, RegexOptions.CultureInvariant);*/
+
             var statements = script.Split(';');
             var stepGroups = statements.Select(GetSteps).Where(g => g.Any()).ToList();
             var steps = stepGroups.Select(ResolveStepGroup).ToList();
