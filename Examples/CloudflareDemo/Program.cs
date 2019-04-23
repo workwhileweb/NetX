@@ -1,4 +1,4 @@
-﻿#define CHARLES
+﻿//#define CHARLES
 using System;
 using System.IO;
 using Leaf.xNet;
@@ -21,6 +21,16 @@ namespace CloudflareDemo
                 #if CHARLES
                 http.Proxy = ProxyClient.DebugHttpProxy;
                 #endif
+
+                // JS Challenge (404)
+                /*
+                var respJsChallenge404 = http.GetThroughCloudflare("https://uam.hitmehard.fun/");
+                //string respJsChallengeStr404 = respJsChallenge404.ToString();
+
+                bool jsChallengePassed404 = respJsChallenge404.StatusCode == HttpStatusCode.NotFound;
+                Console.WriteLine($@"{nameof(jsChallengePassed404)} = {jsChallengePassed404}");
+                */
+
 
                 // JS Challenge (+ custom port)
                 var respJsChallenge = http.GetThroughCloudflare("http://lionroyalcpk.club:2082/");
