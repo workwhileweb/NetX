@@ -100,7 +100,7 @@ HttpRequest.Cookies.UnescapeValuesOnSend = false;
 httpRequest.SslProtocols = SslProtocols.Tls | SslProtocols.Tls12 | SslProtocols.Tls11;
 ```
 
-### My HTTPS proxy not working
+### My HTTPS proxy returns bad response
 Sometimes HTTPS proxy require relative address instead of absolute.
 This behavior can be changed:
 ```csharp
