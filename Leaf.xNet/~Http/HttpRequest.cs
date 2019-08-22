@@ -840,6 +840,56 @@ namespace Leaf.xNet
 
         #endregion
 
+        #region Options
+
+        /// <summary>
+        /// Отправляет OPTIONS-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        public HttpResponse Options(string address, RequestParams urlParams = null)
+        {
+            // ReSharper disable once InvertIf
+            if (urlParams != null)
+            {
+                var uriBuilder = new UriBuilder(address) {
+                    Query = urlParams.Query
+                };
+                address = uriBuilder.Uri.AbsoluteUri;
+            }
+
+            return Raw(HttpMethod.OPTIONS, address);
+        }
+
+        /// <summary>
+        /// Отправляет OPTIONS-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Options(Uri address, RequestParams urlParams = null)
+        {
+            // ReSharper disable once InvertIf
+            if (urlParams != null)
+            {
+                var uriBuilder = new UriBuilder(address) {
+                    Query = urlParams.Query
+                };
+                address = uriBuilder.Uri;
+            }
+
+            return Raw(HttpMethod.OPTIONS, address);
+        }
+
+        #endregion
+        
         #region Post
 
         /// <summary>
