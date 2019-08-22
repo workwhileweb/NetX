@@ -4,7 +4,6 @@
 [![Last Release](https://img.shields.io/github/release-date/csharp-leaf/Leaf.xNet.svg?logo=Leaf.xNet)](https://github.com/csharp-leaf/Leaf.xNet/releases)
 [![Nuget installs](https://img.shields.io/nuget/dt/Leaf.xNet.svg)](https://www.nuget.org/packages/Leaf.xNet/)  
 
-[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FZLZ5ED65HVCL)
 
 # Leaf.xNet
 **Leaf.xNet** - provides HTTP/HTTPS, Socks 4A, Socks 4, Socks 5.  
@@ -16,7 +15,8 @@ Usage same like original xNet.
 - **Igor' Vasilyev** - found many bugs and reported it. Thank you.
 - **Monaco** (BHF) - bug reporter, donations help.
 - **Wizard** - donation support.
-- **@azor83** - donation for implementation of MiddleHeaders.  
+- **@azor83** - donation for implementation of MiddleHeaders.
+- **TMT** - donation for PATCH, DELETE, PUT, OPTIONS methods.
 [Make a donation to the development of the library](#donate)
 
 ## Contacts
@@ -29,6 +29,14 @@ Install-Package Leaf.xNet
 ```
 
 # Features
+### HTTP Methods
+- GET
+- POST
+- PATCH
+- DELETE
+- PUT
+- OPTIONS
+
 ### CloudFlare bypass
 See demo project in the Examples folder.
 
@@ -274,15 +282,14 @@ request.Cookies.Set(cookie);
 
 # Donate
 If this project help you reduce time to develop, you can give me a cup of coffee :)  
-**PayPal**: `mixtape774@yandex.com`
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FZLZ5ED65HVCL)
+**PayPal**: `grand.silence@mail.ru`
 
 [**Via web-payment**: WebMoney | Steam Item | MasterCard | Visa | Sberbank.Online | BitCoin ](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
 [![Imgur](https://i.imgur.com/APbu91c.png)](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
 
 ### Wallets
 **Yandex**.Money | **Яндекс**.Деньги: `410011037924983`  
-**Webmoney**: `R246626749259` | `Z349403749504` | `U313788999957` | `E894184114651` | `X428336365219`  
+**Webmoney**: `Z349403749504` | `U313788999957` | `E894184114651` | `X428336365219`  
 Bitcoin **BTC**: `3MTuJDRK9RcSQURsvJysqg1gp91FFTDSs7`  
 Bitcoin Gold **BTG**: `Abf3jmLwiYw6ewuwMgu4AeHw4a8WVZUySH`  
 LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`  
