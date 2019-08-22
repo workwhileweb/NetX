@@ -1528,8 +1528,1371 @@ namespace Leaf.xNet
 
         #endregion
 
+        #region Patch
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(string address)
+        {
+            return Raw(HttpMethod.PATCH, address);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(Uri address)
+        {
+            return Raw(HttpMethod.PATCH, address);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(string address, RequestParams reqParams)
+        {
+            #region Проверка параметров
+
+            if (reqParams == null)
+                throw new ArgumentNullException(nameof(reqParams));
+
+            #endregion
+
+            return Raw(HttpMethod.PATCH, address, new FormUrlEncodedContent(reqParams));
+        }
+
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(Uri address, RequestParams reqParams)
+        {
+            #region Проверка параметров
+
+            if (reqParams == null)
+                throw new ArgumentNullException(nameof(reqParams));
+
+            #endregion
+
+            return Raw(HttpMethod.PATCH, address, new FormUrlEncodedContent(reqParams));
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(string address, string str, string contentType)
+        {
+            #region Проверка параметров
+
+            if (str == null)
+                throw new ArgumentNullException(nameof(str));
+
+            if (str.Length == 0)
+                throw new ArgumentNullException(nameof(str));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StringContent(str) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(Uri address, string str, string contentType)
+        {
+            #region Проверка параметров
+
+            if (str == null)
+                throw new ArgumentNullException(nameof(str));
+
+            if (str.Length == 0)
+                throw new ArgumentNullException(nameof(str));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StringContent(str) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(string address, byte[] bytes, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new BytesContent(bytes) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(Uri address, byte[] bytes, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            var content = new BytesContent(bytes) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(string address, Stream stream, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StreamContent(stream) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(Uri address, Stream stream, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StreamContent(stream) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(string address, string path)
+        {
+            #region Проверка параметров
+
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (path.Length == 0)
+                throw new ArgumentNullException(nameof(path));
+
+            #endregion
+
+            return Raw(HttpMethod.PATCH, address, new FileContent(path));
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(Uri address, string path)
+        {
+            #region Проверка параметров
+
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (path.Length == 0)
+                throw new ArgumentNullException(nameof(path));
+
+            #endregion
+
+            return Raw(HttpMethod.PATCH, address, new FileContent(path));
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(string address, HttpContent content)
+        {
+            #region Проверка параметров
+
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            #endregion
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PATCH-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Patch(Uri address, HttpContent content)
+        {
+            #region Проверка параметров
+
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            #endregion
+
+            return Raw(HttpMethod.PATCH, address, content);
+        }
+
         #endregion
 
+        
+        #endregion
+
+        #region Put
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(string address)
+        {
+            return Raw(HttpMethod.PUT, address);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(Uri address)
+        {
+            return Raw(HttpMethod.PUT, address);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(string address, RequestParams reqParams)
+        {
+            #region Проверка параметров
+
+            if (reqParams == null)
+                throw new ArgumentNullException(nameof(reqParams));
+
+            #endregion
+
+            return Raw(HttpMethod.PUT, address, new FormUrlEncodedContent(reqParams));
+        }
+
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(Uri address, RequestParams reqParams)
+        {
+            #region Проверка параметров
+
+            if (reqParams == null)
+                throw new ArgumentNullException(nameof(reqParams));
+
+            #endregion
+
+            return Raw(HttpMethod.PUT, address, new FormUrlEncodedContent(reqParams));
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(string address, string str, string contentType)
+        {
+            #region Проверка параметров
+
+            if (str == null)
+                throw new ArgumentNullException(nameof(str));
+
+            if (str.Length == 0)
+                throw new ArgumentNullException(nameof(str));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StringContent(str) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(Uri address, string str, string contentType)
+        {
+            #region Проверка параметров
+
+            if (str == null)
+                throw new ArgumentNullException(nameof(str));
+
+            if (str.Length == 0)
+                throw new ArgumentNullException(nameof(str));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StringContent(str) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(string address, byte[] bytes, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new BytesContent(bytes) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(Uri address, byte[] bytes, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            var content = new BytesContent(bytes) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(string address, Stream stream, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StreamContent(stream) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(Uri address, Stream stream, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StreamContent(stream) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(string address, string path)
+        {
+            #region Проверка параметров
+
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (path.Length == 0)
+                throw new ArgumentNullException(nameof(path));
+
+            #endregion
+
+            return Raw(HttpMethod.PUT, address, new FileContent(path));
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(Uri address, string path)
+        {
+            #region Проверка параметров
+
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (path.Length == 0)
+                throw new ArgumentNullException(nameof(path));
+
+            #endregion
+
+            return Raw(HttpMethod.PUT, address, new FileContent(path));
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(string address, HttpContent content)
+        {
+            #region Проверка параметров
+
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            #endregion
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет PUT-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Put(Uri address, HttpContent content)
+        {
+            #region Проверка параметров
+
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            #endregion
+
+            return Raw(HttpMethod.PUT, address, content);
+        }
+
+        #endregion
+        
+        #endregion
+        
+        #region Delete
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(string address)
+        {
+            return Raw(HttpMethod.DELETE, address);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(Uri address)
+        {
+            return Raw(HttpMethod.DELETE, address);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(string address, RequestParams reqParams)
+        {
+            #region Проверка параметров
+
+            if (reqParams == null)
+                throw new ArgumentNullException(nameof(reqParams));
+
+            #endregion
+
+            return Raw(HttpMethod.DELETE, address, new FormUrlEncodedContent(reqParams));
+        }
+
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="reqParams">Параметры запроса, отправляемые HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="reqParams"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(Uri address, RequestParams reqParams)
+        {
+            #region Проверка параметров
+
+            if (reqParams == null)
+                throw new ArgumentNullException(nameof(reqParams));
+
+            #endregion
+
+            return Raw(HttpMethod.DELETE, address, new FormUrlEncodedContent(reqParams));
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(string address, string str, string contentType)
+        {
+            #region Проверка параметров
+
+            if (str == null)
+                throw new ArgumentNullException(nameof(str));
+
+            if (str.Length == 0)
+                throw new ArgumentNullException(nameof(str));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StringContent(str) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="str">Строка, отправляемая HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="str"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="str"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(Uri address, string str, string contentType)
+        {
+            #region Проверка параметров
+
+            if (str == null)
+                throw new ArgumentNullException(nameof(str));
+
+            if (str.Length == 0)
+                throw new ArgumentNullException(nameof(str));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StringContent(str) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(string address, byte[] bytes, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new BytesContent(bytes) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="bytes">Массив байтов, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="bytes"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(Uri address, byte[] bytes, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            var content = new BytesContent(bytes) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(string address, Stream stream, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StreamContent(stream) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="stream">Поток данных, отправляемый HTTP-серверу.</param>
+        /// <param name="contentType">Тип отправляемых данных.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="stream"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="contentType"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="contentType"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(Uri address, Stream stream, string contentType = "application/octet-stream")
+        {
+            #region Проверка параметров
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (contentType == null)
+                throw new ArgumentNullException(nameof(contentType));
+
+            if (contentType.Length == 0)
+                throw new ArgumentNullException(nameof(contentType));
+
+            #endregion
+
+            var content = new StreamContent(stream) {
+                ContentType = contentType
+            };
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Значение параметра <paramref name="address"/> является пустой строкой.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> является пустой строкой.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(string address, string path)
+        {
+            #region Проверка параметров
+
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (path.Length == 0)
+                throw new ArgumentNullException(nameof(path));
+
+            #endregion
+
+            return Raw(HttpMethod.DELETE, address, new FileContent(path));
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="path">Путь к файлу, данные которого будут отправлены HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="path"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="path"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(Uri address, string path)
+        {
+            #region Проверка параметров
+
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (path.Length == 0)
+                throw new ArgumentNullException(nameof(path));
+
+            #endregion
+
+            return Raw(HttpMethod.DELETE, address, new FileContent(path));
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(string address, HttpContent content)
+        {
+            #region Проверка параметров
+
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            #endregion
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        /// <summary>
+        /// Отправляет DELETE-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="content">Контент, отправляемый HTTP-серверу.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Значение параметра <paramref name="address"/> равно <see langword="null"/>.
+        /// -или-
+        /// Значение параметра <paramref name="content"/> равно <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Delete(Uri address, HttpContent content)
+        {
+            #region Проверка параметров
+
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            #endregion
+
+            return Raw(HttpMethod.DELETE, address, content);
+        }
+
+        #endregion
+        
+        #endregion
+        
+        #endregion
+        
         #region Методы (защищённые)
 
         /// <summary>
