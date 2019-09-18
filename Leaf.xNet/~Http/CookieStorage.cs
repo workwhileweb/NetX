@@ -42,6 +42,11 @@ namespace Leaf.xNet
         public bool EscapeValuesOnReceive { get; set; } = true;
 
         /// <summary>
+        /// Dont throw exception when received cookie name is invalid, just ignore.
+        /// </summary>
+        public bool IgnoreInvalidCookie { get; set; } = false;
+
+        /// <summary>
         /// Возвращает или задаёт возможность де-экранировать символы значения Cookie прежде чем отправлять запрос на сервер.
         /// <remarks>
         /// По умолчанию задан тому же значению что и <see cref="EscapeValuesOnReceive"/>.
@@ -59,15 +64,17 @@ namespace Leaf.xNet
         private bool _unescapeValuesOnSend;
         private bool _unescapeValuesOnSendCustomized;
 
+        private static readonly char[] ReservedChars = new char[] { ' ', '\t', '\r', '\n', '=', ';', ',' };
 
         private static BinaryFormatter Bf => _binaryFormatter ?? (_binaryFormatter = new BinaryFormatter());
         private static BinaryFormatter _binaryFormatter;
 
 
-        public CookieStorage(bool isLocked = false, CookieContainer container = null)
+        public CookieStorage(bool isLocked = false, CookieContainer container = null, bool ignoreInvalidCookie = false)
         {
             IsLocked = isLocked;
             Container = container ?? new CookieContainer();
+            IgnoreInvalidCookie = ignoreInvalidCookie;
         }
 
         /// <summary>
@@ -146,6 +153,8 @@ namespace Leaf.xNet
             var keyValue = arguments[0].Split(new[] {'='}, 2);
             keyValue[0] = keyValue[0].Trim();
             keyValue[1] = keyValue[1].Trim();
+
+            if (IgnoreInvalidCookie && (string.IsNullOrEmpty(keyValue[0]) || keyValue[0][0] == '$' || keyValue[0].IndexOfAny(ReservedChars) != -1)) return;
 
             var cookie = new Cookie(keyValue[0], keyValue.Length < 2 ? string.Empty 
                 : EscapeValuesOnReceive ? Uri.EscapeDataString(keyValue[1]) : keyValue[1]
