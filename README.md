@@ -297,5 +297,6 @@ LiteCoin **LTC**: `M8rkfHAB62NyvAPkaZUG4GeQB5DPvts4xD`
 LiteCoin **LTC** (alternate): `32ecMPkD8uXZ7f7rUgUvEdPzrNcx21J5po`  
 
 # TODO:
+- Implement [Captcha Services](https://github.com/openbullet/openbullet/tree/master/RuriLib/CaptchaServices)
 - Move `HttpResponse` indexer to `Headers` property and implement IEnumerable for it
 - Implement new property `StoreResponseCookies` for `HttpRequest`: `HttpResponse` should have `Cookies` as `IReadOnlyKeyValueCollection<string,Cookie>` with indexer.
