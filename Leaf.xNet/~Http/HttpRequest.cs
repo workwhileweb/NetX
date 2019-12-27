@@ -852,6 +852,58 @@ namespace Leaf.xNet
 
         #endregion
 
+
+        #region Head
+
+        /// <summary>
+        /// Отправляет HEAD-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="System.ArgumentException">Значение параметра <paramref name="address"/> является пустой строкой.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        public HttpResponse Head(string address, RequestParams urlParams = null)
+        {
+            // ReSharper disable once InvertIf
+            if (urlParams != null)
+            {
+                var uriBuilder = new UriBuilder(address) {
+                    Query = urlParams.Query
+                };
+                address = uriBuilder.Uri.AbsoluteUri;
+            }
+
+            return Raw(HttpMethod.HEAD, address);
+        }
+
+        /// <summary>
+        /// Отправляет HEAD-запрос HTTP-серверу.
+        /// </summary>
+        /// <param name="address">Адрес интернет-ресурса.</param>
+        /// <param name="urlParams">Параметры URL-адреса, или значение <see langword="null"/>.</param>
+        /// <returns>Объект, предназначенный для загрузки ответа от HTTP-сервера.</returns>
+        /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="address"/> равно <see langword="null"/>.</exception>
+        /// <exception cref="Leaf.xNet.HttpException">Ошибка при работе с HTTP-протоколом.</exception>
+        // ReSharper disable once UnusedMember.Global
+        public HttpResponse Head(Uri address, RequestParams urlParams = null)
+        {
+            // ReSharper disable once InvertIf
+            if (urlParams != null)
+            {
+                var uriBuilder = new UriBuilder(address) {
+                    Query = urlParams.Query
+                };
+                address = uriBuilder.Uri;
+            }
+
+            return Raw(HttpMethod.HEAD, address);
+        }
+
+        #endregion
+
+
         #region Options
 
         /// <summary>
@@ -901,7 +953,8 @@ namespace Leaf.xNet
         }
 
         #endregion
-        
+
+
         #region Post
 
         /// <summary>
@@ -1591,6 +1644,7 @@ namespace Leaf.xNet
 
         #endregion
 
+
         #region Patch
 
         /// <summary>
@@ -2046,6 +2100,7 @@ namespace Leaf.xNet
         
         #endregion
 
+
         #region Put
 
         /// <summary>
@@ -2499,7 +2554,8 @@ namespace Leaf.xNet
         #endregion
         
         #endregion
-        
+
+
         #region Delete
 
         /// <summary>
@@ -2953,7 +3009,7 @@ namespace Leaf.xNet
         #endregion
         
         #endregion
-        
+
         #endregion
         
         #region Методы (защищённые)
