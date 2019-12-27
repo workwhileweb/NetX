@@ -11,12 +11,15 @@ It's a based on [Extreme.Net](https://github.com/Fedorus/Extreme.Net). And origi
 Usage same like original xNet.
 
 ## Gratitudes
-- **Artem** (devspec) - donation support. Thank you.
-- **Igor' Vasilyev** - found many bugs and reported it. Thank you.
-- **Monaco** (BHF) - bug reporter, donations help.
-- **Wizard** - donation support.
-- **@azor83** - donation for implementation of MiddleHeaders.
-- **TMT** - donation for PATCH, DELETE, PUT, OPTIONS methods.
+- **Artem** (devspec) - donation support. Thank you
+- **Igor' Vasilyev** - found many bugs and reported it. Thank you
+- **Monaco** (BHF) - bug reporter, donations help
+- **Wizard** - donation support
+- **@azor83** - donation for implementation of MiddleHeaders
+- **TMT** - donation for PATCH, DELETE, PUT, OPTIONS methods
+
+## Contributors
+- **[guzlewski](https://github.com/guzlewski)**: Randomizer fixes, IgnoreInvalidCookies
 
 [Make a donation to the development of the library](#donate)
 
