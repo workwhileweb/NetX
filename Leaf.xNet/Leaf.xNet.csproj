@@ -94,5 +94,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web" />
+  </ItemGroup>
 
 </Project>
