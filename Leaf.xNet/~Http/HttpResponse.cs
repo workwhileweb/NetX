@@ -836,7 +836,7 @@ namespace Leaf.xNet
             {
                 Cookies = _request.Cookies != null && !_request.Cookies.IsLocked
                     ? _request.Cookies
-                    : new CookieStorage();
+                    : new CookieStorage(ignoreInvalidCookie: _request.IgnoreInvalidCookie);
             }
 
             if (_receiverHelper == null)

@@ -278,6 +278,11 @@ namespace Leaf.xNet
         /// </summary>
         public string AcceptEncoding { get; set; } = "gzip,deflate";
 
+        /// <summary>
+        /// Dont throw exception when received cookie name is invalid, just ignore.
+        /// </summary>
+        public bool IgnoreInvalidCookie { get; set; } = false;
+
         #region Поведение
 
         /// <summary>
@@ -3489,7 +3494,7 @@ namespace Leaf.xNet
             // Cookies isn't set now
             if (Cookies == null)
             {
-                Cookies = new CookieStorage();
+                Cookies = new CookieStorage(ignoreInvalidCookie: IgnoreInvalidCookie);
                 return ToHeadersString(headers);
             }
 
