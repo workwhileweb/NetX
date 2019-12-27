@@ -11,13 +11,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Leaf.xNet</RootNamespace>
     <AssemblyName>Leaf.xNet</AssemblyName>
-    <TargetFrameworks>net452;net462;net471;net472;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <FileAlignment>512</FileAlignment>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Grand Silence</Authors>
-    <Company>Kelog Studio</Company>
+    <Company>Kelog</Company>
     <Product>Leaf</Product>
-    <Configurations>Debug;Release;ReleaseLibs;Release Examples</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -39,37 +39,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Examples|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLibs|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Leaf.xNet.xml</DocumentationFile>
-    <Version>5.1.0</Version>
+    <Version>5.2.0</Version>
     <RepositoryUrl>https://github.com/csharp-leaf/Leaf.xNet</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageProjectUrl>https://github.com/csharp-leaf</PackageProjectUrl>
-    <Copyright>© 2018 Developed by Grand Silence — Kelog Studio</Copyright>
+    <Copyright>© 2018-2020 Developed by Grand Silence — Kelog Studio</Copyright>
     <PackageTags>net,http,socks,proxy,cloudflare,xnet,https,stormwall,useragent,parsing,bot,web,crowling</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/csharp-leaf/Leaf.Core/master/Icons/icon-300.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <NoWarn>1591</NoWarn>
-    <Description>Improved xNet library for .NET Framework 4.5.2, 4.6.2, 4.7.1, 4.7.2 &amp; .NET Core 2.0-2.2</Description> <!-- Ignore warinings abound undocumented code -->
+    <Description>Improved xNet for .NET Framework 4.5.2+ &amp; .NET Core 2+</Description> <!-- Ignore warinings abound undocumented code -->
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <None Include="_nuget\icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
   <!-- :: // Generic configurations -->
 
   <!-- :: Platform specific configurations -->
@@ -78,11 +64,9 @@
     <DefineConstants>IS_NETFRAMEWORK</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('netcore'))">
-    <DefineConstants>IS_NETCORE</DefineConstants>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <DefineConstants>IS_NETSTANDARD</DefineConstants>
   </PropertyGroup>
-
-
 
   <!-- :: // Platform specific configurations -->
   
@@ -93,8 +77,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Web" />
   </ItemGroup>
 

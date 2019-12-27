@@ -46,6 +46,7 @@ namespace Leaf.xNet
         /// </summary>
         public bool IgnoreInvalidCookie { get; set; } = false;
       
+        /// <summary>
         /// Пропускать куки которые истекли в ответе. Если указать <see langword="true" /> (по умолчанию), истекшее значение Cookie не будет обновляться и удаляться. 
         /// </summary>
         public bool IgnoreSetForExpiredCookies { get; set; } = true;

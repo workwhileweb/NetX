@@ -90,7 +90,9 @@ namespace Leaf.xNet.Services.Cloudflare
 
             log?.Invoke($"{LogPrefix}Checking availability at: {uri.AbsoluteUri} ...");
 
+#pragma warning disable 162
             for (int i = 0; i < MaxRetries; i++)
+#pragma warning restore 162
             {
                 string retry = $". Retry {i + 1} / {MaxRetries}.";
                 log?.Invoke($"{LogPrefix}Trying to bypass{retry}");

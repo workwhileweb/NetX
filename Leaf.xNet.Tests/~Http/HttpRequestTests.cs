@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Leaf.xNet.Tests
 {
-    [TestClass]
     public class HttpRequestTests
     {
         private const string BaseUrl = "https://nghttp2.org";
 
-
-        [TestMethod]
+        [Fact]
         public void UserAgentRandomizeTest()
         {
             const int generateRetries = 10;
@@ -22,24 +20,23 @@ namespace Leaf.xNet.Tests
                 for (int i = 0; i < generateRetries; i++)
                 {
                     req.UserAgentRandomize();
-                    if (string.IsNullOrEmpty(req.UserAgent))
-                        Assert.Fail("Unable to generate random UserAgent");
-
+                    Assert.False(string.IsNullOrEmpty(req.UserAgent), "Unable to generate random UserAgent");
+                    
                     if (lastUserAgent != req.UserAgent)
                         ++scores;
 
                     lastUserAgent = req.UserAgent;
                 }
-                        
-                if (scores < minScore)
-                    Assert.Fail($"For {generateRetries} retries unable to generate minimal count of user agents (${minScore})");
+                
+                Assert.False(scores < minScore,
+                    $"For {generateRetries} retries unable to generate minimal count of user agents (${minScore})");
 
                 string useragentJson = req.Get("/httpbin/user-agent").ToString();
-                StringAssert.Contains(useragentJson, req.UserAgent);
+                Assert.Contains(req.UserAgent, useragentJson);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetTest()
         {
             const string getArgument = "getArgument";
@@ -50,12 +47,12 @@ namespace Leaf.xNet.Tests
                 var response = req.Get("/httpbin/get?{getArgument}={getValue}");
                 string source = response.ToString();
 
-                StringAssert.Contains(source, getArgument);
-                StringAssert.Contains(source, getValue);
+                Assert.Contains(getArgument, source);
+                Assert.Contains(getValue, source);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PostTestFormEncoded()
         {
             const string postArgument = "postArgument";
@@ -68,14 +65,14 @@ namespace Leaf.xNet.Tests
                 };
 
                 var response = req.Post("/httpbin/post", rp);
-                var source = response.ToString();
+                string source = response.ToString();
 
-                StringAssert.Contains(source, postArgument);
-                StringAssert.Contains(source, postValue);
+                Assert.Contains(postArgument, source);
+                Assert.Contains(postValue, source);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PostTestMultipart()
         {
             const string postArgument = "postArgument";
@@ -90,12 +87,12 @@ namespace Leaf.xNet.Tests
                 var response = req.Post("/httpbin/post", rp);
                 var source = response.ToString();
 
-                StringAssert.Contains(source, postArgument);
-                StringAssert.Contains(source, postValue);
+                Assert.Contains(postArgument, source);
+                Assert.Contains(postValue, source);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FilterCookies()
         {
             var list = new Dictionary<string, string> {
@@ -111,11 +108,11 @@ namespace Leaf.xNet.Tests
 
             foreach (var item in list)
             {
-                Assert.AreEqual(CookieFilters.Filter(item.Key), item.Value);
+                Assert.Equal(item.Value, CookieFilters.Filter(item.Key));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FilterCookieDomains()
         {
             var validDomains = new[] {
@@ -132,7 +129,7 @@ namespace Leaf.xNet.Tests
             };
 
             foreach (string validDomain in validDomains)
-                Assert.IsNotNull(CookieFilters.FilterDomain(validDomain), $"Domain \"{validDomain}\" filtered bad but should be good");
+                Assert.NotNull(CookieFilters.FilterDomain(validDomain));
 
             // Normalized Wildcard Domains
             //
@@ -144,7 +141,7 @@ namespace Leaf.xNet.Tests
             foreach (var normalizedDomain in normalizedDomains)
             {
                 string filteredNormalizedDomain = CookieFilters.FilterDomain(normalizedDomain.Key);
-                Assert.AreEqual(normalizedDomain.Value, filteredNormalizedDomain, "Invalid first level cookie domain normalization");
+                Assert.Equal(normalizedDomain.Value, filteredNormalizedDomain);
             }
 
             // Invalid Domains
@@ -157,283 +154,8 @@ namespace Leaf.xNet.Tests
             };
             foreach (string invalidDomain in invalidDomains)
             {
-                Assert.IsNull(CookieFilters.FilterDomain(invalidDomain), $"Domain \"{invalidDomain}\" filtered good but it should be bad");
+                Assert.Null(CookieFilters.FilterDomain(invalidDomain));
             }
         }
-
-        /*
-        [TestMethod]
-        public void CloudFlareBypass()
-        {
-            using (var req = new HttpRequest())
-            {
-                var resp = req.GetThroughCloudflare("https://uam.zaczero.pl/");
-                Assert.AreEqual("OK", resp.ToString());
-
-                //var resp = req.GetThroughCloudflare("http://lionroyalcpk.club:2082/");
-                //string respStr = resp.ToString();
-            }
-        }*/
-
-        /*
-        [TestMethod]
-        public void KeepTempHeadersAfterRedirect()
-        {
-            using (var req = new HttpRequest())
-            {
-                req.Proxy = HttpProxyClient.Parse("127.0.0.1:8887");
-                req.Proxy.AbsoluteUriInStartingLine = false;
-
-                req.KeepTemporaryHeadersOnRedirect = true;
-                req.AddHeader(HttpHeader.Referer, "https://google.com");
-                var res = req.Get("http://google.com");
-
-                var res3 = req.Get("http://ya.ru");
-
-                req.KeepTemporaryHeadersOnRedirect = false;
-                req.AddHeader(HttpHeader.Referer, "https://google.com");
-                var resNo = req.Get("http://google.com");
-
-
-
-                req.KeepTemporaryHeadersOnRedirect = true;
-                req.AddHeader(HttpHeader.Referer, "https://google.com");
-                req.Get("http://google.com").None();
-
-                req.KeepTemporaryHeadersOnRedirect = false;
-                req.AddHeader(HttpHeader.Referer, "https://google.com");
-                req.Get("http://google.com").None();
-
-
-            }
-        }
-
-        
-        [TestMethod]
-        public void AvoidCrossdomainCookieDuplication()
-        {
-            var req = new HttpRequest("https://viastyle.org");
-            req.Proxy = HttpProxyClient.Parse("127.0.0.1:8888");
-            CookieStorage.DefaultExpireBeforeSet = true;
-
-            var resp = req.Get("/up/leaf-cookie.php");
-            var resp2 = req.Get("/up/leaf-cookie.php?q=q");
-            var resp3 = req.Get("/up/leaf-cookie.php");
-
-        }*/
-
-        /*
-        [TestMethod]
-        public void GetCookies()
-        {
-            using (var req = new HttpRequest())
-            {
-                
-              string getToken = req.Get("https://www.ourtesco.com/login/").ToString();
-
-                string token = Regex.Match(getToken, @"name=""user_info_nonce"" value=""(.+?)""").Groups[1].ToString();
-
-
-                req.Referer = "https://www.ourtesco.com/login/";
-                req.AddHeader("Accept-Encoding", "gzip, deflate, br");
-                req.AddHeader("Accept-Language", "ru,en;q=0.9");
-                req.AddHeader("Upgrade-Insecure-Requests", "1");
-                req.AddHeader("Origin", "https://www.ourtesco.com");
-                var postData = new RequestParams
-                {
-                    ["redirect_to"] = "https://www.ourtesco.com/login/",
-                    // TODO: edit
-                    ["log"] = "login",
-                    ["pwd"] = "pass",
-                    ["user_info_nonce"] = token,
-                    ["_wp_http_referer"] = "/login/",
-                    ["wplogin"] = "Sign in"
-                };
-
-                string postResponse = req.Post("https://www.ourtesco.com/login/", postData).ToString();
-                
-
-                // del
-
-                var pd = new RequestParams
-                {
-                    ["storeId"] = "10151",
-                    ["langId"] = "-24",
-                    ["catalogId"] = "10051",
-                    ["fromOrderId"] = "*",
-                    ["toOrderId"] = ".",
-                    ["deleteIfEmpty"] = "*",
-                    ["createIfEmpty"] = "1",
-                    ["calculationUsageId"] = "-1",
-                    ["updatePrices"] = "0",
-                    ["previousPage"] = "logon",
-                    ["forgotPasswordURL"] = "MSResForgotPassword",
-                    ["rememberMe"] = "false",
-                    ["resJSON"] = "true",
-                    ["reLogonURL"] = "MSResLogin",
-                    ["resetConfirmationViewName"] = "MSPwdEmailConfirmModalView",
-                    ["myAcctMain"] = "",
-                    ["challengeAnswer"] = "-",
-                    ["errorViewName"] = "MSResLogin",
-                    ["continueSignIn"] = "1",
-                    ["migrateUserErrorMsg"] = "MS_MIGRAT_HEADERERR_MSG",
-                    ["returnPage"] = "MSUserLoyaltyOptInView",
-                    ["URL"] = "/webapp/wcs/stores/servlet/MSSecureOrdercalculate?catalogId=10051&langId=-24&mergeStatus=&storeId=10151&URL=https://www.marksandspencer.com/&page=ACCOUNT_LOGIN",
-                    ["orderMove"] = "/webapp/wcs/stores/servlet/OrderItemMove?calculationUsageIdentifier=MSLoginModalDisplay_orderMove&catalogId=10051&langId=-24&mergeStatus=&storeId=10151&toOrderId=.**.&URL=OrderCalculate?URL=https://www.marksandspencer.com/",
-                    // todo: edit
-                    ["logonId"] = "", 
-                    ["logonPassword"] = ""
-                };
-
-                //req.Proxy = Socks5ProxyClient.Parse("127.0.0.1:8889");
-                string rs = req.Post("https://www.marksandspencer.com/MSLogon", pd).ToString();
-                //StringAssert.Contains(source, getArgument);
-                //StringAssert.Contains(source, getValue);
-            }
-        }
-
-        [TestMethod]
-        public void PostTest2()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest3()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest4()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest5()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest6()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest7()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest8()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest9()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest10()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest11()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest12()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PostTest13()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void RawTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void RawTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void AddHeaderTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void AddXmlHttpRequestHeaderTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void AddHeaderTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void CloseTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void DisposeTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void ContainsCookieTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void ContainsHeaderTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void ContainsHeaderTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void EnumerateHeadersTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void ClearAllHeadersTest()
-        {
-            Assert.Fail();
-        }*/
     }
 }
