@@ -83,7 +83,7 @@ namespace Leaf.xNet
 
 
         // ReSharper disable once UnusedMember.Global
-        internal new void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
+        internal void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
         {
             var dstPort = GetPortBytes(destinationPort);
             byte[] dstIp = { 0, 0, 0, 1 };

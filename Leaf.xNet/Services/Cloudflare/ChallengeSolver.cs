@@ -25,6 +25,7 @@ namespace Leaf.xNet.Services.Cloudflare
         /// </summary>
         /// <param name="challengePageContent">The HTML content of the clearance page, which contains the challenge.</param>
         /// <param name="targetHost">The hostname of the protected website.</param>
+        /// <param name="targetPort">The port of the protected website.</param>
         /// <returns>The solution.</returns>
         public static ChallengeSolution Solve(string challengePageContent, string targetHost, int targetPort)
         {
