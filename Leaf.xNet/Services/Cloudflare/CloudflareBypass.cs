@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Leaf.xNet.Services.Captcha;
+
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -17,6 +18,10 @@ namespace Leaf.xNet.Services.Cloudflare
     // ReSharper disable once UnusedType.Global
     public static class CloudflareBypass
     {
+        private const string PublicVersionIsNotMaintained = "Not maintained in public Leaf.xNet anymore.\r\n" +
+            "You can order private paid Leaf.xNet with support.\r\n" +
+            "Telegram: @kelog";
+        
         #region Public / Private: Data
 
         /// <summary>
@@ -58,6 +63,7 @@ namespace Leaf.xNet.Services.Cloudflare
         /// Check response for Cloudflare protection.
         /// </summary>
         /// <returns>Returns <keyword>true</keyword> if response has Cloudflare protection challenge.</returns>
+        [ObsoleteAttribute(PublicVersionIsNotMaintained)]
         public static bool IsCloudflared(this HttpResponse response)
         {
             bool serviceUnavailable = response.StatusCode == HttpStatusCode.ServiceUnavailable || response.StatusCode == HttpStatusCode.Forbidden;
@@ -78,6 +84,7 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <exception cref="CloudflareException">When unable to bypass Cloudflare</exception>
         /// <exception cref="CaptchaException">When unable to solve captcha using <see cref="ICaptchaSolver"/> provider.</exception>
         /// <returns>Returns original HttpResponse</returns>
+        [ObsoleteAttribute(PublicVersionIsNotMaintained)]
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, Uri uri, 
             DLog log = null,
             CancellationToken cancellationToken = default,
@@ -144,6 +151,7 @@ namespace Leaf.xNet.Services.Cloudflare
 
         /// <inheritdoc cref="GetThroughCloudflare(HttpRequest, string, DLog, CancellationToken, ICaptchaSolver)"/>
         /// <param name="url">URL address</param>
+        [ObsoleteAttribute(PublicVersionIsNotMaintained)]
         // ReSharper disable once UnusedMember.Global
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, string url,
             DLog log = null,
@@ -183,7 +191,9 @@ namespace Leaf.xNet.Services.Cloudflare
                         response = request.Get(response.RedirectAddress.AbsoluteUri);
                         request.IgnoreProtocolErrors = ignoreProtocolErrors;
 
+#pragma warning disable 618
                         if (IsCloudflared(response))
+#pragma warning restore 618
                         {
                             log?.Invoke($"{LogPrefix}ERROR [{tag}]. Unable to get he original response at: {uri.AbsoluteUri}");
                             return false;
