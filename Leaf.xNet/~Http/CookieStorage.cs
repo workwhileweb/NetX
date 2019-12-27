@@ -45,6 +45,10 @@ namespace Leaf.xNet
         /// Dont throw exception when received cookie name is invalid, just ignore.
         /// </summary>
         public bool IgnoreInvalidCookie { get; set; } = false;
+      
+        /// Пропускать куки которые истекли в ответе. Если указать <see langword="true" /> (по умолчанию), истекшее значение Cookie не будет обновляться и удаляться. 
+        /// </summary>
+        public bool IgnoreSetForExpiredCookies { get; set; } = true;
 
         /// <summary>
         /// Возвращает или задаёт возможность де-экранировать символы значения Cookie прежде чем отправлять запрос на сервер.
@@ -138,7 +142,7 @@ namespace Leaf.xNet
             Set(cookie);
         }
 
-                /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
+        /// <inheritdoc cref="Set(System.Net.CookieCollection)"/>
         /// <param name="requestAddress">Адрес запроса</param>
         /// <param name="rawCookie">Сырой формат записи в виде строки</param>
         public void Set(Uri requestAddress, string rawCookie)
@@ -165,11 +169,11 @@ namespace Leaf.xNet
             // Обрабатываем дополнительные ключи Cookie
             for (int i = 1; i < arguments.Length; i++)
             {
-                keyValue = arguments[i].Split(new[] {'='}, 2);
+                var cookieArgsKeyValues = arguments[i].Split(new[] {'='}, 2);
 
                 // Обрабатываем ключи регистронезависимо
-                string key = keyValue[0].Trim().ToLower();
-                string value = keyValue.Length < 2 ? null : keyValue[1].Trim();
+                string key = cookieArgsKeyValues[0].Trim().ToLower();
+                string value = cookieArgsKeyValues.Length < 2 ? null : cookieArgsKeyValues[1].Trim();
 
                 // ReSharper disable once SwitchStatementMissingSomeCases
                 switch (key)
@@ -212,7 +216,10 @@ namespace Leaf.xNet
                     cookie.Path = null;
                 }
             }
-               
+            
+            if (IgnoreSetForExpiredCookies && cookie.Expired)
+                return;
+            
             Set(cookie);
         }
 

@@ -4,8 +4,7 @@ using System.Text;
 using System.Net.Security;
 using System.Security;
 #if IS_NETFRAMEWORK
-using Microsoft.Win32;
-using System.IO;
+using System.Web;
 #endif
 
 namespace Leaf.xNet
@@ -138,25 +137,8 @@ namespace Leaf.xNet
             string mediaType = "application/octet-stream";
 
             #if IS_NETFRAMEWORK
-            try
-            {                
-                using (var regKey = Registry.ClassesRoot.OpenSubKey(extension))
-                {
-                    var keyValue = regKey?.GetValue("Content Type");
-
-                    if (keyValue != null)
-                        mediaType = keyValue.ToString();
-                }
-                
-            }
-            #region Catch's
-
-            catch (IOException) { }
-            catch (ObjectDisposedException) { }
-            catch (UnauthorizedAccessException) { }
-            catch (SecurityException) { }
-
-            #endregion
+            
+            return MimeMapping.GetMimeMapping(extension);
 
             #else
 
