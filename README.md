@@ -41,7 +41,12 @@ Install-Package Leaf.xNet
 - PUT
 - OPTIONS
 
-### CloudFlare bypass
+### Cloudflare bypass (obsolete)
+
+> Not maintained in public Leaf.xNet anymore.  
+  But you can [order private paid Leaf.xNet with support](https://t.me/kelog).  
+  Telegram: [@kelog](https://t.me/kelog)
+    
 See demo project in the Examples folder.
 
 ```csharp
@@ -57,7 +62,7 @@ var resp = httpRequest.Get("https://...");
 bool isCloudFlared = resp.isCloudFlared();
 ```
 
-### CloudFlare bypass when ReCaptcha required
+#### CloudFlare bypass when ReCaptcha required
 See demo project in the Examples folder.
 ```csharp
 using Leaf.xNet.Services.Captcha;
