@@ -1,14 +1,16 @@
 ﻿using System;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace Leaf.xNet
 {
     public static class CookieFilters
     {
-        public static bool Enabled = true;
-
-        public static bool Trim = true;
-        public static bool Path = true;
-        public static bool CommaEndingValue = true;
+        public static bool Enabled { get; set; } = true;
+        
+        public static bool Trim { get; set; } = true;
+        public static bool Path { get; set; } = true;
+        public static bool CommaEndingValue { get; set; } = true;
 
         /// <summary>
         /// Фильтруем Cookie для дальнейшего использования в нативном хранилище.

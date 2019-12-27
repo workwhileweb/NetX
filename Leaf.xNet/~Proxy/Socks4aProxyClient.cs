@@ -21,19 +21,11 @@ namespace Leaf.xNet
 
         /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.Socks4AProxyClient" /> заданным хостом прокси-сервера, и устанавливает порт равным - 1080.
-        /// </summary>
-        /// <param name="host">Хост прокси-сервера.</param>
-        public Socks4AProxyClient(string host)
-            : this(host, DefaultPort) { }
-
-        /// <inheritdoc />
-        /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.Socks4AProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
-        public Socks4AProxyClient(string host, int port)
+        public Socks4AProxyClient(string host, int port = DefaultPort)
             : this(host, port, string.Empty) { }
 
         /// <inheritdoc />

@@ -30,6 +30,7 @@ namespace Leaf.xNet
         UserAgent,
         Via,
         Warning,
+        // ReSharper disable once InconsistentNaming
         DNT,
         AccessControlAllowOrigin,
         AcceptRanges,
@@ -39,6 +40,7 @@ namespace Leaf.xNet
         ContentLanguage,
         ContentLength,
         ContentLocation,
+        // ReSharper disable once InconsistentNaming
         ContentMD5,
         ContentDisposition,
         ContentRange,

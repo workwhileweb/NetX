@@ -35,6 +35,7 @@ namespace Leaf.xNet
         private const byte CommandReplyNetworkUnreachable = 0x03;
         private const byte CommandReplyHostUnreachable = 0x04;
         private const byte CommandReplyConnectionRefused = 0x05;
+        // ReSharper disable once InconsistentNaming
         private const byte CommandReplyTTLExpired = 0x06;
         private const byte CommandReplyCommandNotSupported = 0x07;
         private const byte CommandReplyAddressTypeNotSupported = 0x08;
@@ -57,19 +58,11 @@ namespace Leaf.xNet
 
         /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.Socks5ProxyClient" /> заданным хостом прокси-сервера, и устанавливает порт равным - 1080.
-        /// </summary>
-        /// <param name="host">Хост прокси-сервера.</param>
-        public Socks5ProxyClient(string host)
-            : this(host, DefaultPort) { }
-
-        /// <inheritdoc />
-        /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.Socks5ProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
-        public Socks5ProxyClient(string host, int port)
+        public Socks5ProxyClient(string host, int port = DefaultPort)
             : this(host, port, string.Empty, string.Empty) { }
 
         /// <inheritdoc />
@@ -190,7 +183,7 @@ namespace Leaf.xNet
 
         private void InitialNegotiation(Stream nStream)
         {
-            var authMethod = !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)
+            byte authMethod = !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)
                 ? AuthMethodUsernamePassword
                 : AuthMethodNoAuthenticationRequired;
 

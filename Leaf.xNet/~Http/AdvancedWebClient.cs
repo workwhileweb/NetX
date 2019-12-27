@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Net;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+
 namespace Leaf.xNet
 {
     public class AdvancedWebClient : WebClient

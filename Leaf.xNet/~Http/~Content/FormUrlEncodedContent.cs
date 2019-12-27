@@ -19,6 +19,7 @@ namespace Leaf.xNet
         /// <param name="keysUnescaped">Указывает, нужно ли пропустить кодирование имен параметров запроса.</param>
         /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="content" /> равно <see langword="null" />.</exception>
         /// <remarks>По умолчанию используется тип контента - 'application/x-www-form-urlencoded'.</remarks>
+        // ReSharper disable once UnusedMember.Global
         public FormUrlEncodedContent(IEnumerable<KeyValuePair<string, string>> content, bool valuesUnescaped = false, bool keysUnescaped = false)
         {
             #region Проверка параметров

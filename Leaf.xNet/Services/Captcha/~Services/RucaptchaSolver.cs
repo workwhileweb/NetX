@@ -9,11 +9,14 @@ namespace Leaf.xNet.Services.Captcha
     /// <inheritdoc />
     public class RucaptchaSolver : BaseCaptchaSolver
     {
+        // ReSharper disable once MemberCanBeProtected.Global
         public string Host { get; protected set; } = "rucaptcha.com";
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public CaptchaProxy Proxy { get; set; }
 
-        public override string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken))
+        public override string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default)
         {
             // Validation
             ThrowIfApiKeyRequiredAndInvalid();
@@ -30,7 +33,7 @@ namespace Leaf.xNet.Services.Captcha
                 {"key", ApiKey},
                 {"method", "userrecaptcha"},
                 {"googlekey", siteKey},
-                {"pageurl", pageUrl},
+                {"pageurl", pageUrl}
             };
 
             if (Proxy.IsValid)

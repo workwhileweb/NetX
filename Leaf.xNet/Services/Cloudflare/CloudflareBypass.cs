@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Leaf.xNet.Services.Captcha;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Leaf.xNet.Services.Cloudflare
 {
@@ -12,7 +14,7 @@ namespace Leaf.xNet.Services.Cloudflare
     /// <remarks>
     /// Only the JavaScript challenge can be handled. CAPTCHA and IP address blocking cannot be bypassed.
     /// </remarks>
-    // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once UnusedType.Global
     public static class CloudflareBypass
     {
         #region Public / Private: Data
@@ -78,7 +80,8 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <returns>Returns original HttpResponse</returns>
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, Uri uri, 
             DLog log = null,
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
+            // ReSharper disable once UnusedParameter.Global
             ICaptchaSolver captchaSolver = null)
         {
             if (!request.UseCookies)
@@ -115,7 +118,7 @@ namespace Leaf.xNet.Services.Cloudflare
                     break;
                 }
 
-                if (cancellationToken != default(CancellationToken))
+                if (cancellationToken != default)
                     cancellationToken.ThrowIfCancellationRequested();
 
                 // Bypass depend on challenge type: JS / Recaptcha
@@ -141,9 +144,10 @@ namespace Leaf.xNet.Services.Cloudflare
 
         /// <inheritdoc cref="GetThroughCloudflare(HttpRequest, string, DLog, CancellationToken, ICaptchaSolver)"/>
         /// <param name="url">URL address</param>
+        // ReSharper disable once UnusedMember.Global
         public static HttpResponse GetThroughCloudflare(this HttpRequest request, string url,
             DLog log = null,
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             ICaptchaSolver captchaSolver = null)
         {
             var uri = request.BaseAddress != null && url.StartsWith("/") ? new Uri(request.BaseAddress, url) : new Uri(url);
@@ -201,6 +205,7 @@ namespace Leaf.xNet.Services.Cloudflare
 
         private static bool HasJsChallenge(HttpResponse response) => response.ToString().ContainsInsensitive("jschl-answer");
 
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool SolveJsChallenge(ref HttpResponse response, HttpRequest request, Uri uri, string retry, 
             DLog log, CancellationToken cancellationToken)
         {
@@ -243,6 +248,7 @@ namespace Leaf.xNet.Services.Cloudflare
             return response.ToString().IndexOf("<div class=\"g-recaptcha\">", StringComparison.OrdinalIgnoreCase) != -1;
         }
 
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool SolveRecaptchaChallenge(ref HttpResponse response, HttpRequest request, Uri uri, string retry, 
             DLog log, CancellationToken cancelToken)
         {
@@ -330,7 +336,7 @@ namespace Leaf.xNet.Services.Cloudflare
         {
             log?.Invoke($"{LogPrefix}: delay {milliseconds} ms...");
 
-            if (cancellationToken == default(CancellationToken))
+            if (cancellationToken == default)
                 Thread.Sleep(milliseconds);
             else
             {

@@ -8,6 +8,9 @@ using System.Threading;
 
 #if DEBUG
 using System.Diagnostics;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 #endif
 
 namespace Leaf.xNet
@@ -293,6 +296,7 @@ namespace Leaf.xNet
         /// Возвращает значение, указывающие, успешно ли выполнен запрос (код ответа = 200 OK). 
         /// </summary>
         // ReSharper disable once UnusedMember.Global
+        // ReSharper disable once InconsistentNaming
         public bool IsOK => StatusCode == HttpStatusCode.OK;
 
         /// <summary>
@@ -1166,7 +1170,7 @@ namespace Leaf.xNet
                     if (length > bufferSize)
                         length = bufferSize;
 
-                    var bytesRead = _receiverHelper.HasData 
+                    int bytesRead = _receiverHelper.HasData 
                         ? _receiverHelper.Read(buffer, 0, length) 
                         : stream.Read(buffer, 0, length);
 
@@ -1309,7 +1313,7 @@ namespace Leaf.xNet
             if (!_headers.ContainsKey("Keep-Alive"))
                 return null;
 
-            var header = _headers["Keep-Alive"];
+            string header = _headers["Keep-Alive"];
             var match = KeepAliveTimeoutRegex.Match(header);
 
             if (match.Success)
@@ -1323,7 +1327,7 @@ namespace Leaf.xNet
             if (!_headers.ContainsKey("Keep-Alive"))
                 return null;
 
-            var header = _headers["Keep-Alive"];
+            string header = _headers["Keep-Alive"];
             var match = KeepAliveMaxRegex.Match(header);
 
             if (match.Success)
@@ -1334,7 +1338,7 @@ namespace Leaf.xNet
 
         private Uri GetLocation()
         {
-            if (!_headers.TryGetValue("Location", out var location))
+            if (!_headers.TryGetValue("Location", out string location))
                 _headers.TryGetValue("Redirect-Location", out location);
 
             if (string.IsNullOrEmpty(location))
@@ -1351,7 +1355,7 @@ namespace Leaf.xNet
             if (!_headers.ContainsKey("Content-Type"))
                 return _request.CharacterSet ?? Encoding.Default;
 
-            var header = _headers["Content-Type"];
+            string header = _headers["Content-Type"];
             var match = ContentCharsetRegex.Match(header);
 
             if (!match.Success)

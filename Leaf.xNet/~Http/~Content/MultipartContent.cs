@@ -68,6 +68,7 @@ namespace Leaf.xNet
         /// <exception cref="System.ArgumentNullException">Значение параметра <paramref name="boundary"/> равно <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Значение параметра <paramref name="boundary"/> является пустой строкой.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Значение параметра <paramref name="boundary"/> имеет длину более 70 символов.</exception>
+        // ReSharper disable once MemberCanBePrivate.Global
         public MultipartContent(string boundary)
         {
             #region Проверка параметров
@@ -354,7 +355,7 @@ namespace Leaf.xNet
 
         #region Методы (закрытые)
 
-        public static string GetRandomString(int length)
+        private static string GetRandomString(int length)
         {
             var strBuilder = new StringBuilder(length);
 

@@ -30,7 +30,7 @@ namespace Leaf.xNet.Services.StormWall
             int e = _cK;
             var n = new StringBuilder();
 
-            foreach (var o in _cE)
+            foreach (char o in _cE)
             {
                 n.Append(Csr(-1 * e, o));
                 ++e;

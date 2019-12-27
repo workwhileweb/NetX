@@ -14,15 +14,16 @@ namespace Leaf.xNet
     {
         #region Константы (защищённые)
 
-        protected internal const int DefaultPort = 1080;
+        protected const int DefaultPort = 1080;
 
-        protected internal const byte VersionNumber = 4;
-        protected internal const byte CommandConnect = 0x01;
-        //protected internal const byte CommandBind = 0x02;
-        protected internal const byte CommandReplyRequestGranted = 0x5a;
-        protected internal const byte CommandReplyRequestRejectedOrFailed = 0x5b;
-        protected internal const byte CommandReplyRequestRejectedCannotConnectToIdentd = 0x5c;
-        protected internal const byte CommandReplyRequestRejectedDifferentIdentd = 0x5d;
+        protected const byte VersionNumber = 4;
+
+        private const byte CommandConnect = 0x01;
+        // protected const byte CommandBind = 0x02;
+        protected const byte CommandReplyRequestGranted = 0x5a;
+        private const byte CommandReplyRequestRejectedOrFailed = 0x5b;
+        private const byte CommandReplyRequestRejectedCannotConnectToIdentd = 0x5c;
+        private const byte CommandReplyRequestRejectedDifferentIdentd = 0x5d;
 
         #endregion
 
@@ -39,19 +40,11 @@ namespace Leaf.xNet
 
         /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.Socks4ProxyClient" /> заданным хостом прокси-сервера, и устанавливает порт равным - 1080.
-        /// </summary>
-        /// <param name="host">Хост прокси-сервера.</param>
-        public Socks4ProxyClient(string host)
-            : this(host, DefaultPort) { }
-
-        /// <inheritdoc />
-        /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.Socks4ProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
-        public Socks4ProxyClient(string host, int port)
+        public Socks4ProxyClient(string host, int port = DefaultPort)
             : this(host, port, string.Empty) { }
 
         /// <inheritdoc />
@@ -165,7 +158,8 @@ namespace Leaf.xNet
 
         #region Методы (внутренние защищённые)
 
-        protected internal void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
+        // ReSharper disable once SuggestBaseTypeForParameter
+        private void SendCommand(NetworkStream nStream, byte command, string destinationHost, int destinationPort)
         {
             var dstPort = GetIpAddressBytes(destinationHost);
             var dstIp = GetPortBytes(destinationPort);
@@ -203,7 +197,7 @@ namespace Leaf.xNet
                 HandleCommandError(reply);
         }
 
-        protected internal byte[] GetIpAddressBytes(string destinationHost)
+        private byte[] GetIpAddressBytes(string destinationHost)
         {
             if (IPAddress.TryParse(destinationHost, out var ipAddress))
                 return ipAddress.GetAddressBytes();
@@ -229,7 +223,7 @@ namespace Leaf.xNet
             return ipAddress.GetAddressBytes();
         }
 
-        protected internal byte[] GetPortBytes(int port)
+        protected static byte[] GetPortBytes(int port)
         {
             var array = new byte[2];
 
@@ -239,7 +233,7 @@ namespace Leaf.xNet
             return array;
         }
 
-        protected internal void HandleCommandError(byte command)
+        protected void HandleCommandError(byte command)
         {
             string errorMessage;
 

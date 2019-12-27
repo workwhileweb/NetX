@@ -4,6 +4,7 @@ using System.Text;
 using System.Net.Security;
 #if IS_NETFRAMEWORK
 using System.Web;
+// ReSharper disable MemberCanBePrivate.Global
 #endif
 
 namespace Leaf.xNet

@@ -1,7 +1,7 @@
 ﻿namespace Leaf.xNet.Services.Captcha
 {
-    // ReSharper disable once UnusedMember.Global
     /// <inheritdoc />
+    // ReSharper disable once UnusedType.Global
     public class TwoCaptchaSolver : RucaptchaSolver
     {
         public TwoCaptchaSolver()

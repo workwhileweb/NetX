@@ -9,12 +9,12 @@ namespace Leaf.xNet
     /// </summary>
     public static class Randomizer
     {
-        private static readonly RNGCryptoServiceProvider generator = new RNGCryptoServiceProvider();
+        private static readonly RNGCryptoServiceProvider Generator = new RNGCryptoServiceProvider();
 
         private static Random Generate()
         {
-            byte[] buffer = new byte[4];
-            generator.GetBytes(buffer);
+            var buffer = new byte[4];
+            Generator.GetBytes(buffer);
             return new Random(BitConverter.ToInt32(buffer, 0));
         }
 

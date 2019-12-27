@@ -1,5 +1,7 @@
 ﻿using System;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace Leaf.xNet
 {
     /// <inheritdoc />

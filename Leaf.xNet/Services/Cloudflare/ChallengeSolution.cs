@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Leaf.xNet.Services.Cloudflare
 {
@@ -37,12 +38,13 @@ namespace Leaf.xNet.Services.Cloudflare
         /// <summary>
         /// Вернет истину если испытание подсчитывается только типом <see cref="Int32"/>, а не <see cref="Double"/> с плавающей точкой.
         /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool ContainsIntegerTag { get; }
 
         /// <summary>
         /// Результирующий URL запроса который необходимо исполнить для прохождения JS испытания.
         /// </summary>
-        public string ClearanceQuery => !(string.IsNullOrEmpty(S)) ?
+        public string ClearanceQuery => !string.IsNullOrEmpty(S) ?
             $"{ClearancePage}?s={Uri.EscapeDataString(S)}&jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer.ToString("R", CultureInfo.InvariantCulture)}" :
             $"{ClearancePage}?jschl_vc={VerificationCode}&pass={Pass}&jschl_answer={Answer.ToString("R", CultureInfo.InvariantCulture)}";
 

@@ -6,10 +6,12 @@ namespace Leaf.xNet.Services.Captcha
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum CaptchaProxyType
     {
+        // ReSharper disable UnusedMember.Global
         HTTP,
         HTTPS,
         SOCKS4,
         SOCKS5
+        // ReSharper restore UnusedMember.Global
     }
 
     public struct CaptchaProxy
@@ -39,6 +41,7 @@ namespace Leaf.xNet.Services.Captcha
             Address = address;
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Validate(CaptchaProxyType type, string address)
         {
             if (string.IsNullOrEmpty(address))

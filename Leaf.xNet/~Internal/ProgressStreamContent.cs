@@ -7,8 +7,8 @@ using System.Net;
 namespace Leaf.xNet
 {
     internal delegate void ProgressDelegate(long bytes, long totalBytes, long totalBytesExpected);
-
-    // ReSharper disable once UnusedMember.Global
+    
+    // ReSharper disable once UnusedType.Global
     internal class ProgressStreamContent : System.Net.Http.StreamContent
     {
         // ReSharper disable once UnusedMember.Global
@@ -58,13 +58,14 @@ namespace Leaf.xNet
 
             Progress(bytes, _totalBytes, _totalBytesExpected);
         }
-
-        private ProgressDelegate _progress;
+        
+        // ReSharper disable once MemberCanBePrivate.Global
         public ProgressDelegate Progress
         {
             get => _progress;
             set => _progress = value ?? delegate { };
         }
+        private ProgressDelegate _progress;
 
         protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
@@ -74,7 +75,7 @@ namespace Leaf.xNet
 
         protected override bool TryComputeLength(out long length)
         {
-            var result = base.TryComputeLength(out length);
+            bool result = base.TryComputeLength(out length);
             _totalBytesExpected = length;
             return result;
         }
@@ -128,7 +129,7 @@ namespace Leaf.xNet
             {
                 _token.ThrowIfCancellationRequested();
 
-                var readCount = ParentStream.Read(buffer, offset, count);
+                int readCount = ParentStream.Read(buffer, offset, count);
                 ReadCallback(readCount);
                 return readCount;
             }
@@ -157,7 +158,7 @@ namespace Leaf.xNet
                 _token.ThrowIfCancellationRequested();
                 var linked = CancellationTokenSource.CreateLinkedTokenSource(_token, cancellationToken);
 
-                var readCount = await ParentStream.ReadAsync(buffer, offset, count, linked.Token);
+                int readCount = await ParentStream.ReadAsync(buffer, offset, count, linked.Token);
 
                 ReadCallback(readCount);
                 return readCount;

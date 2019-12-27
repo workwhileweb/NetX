@@ -101,6 +101,7 @@ namespace Leaf.xNet.Services.Cloudflare
             return number;
         }
 
+        // ReSharper disable once UseDeconstructionOnParameter
         private static double ApplyDecodingStep(double number, Tuple<string, double> step)
         {
             string op = step.Item1;

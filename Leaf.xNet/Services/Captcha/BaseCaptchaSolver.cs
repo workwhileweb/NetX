@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Threading;
+
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Leaf.xNet.Services.Captcha
 {
@@ -9,7 +12,7 @@ namespace Leaf.xNet.Services.Captcha
     {
         public string ApiKey { get; set; }
         public bool IsApiKeyRequired { get; protected set; } = true;
-        public virtual bool IsApiKeyValid => !string.IsNullOrEmpty(ApiKey);
+        public bool IsApiKeyValid => !string.IsNullOrEmpty(ApiKey);
         
         public uint UploadRetries { get; set; } = 40;
         public uint StatusRetries { get; set; } = 80;
@@ -25,25 +28,25 @@ namespace Leaf.xNet.Services.Captcha
         #region SolveImage : Generic
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveImage(string imageUrl, CancellationToken cancelToken = default(CancellationToken))
+        public virtual string SolveImage(string imageUrl, CancellationToken cancelToken = default)
         {
             throw NotImplemented(nameof(SolveImage), NameOfString);
         }
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveImage(byte[] imageBytes, CancellationToken cancelToken = default(CancellationToken))
+        public virtual string SolveImage(byte[] imageBytes, CancellationToken cancelToken = default)
         {
             throw NotImplemented(nameof(SolveImage), "byte[]");
         }
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveImage(Stream imageStream, CancellationToken cancelToken = default(CancellationToken))
+        public virtual string SolveImage(Stream imageStream, CancellationToken cancelToken = default)
         {
             throw NotImplemented(nameof(SolveImage), nameof(Stream));
         }
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public string SolveImageFromBase64(string imageBase64, CancellationToken cancelToken = default(CancellationToken))
+        public string SolveImageFromBase64(string imageBase64, CancellationToken cancelToken = default)
         {
             throw NotImplemented(nameof(SolveImageFromBase64), NameOfString);
         }
@@ -54,7 +57,7 @@ namespace Leaf.xNet.Services.Captcha
         #region SolveImage : Recaptcha
 
         /// <exception cref="NotImplementedException">Throws when method isn't implemented by your class.</exception>
-        public virtual string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default(CancellationToken))
+        public virtual string SolveRecaptcha(string pageUrl, string siteKey, CancellationToken cancelToken = default)
         {
             throw NotImplemented(nameof(SolveRecaptcha), "string, string");
         }
@@ -67,6 +70,7 @@ namespace Leaf.xNet.Services.Captcha
                 throw new CaptchaException(CaptchaError.InvalidApiKey);
         }
 
+        // ReSharper disable once UnusedParameter.Global
         protected void Delay(TimeSpan delay, CancellationToken cancelToken)
         {
             if (cancelToken != CancellationToken.None)

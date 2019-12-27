@@ -49,6 +49,7 @@ namespace Leaf.xNet
         /// -или-
         /// Значение параметра <paramref name="count"/> больше (длина содержимого - смещение).</exception>
         /// <remarks>По умолчанию используется тип контента - 'application/octet-stream'.</remarks>
+        // ReSharper disable once MemberCanBePrivate.Global
         public BytesContent(byte[] content, int offset, int count)
         {
             #region Проверка параметров

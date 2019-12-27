@@ -17,11 +17,13 @@ namespace Leaf.xNet
         /// <summary>
         /// Указывает, нужно ли пропустить кодирование значений параметров запроса.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public readonly bool ValuesUnescaped;
         
         /// <summary>
         /// Указывает, нужно ли пропустить кодирование имен параметров запроса.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public readonly bool KeysUnescaped;
 
         /// <inheritdoc />

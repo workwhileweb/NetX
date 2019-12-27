@@ -33,19 +33,11 @@ namespace Leaf.xNet
 
         /// <inheritdoc />
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.HttpProxyClient" /> заданным хостом прокси-сервера, и устанавливает порт равным - 8080.
-        /// </summary>
-        /// <param name="host">Хост прокси-сервера.</param>
-        public HttpProxyClient(string host)
-            : this(host, DefaultPort) { }
-
-        /// <inheritdoc />
-        /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="T:Leaf.xNet.HttpProxyClient" /> заданными данными о прокси-сервере.
         /// </summary>
         /// <param name="host">Хост прокси-сервера.</param>
         /// <param name="port">Порт прокси-сервера.</param>
-        public HttpProxyClient(string host, int port)
+        public HttpProxyClient(string host, int port = DefaultPort)
             : this(host, port, string.Empty, string.Empty) { }
 
         /// <inheritdoc />
@@ -66,6 +58,8 @@ namespace Leaf.xNet
         /// <summary>
         /// Версия протокола которая должна использоваться. HTTP 2.0 не поддерживается в данный момент.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public static string ProtocolVersion { get; set; } = "1.1"; 
         
         #endregion

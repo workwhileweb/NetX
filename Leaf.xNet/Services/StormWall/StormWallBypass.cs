@@ -6,7 +6,7 @@ namespace Leaf.xNet.Services.StormWall
     /// <summary>
     /// Класс-расширение для обхода AntiDDoS защиты StormWall.
     /// </summary>
-    // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once UnusedType.Global
     public static class StormWallBypass
     {
         #region Solver Singleton
@@ -14,11 +14,13 @@ namespace Leaf.xNet.Services.StormWall
         private static StormWallSolver Solver => _solver ?? (_solver = new StormWallSolver());
         #endregion
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static bool IsStormWalled(this HttpResponse rawResp)
         {
             return IsStormWalled(rawResp.ToString());
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static bool IsStormWalled(this string resp)
         {
             return resp.Contains("<h1>Stormwall DDoS protection</h1>")
@@ -39,6 +41,7 @@ namespace Leaf.xNet.Services.StormWall
         /// <param name="url">Адрес запроса</param>
         /// <param name="resp">Ответ со страницей StormWall если он был получен ранее. Чтобы не делать лишний запрос, оптимизация.</param>
         /// <returns>Вернет чистый ответ от сервера, без защиты Anti-DDoS.</returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static HttpResponse GetThroughStormWall(this HttpRequest req, string url, string resp = null)
         {
             if (resp == null)

@@ -12,13 +12,18 @@ using System.Text;
 using System.Threading;
 using Leaf.xNet.Services.Captcha;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace Leaf.xNet
 {
     /// <inheritdoc />
     /// <summary>
     /// Class to send HTTP-server requests.
     /// </summary>
-    public class HttpRequest : IDisposable
+    public sealed class HttpRequest : IDisposable
     {
         // Используется для определения того, сколько байт было отправлено/считано.
         private sealed class HttpWrapperStream : Stream
@@ -127,7 +132,7 @@ namespace Leaf.xNet
         /// <summary>
         /// Version HTTP-protocol, used in requests.
         /// </summary>
-        public static Version ProtocolVersion = new Version(1, 1);
+        public static Version ProtocolVersion { get; set; } = new Version(1, 1);
 
         #region Статические свойства (открытые)
 
@@ -200,6 +205,7 @@ namespace Leaf.xNet
         /// <summary>
         /// Возникает каждый раз при продвижении хода выгрузки данных тела сообщения.
         /// </summary>
+        // ReSharper disable once EventNeverSubscribedTo.Global
         public event EventHandler<UploadProgressChangedEventArgs> UploadProgressChanged
         {
             add => _uploadProgressChangedHandler += value;
@@ -210,6 +216,7 @@ namespace Leaf.xNet
         /// <summary>
         /// Возникает каждый раз при продвижении хода загрузки данных тела сообщения.
         /// </summary>
+        // ReSharper disable once EventNeverSubscribedTo.Global
         public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged
         {
             add => _downloadProgressChangedHandler += value;
@@ -255,7 +262,7 @@ namespace Leaf.xNet
         /// Возвращает или задает метод делегата, вызываемый при проверки сертификата SSL, используемый для проверки подлинности.
         /// </summary>
         /// <value>Значение по умолчанию — <see langword="null"/>. Если установлено значение по умолчанию, то используется метод, который принимает все сертификаты SSL.</value>
-        public RemoteCertificateValidationCallback SslCertificateValidatorCallback;
+        public RemoteCertificateValidationCallback SslCertificateValidatorCallback { get; set; }
 
         /// <summary>
         /// Разрешает устанавливать пустые значения заголовкам.
@@ -1488,6 +1495,7 @@ namespace Leaf.xNet
         /// Установка значения HTTP-заголовка, который должен задаваться с помощью специального свойства/метода.
         /// </exception>
         /// <remarks>Данный HTTP-заголовок будет стёрт после первого запроса.</remarks>
+        // ReSharper disable once UnusedMethodReturnValue.Global
         public HttpRequest AddHeader(HttpHeader header, string value)
         {
             AddHeader(Http.Headers[header], value);
@@ -2954,7 +2962,7 @@ namespace Leaf.xNet
         /// Освобождает неуправляемые (а при необходимости и управляемые) ресурсы, используемые объектом <see cref="HttpRequest"/>.
         /// </summary>
         /// <param name="disposing">Значение <see langword="true"/> позволяет освободить управляемые и неуправляемые ресурсы; значение <see langword="false"/> позволяет освободить только неуправляемые ресурсы.</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing || TcpClient == null)
                 return;
@@ -2975,7 +2983,7 @@ namespace Leaf.xNet
         /// Вызывает событие <see cref="UploadProgressChanged"/>.
         /// </summary>
         /// <param name="e">Аргументы события.</param>
-        protected virtual void OnUploadProgressChanged(UploadProgressChangedEventArgs e)
+        private void OnUploadProgressChanged(UploadProgressChangedEventArgs e)
         {
             var eventHandler = _uploadProgressChangedHandler;
 
@@ -2986,7 +2994,7 @@ namespace Leaf.xNet
         /// Вызывает событие <see cref="DownloadProgressChanged"/>.
         /// </summary>
         /// <param name="e">Аргументы события.</param>
-        protected virtual void OnDownloadProgressChanged(DownloadProgressChangedEventArgs e)
+        private void OnDownloadProgressChanged(DownloadProgressChangedEventArgs e)
         {
             var eventHandler = _downloadProgressChangedHandler;
 
@@ -3135,7 +3143,7 @@ namespace Leaf.xNet
 
         private void CloseConnectionIfNeeded()
         {
-            var hasConnection = TcpClient != null && ClientStream != null;
+            bool hasConnection = TcpClient != null && ClientStream != null;
 
             if (!hasConnection || Response.HasError || Response.MessageBodyLoaded)
                 return;
@@ -3154,10 +3162,10 @@ namespace Leaf.xNet
         {
             var proxy = GetProxy();
 
-            var hasConnection = TcpClient != null;
-            var proxyChanged = !Equals(_currentProxy, proxy);
+            bool hasConnection = TcpClient != null;
+            bool proxyChanged = !Equals(_currentProxy, proxy);
 
-            var addressChanged =
+            bool addressChanged =
                 previousAddress == null ||
                 previousAddress.Port != address.Port ||
                 previousAddress.Host != address.Host ||
@@ -3183,13 +3191,13 @@ namespace Leaf.xNet
             if (!KeepAlive)
                 return false;
 
-            var maximumKeepAliveRequests =
+            int maximumKeepAliveRequests =
                 Response.MaximumKeepAliveRequests ?? _maximumKeepAliveRequests;
 
             if (_keepAliveRequestCount >= maximumKeepAliveRequests)
                 return true;
 
-            var keepAliveTimeout = Response.KeepAliveTimeout ?? _keepAliveTimeout;
+            int keepAliveTimeout = Response.KeepAliveTimeout ?? _keepAliveTimeout;
 
             var timeLimit = _whenConnectionIdle.AddMilliseconds(keepAliveTimeout);
 
@@ -3198,8 +3206,8 @@ namespace Leaf.xNet
 
         private void SendRequestData(Uri uri, HttpMethod method)
         {
-            var contentLength = 0L;
-            var contentType = string.Empty;
+            long contentLength = 0L;
+            string contentType = string.Empty;
 
             if (CanContainsRequestBody(method) && _content != null)
             {
@@ -3208,8 +3216,8 @@ namespace Leaf.xNet
             }
 
 
-            var startingLine = GenerateStartingLine(method);
-            var headers = GenerateHeaders(uri, method, contentLength, contentType);
+            string startingLine = GenerateStartingLine(method);
+            string headers = GenerateHeaders(uri, method, contentLength, contentType);
 
             var startingLineBytes = Encoding.ASCII.GetBytes(startingLine);
             var headersBytes = Encoding.ASCII.GetBytes(headers);
@@ -3220,7 +3228,7 @@ namespace Leaf.xNet
             ClientStream.Write(startingLineBytes, 0, startingLineBytes.Length);
             ClientStream.Write(headersBytes, 0, headersBytes.Length);
 
-            var hasRequestBody = _content != null && contentLength > 0;
+            bool hasRequestBody = _content != null && contentLength > 0;
 
             // Отправляем тело запроса, если оно не присутствует.
             if (hasRequestBody)
@@ -3257,7 +3265,7 @@ namespace Leaf.xNet
 
         private void CheckStatusCode(HttpStatusCode statusCode)
         {
-            var statusCodeNum = (int) statusCode;
+            int statusCodeNum = (int) statusCode;
 
             if (statusCodeNum >= 400 && statusCodeNum < 500)
             {
@@ -3586,7 +3594,7 @@ namespace Leaf.xNet
 
         private string GetLanguageHeader()
         {
-            var cultureName = Culture?.Name ?? CultureInfo.CurrentCulture.Name;
+            string cultureName = Culture?.Name ?? CultureInfo.CurrentCulture.Name;
 
             return cultureName.StartsWith("en")
                 ? cultureName
@@ -3598,7 +3606,7 @@ namespace Leaf.xNet
             if (Equals(CharacterSet, Encoding.UTF8))
                 return "utf-8;q=0.7,*;q=0.3";
 
-            var charsetName = CharacterSet?.WebName ?? Encoding.Default.WebName;
+            string charsetName = CharacterSet?.WebName ?? Encoding.Default.WebName;
 
             return $"{charsetName},utf-8;q=0.7,*;q=0.3";
         }

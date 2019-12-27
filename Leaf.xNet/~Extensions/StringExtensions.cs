@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Leaf.xNet
 {
@@ -58,7 +59,7 @@ namespace Leaf.xNet
                 throw new ArgumentNullException(nameof(right));
 
             if (startIndex < 0 || startIndex >= self.Length)
-                throw new ArgumentOutOfRangeException(nameof(startIndex), "Invalid start index");
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             #endregion
 
             int currentStartIndex = startIndex;

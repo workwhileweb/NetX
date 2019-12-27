@@ -44,7 +44,7 @@ namespace Leaf.xNet
         /// <summary>
         /// Dont throw exception when received cookie name is invalid, just ignore.
         /// </summary>
-        public bool IgnoreInvalidCookie { get; set; } = false;
+        public bool IgnoreInvalidCookie { get; set; }
       
         /// <summary>
         /// Пропускать куки которые истекли в ответе. Если указать <see langword="true" /> (по умолчанию), истекшее значение Cookie не будет обновляться и удаляться. 
@@ -69,7 +69,7 @@ namespace Leaf.xNet
         private bool _unescapeValuesOnSend;
         private bool _unescapeValuesOnSendCustomized;
 
-        private static readonly char[] ReservedChars = new char[] { ' ', '\t', '\r', '\n', '=', ';', ',' };
+        private static readonly char[] ReservedChars = { ' ', '\t', '\r', '\n', '=', ';', ',' };
 
         private static BinaryFormatter Bf => _binaryFormatter ?? (_binaryFormatter = new BinaryFormatter());
         private static BinaryFormatter _binaryFormatter;
