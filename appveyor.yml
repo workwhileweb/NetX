@@ -28,7 +28,7 @@ build:
   publish_nuget: true
   verbosity: minimal
 artifacts:
-- path: Leaf.xNet\bin\Release\Leaf.xNet.$(appveyor_build_version).nupkg
+- path: Leaf.xNet.$(appveyor_build_version).nupkg
   name: Leaf.xNet_v$(appveyor_build_version)__Nuget_All_Targets
 - path: Leaf.xNet\bin\Release\net452
   name: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.5.2
