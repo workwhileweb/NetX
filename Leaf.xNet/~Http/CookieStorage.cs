@@ -382,6 +382,9 @@ namespace Leaf.xNet
             return Contains(new Uri(url), cookieName);
         }
 
+        
+        #region Load / Save: File
+        
         /// <summary>
         /// Сохраняет куки в файл.
         /// <remarks>Рекомендуется расширение .jar.</remarks>
@@ -412,5 +415,41 @@ namespace Leaf.xNet
             using (var fs = new FileStream(filePath, FileMode.Open))
                 return (CookieStorage)Bf.Deserialize(fs);
         }
+        
+        #endregion
+
+
+        #region Save / Load: Bytes
+        
+        /// <summary>
+        /// Сохраняет куки в массив байт.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Global
+        public byte[] ToBytes()
+        {
+            byte[] r;
+
+            using (var ms = new MemoryStream())
+            {
+                Bf.Serialize(ms, this);
+                r = ms.ToArray();
+            }
+
+            return r;
+        }
+        
+        /// <summary>
+        /// Загружает <see cref="CookieStorage"/> из массива байт.
+        /// </summary>
+        /// <param name="bytes">Массив байт</param>
+        /// <returns>Вернет <see cref="CookieStorage"/>, который задается в свойстве <see cref="HttpRequest"/> Cookies.</returns>
+        // ReSharper disable once UnusedMember.Global
+        public static CookieStorage FromBytes(byte[] bytes)
+        {
+            using (var ms = new MemoryStream(bytes))
+                return (CookieStorage)Bf.Deserialize(ms);
+        }
+        
+        #endregion
     }
 }
