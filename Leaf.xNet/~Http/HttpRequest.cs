@@ -735,6 +735,18 @@ namespace Leaf.xNet
         {
             Init();
         }
+        
+        static HttpRequest()
+        {
+            // It's a fix of HTTPs Proxies SSL issue
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback += ServerCertificateValidationCallback;
+        }
+        
+        private static bool ServerCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="HttpRequest"/>.
@@ -3528,7 +3540,12 @@ namespace Leaf.xNet
         private string GenerateStartingLine(HttpMethod method)
         {
             // Fix by Igor Vacil'ev: sometimes proxies returns 404 when used full path.
-            string query = _currentProxy != null && _currentProxy.Type == ProxyType.HTTP && _currentProxy.AbsoluteUriInStartingLine
+            bool hasHttpProxyWithAbsoluteUriInStartingLine = 
+                _currentProxy != null &&
+                _currentProxy.Type == ProxyType.HTTP &&
+                _currentProxy.AbsoluteUriInStartingLine;
+
+            string query = hasHttpProxyWithAbsoluteUriInStartingLine
                 ? Address.AbsoluteUri
                 : Address.PathAndQuery;
 

@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Leaf.xNet</RootNamespace>
     <AssemblyName>Leaf.xNet</AssemblyName>
-    <TargetFrameworks>net452;net462;net472;net48;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <FileAlignment>512</FileAlignment>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Grand Silence</Authors>
@@ -49,7 +49,7 @@
     <PackageTags>net,http,socks,proxy,cloudflare,xnet,https,stormwall,useragent,parsing,bot,web,crowling</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <NoWarn>1591,1573</NoWarn>
-    <Description>Improved xNet for .NET Framework 4.5.2+ &amp; .NET Core 2+</Description> <!-- Ignore warinings abound undocumented code -->
+    <Description>Improved xNet for .NET Framework 4.5+ / .NET Standard 2.0</Description> <!-- Ignore warinings abound undocumented code -->
   </PropertyGroup>
   
   <ItemGroup>

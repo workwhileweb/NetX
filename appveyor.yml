@@ -28,14 +28,8 @@ build:
   publish_nuget: true
   verbosity: minimal
 artifacts:
-- path: Leaf.xNet\bin\Release\net452
-  name: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.5.2
-- path: Leaf.xNet\bin\Release\net462
-  name: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.6.2
-- path: Leaf.xNet\bin\Release\net472
-  name: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.7.2
-- path: Leaf.xNet\bin\Release\net48
-  name: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.8
+- path: Leaf.xNet\bin\Release\net45
+  name: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.5
 - path: Leaf.xNet\bin\Release\netstandard2.0
   name: Leaf.xNet_v$(appveyor_build_version)__NET_Standard_2.0
 deploy:
@@ -50,7 +44,7 @@ deploy:
   release: Leaf.xNet v$(appveyor_build_version)
   auth_token:
     secure: NQtMOO3yB309cDK/pFWRiQ==
-  artifact: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.5.2;Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.6.2;Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.7.2;Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.8;Leaf.xNet_v$(appveyor_build_version)__NET_Standard_2.0
+  artifact: Leaf.xNet_v$(appveyor_build_version)__NET_Framework_4.5;Leaf.xNet_v$(appveyor_build_version)__NET_Standard_2.0
   on:
     branch: master
 only_commits:

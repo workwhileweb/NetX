@@ -152,7 +152,7 @@ namespace Leaf.xNet
         /// Если задано <see langword="false"/> - всегда будет использован относительный адрес в заголовке запроса.
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool AbsoluteUriInStartingLine { get; set; } = true;
+        public bool AbsoluteUriInStartingLine { get; set; }
 
         #endregion
 
@@ -215,8 +215,6 @@ namespace Leaf.xNet
                     return _debugHttpProxy;
 
                 _debugHttpProxy = HttpProxyClient.Parse("127.0.0.1:8888");
-                _debugHttpProxy.AbsoluteUriInStartingLine = false; // Fix tree Charles bug 
-
                 return _debugHttpProxy;
             }
         }

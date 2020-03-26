@@ -194,14 +194,14 @@ namespace Leaf.xNet
 
         private void SendConnectionCommand(Stream nStream, string destinationHost, int destinationPort)
         {
-            var commandBuilder = new StringBuilder();
+            var sb = new StringBuilder();
+            sb.AppendFormat("CONNECT {0}:{1} HTTP/{2}\r\n", destinationHost, destinationPort, ProtocolVersion);
+            sb.AppendFormat(GenerateAuthorizationHeader());
+            sb.Append("Host: "); sb.AppendLine(destinationHost);
+            sb.AppendLine("Proxy-Connection: Keep-Alive");
+            sb.AppendLine();
 
-            commandBuilder.AppendFormat("CONNECT {0}:{1} HTTP/{2}\r\n", destinationHost, destinationPort, ProtocolVersion);
-            commandBuilder.AppendFormat(GenerateAuthorizationHeader());
-            commandBuilder.AppendLine();
-
-            var buffer = Encoding.ASCII.GetBytes(commandBuilder.ToString());
-
+            var buffer = Encoding.ASCII.GetBytes(sb.ToString());
             nStream.Write(buffer, 0, buffer.Length);
         }
 
