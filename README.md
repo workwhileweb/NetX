@@ -291,9 +291,12 @@ request.Cookies.Set(cookie);
 
 # Donate
 If this project help you reduce time to develop, you can give me a cup of coffee :)  
+
+[at BuyMeACoffee.com](https://www.buymeacoffee.com/grandsilence)
+
 **PayPal**: `grand.silence@mail.ru`
 
-[**Via web-payment**: WebMoney | Steam Item | MasterCard | Visa | Sberbank.Online | BitCoin ](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
+[**Via web-payment**: WebMoney | Steam Item | MasterCard | Visa | Sberbank.Online | Bitcoin ](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
 [![Imgur](https://i.imgur.com/APbu91c.png)](https://www.digiseller.market/asp2/pay_options.asp?id_d=2582260)
 
 ### Wallets
