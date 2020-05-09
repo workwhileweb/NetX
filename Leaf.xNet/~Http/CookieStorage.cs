@@ -156,6 +156,9 @@ namespace Leaf.xNet
 
             // Получаем ключ и значение самой Cookie
             var keyValue = arguments[0].Split(new[] {'='}, 2);
+            if (keyValue.Length <= 1)
+                return;
+            
             keyValue[0] = keyValue[0].Trim();
             keyValue[1] = keyValue[1].Trim();
 
