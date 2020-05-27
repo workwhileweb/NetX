@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -976,16 +977,20 @@ namespace Leaf.xNet
 
         #region Загрузка тела сообщения
 
-        private IEnumerable<BytesWrapper> GetMessageBodySource()
+        // ReSharper disable once ReturnTypeCanBeEnumerable.Local
+        private BytesWrapper[] GetMessageBodySource()
         {
-            if (_headers.ContainsKey("Content-Encoding") &&
-                !string.Equals(_headers["Content-Encoding"], 
-                "utf-8", StringComparison.OrdinalIgnoreCase)) // Yandex oauth
-            {
-                return GetMessageBodySourceZip();
-            }
+            bool isNonUtf8ContentEncoding  = 
+                _headers.ContainsKey("Content-Encoding") &&
+                // Yandex oauth fix
+                !string.Equals(_headers["Content-Encoding"], "utf-8", StringComparison.OrdinalIgnoreCase); 
 
-            return GetMessageBodySourceStd();
+            var result = isNonUtf8ContentEncoding
+                ? GetMessageBodySourceZip()
+                : GetMessageBodySourceStd();
+         
+            // It's a fix of response get stuck response issue #83: https://github.com/csharp-leaf/Leaf.xNet/issues/83
+            return result.ToArray();
         }
 
         // Загрузка обычных данных.
