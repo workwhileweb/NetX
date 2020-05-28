@@ -978,19 +978,13 @@ namespace Leaf.xNet
         #region Загрузка тела сообщения
 
         // ReSharper disable once ReturnTypeCanBeEnumerable.Local
-        private BytesWrapper[] GetMessageBodySource()
+        private IEnumerable<BytesWrapper> GetMessageBodySource()
         {
-            bool isNonUtf8ContentEncoding  = 
-                _headers.ContainsKey("Content-Encoding") &&
-                // Yandex oauth fix
-                !string.Equals(_headers["Content-Encoding"], "utf-8", StringComparison.OrdinalIgnoreCase); 
-
-            var result = isNonUtf8ContentEncoding
+            var result = _headers.ContainsKey("Content-Encoding") && _headers["Content-Encoding"].Equals("gzip", StringComparison.OrdinalIgnoreCase)
                 ? GetMessageBodySourceZip()
                 : GetMessageBodySourceStd();
-         
-            // It's a fix of response get stuck response issue #83: https://github.com/csharp-leaf/Leaf.xNet/issues/83
-            return result.ToArray();
+
+            return result; // .ToArray(); - it will break Chunked requests.
         }
 
         // Загрузка обычных данных.
@@ -1016,7 +1010,27 @@ namespace Leaf.xNet
             return ReceiveMessageBody(GetZipStream(streamWrapper));
         }
 
+        private static byte[] GetResponse(Stream stream)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
+
         // Загрузка тела сообщения неизвестной длины.
+        private static IEnumerable<BytesWrapper> ReceiveMessageBody(Stream stream)
+        {
+            // It's a fix of response get stuck response issue #83: https://github.com/csharp-leaf/Leaf.xNet/issues/83
+            var bytesWrapper = new BytesWrapper();
+            var responseBytes = GetResponse(stream);
+            bytesWrapper.Value = responseBytes;
+            bytesWrapper.Length = responseBytes.Length;
+            return new[] { bytesWrapper };
+        }
+
+        /*
         private IEnumerable<BytesWrapper> ReceiveMessageBody(Stream stream)
         {
             var bytesWrapper = new BytesWrapper();
@@ -1087,6 +1101,7 @@ namespace Leaf.xNet
                 yield return bytesWrapper;
             }
         }
+        */
 
         // Загрузка тела сообщения известной длины.
         private IEnumerable<BytesWrapper> ReceiveMessageBody(long contentLength)
