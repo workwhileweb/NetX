@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tuan.Net.X", "Tuan.Net.X\Tuan.Net.X.csproj", "{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tuan.Net.X.Tests", "Tuan.Net.X.Tests\Tuan.Net.X.Tests.csproj", "{FA54D481-086E-4ADD-B32D-F1E6747DDF18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuan.Net.X.Examples.Stresstest", "Tuan.Net.X.Examples\Stresstest\Tuan.Net.X.Examples.Stresstest.csproj", "{99D98852-736A-41C5-A907-54BEFC18F417}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{4A10BB33-1998-43E1-BF7F-FC695F8B7719}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuan.Net.X.Examples.CloudflareDemo", "Tuan.Net.X.Examples\CloudflareDemo\Tuan.Net.X.Examples.CloudflareDemo.csproj", "{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{20F34839-6035-49F4-AF5F-083283DE4EE0}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release Examples|Any CPU = Release Examples|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA54D481-086E-4ADD-B32D-F1E6747DDF18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99D98852-736A-41C5-A907-54BEFC18F417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99D98852-736A-41C5-A907-54BEFC18F417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99D98852-736A-41C5-A907-54BEFC18F417}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{99D98852-736A-41C5-A907-54BEFC18F417}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
+		{99D98852-736A-41C5-A907-54BEFC18F417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Release Examples|Any CPU.ActiveCfg = Release Examples|Any CPU
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Release Examples|Any CPU.Build.0 = Release Examples|Any CPU
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{99D98852-736A-41C5-A907-54BEFC18F417} = {4A10BB33-1998-43E1-BF7F-FC695F8B7719}
+		{A7F2395D-FD4C-4C3E-9893-E8F5CAB6A8F7} = {4A10BB33-1998-43E1-BF7F-FC695F8B7719}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {57A846C3-D2D0-4AB8-9747-4559091ABF00}
+	EndGlobalSection
+EndGlobal
