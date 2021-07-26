@@ -18,7 +18,7 @@ namespace Tuan.Net.X
             return new Random(BitConverter.ToInt32(buffer, 0));
         }
 
-        public static Random Instance => _rand ?? (_rand = Generate());
+        public static Random Instance => _rand ??= Generate();
         [ThreadStatic] private static Random _rand;
     }
 }

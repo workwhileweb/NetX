@@ -15,9 +15,9 @@
 	<LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Grand Silence</Authors>
-    <Company>Kelog</Company>
-    <Product>Leaf</Product>
+    <Authors>Tuan.Net.X</Authors>
+    <Company>Tuan.Net.X</Company>
+    <Product>Tuan.Net.X</Product>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
@@ -43,14 +43,15 @@
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Leaf.xNet.xml</DocumentationFile>
     <Version>5.2.0</Version>
-    <RepositoryUrl>https://github.com/csharp-leaf/Leaf.xNet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/workwhileweb/Tuan.Net.X</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <PackageProjectUrl>https://github.com/csharp-leaf</PackageProjectUrl>
-    <Copyright>© 2018-2020 Developed by Grand Silence — Kelog Studio</Copyright>
+    <PackageProjectUrl>https://github.com/workwhileweb/Tuan.Net.X</PackageProjectUrl>
+    <Copyright>Tuan.Net.X</Copyright>
     <PackageTags>net,http,socks,proxy,cloudflare,xnet,https,stormwall,useragent,parsing,bot,web,crowling</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <NoWarn>1591,1573</NoWarn>
-    <Description>Improved xNet for .NET Framework 4.5+ / .NET Standard 2.0</Description> <!-- Ignore warinings abound undocumented code -->
+    <Description>Tuan.Net.X</Description>
+    <PackageLicenseExpression>Tuan.Net.X</PackageLicenseExpression> <!-- Ignore warinings abound undocumented code -->
   </PropertyGroup>
   
   <ItemGroup>
