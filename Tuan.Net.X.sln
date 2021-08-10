@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tuan.Net.X", "Tuan.Net.X\Tuan.Net.X.csproj", "{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tuan.Net.X", "Tuan.Net.X.csproj", "{9EBEF1BC-95F2-4C8C-9E52-454388D3912E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
