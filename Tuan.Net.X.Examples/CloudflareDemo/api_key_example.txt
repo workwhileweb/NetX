@@ -1,1 +1,0 @@
-copy this file as api_key.txt and just paste API key in the file
